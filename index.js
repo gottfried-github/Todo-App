@@ -9,6 +9,10 @@ function itemUpdateDone(done, i, items) {
     )
 }
 
+function itemAppend(item, items) {
+    return [...items, {i: items.length, item}]
+}
+
 function itemsDeleteDone(items) {
     return items.reduce((itemsNotDone, item) => {
         if (item.item.done) return itemsNotDone
@@ -42,6 +46,19 @@ function itemsDone(items) {
 /*
     Render items
 */
+function inputRender(submitCb) {
+    const inputEl = document.createElement("input")
+    inputEl.setAttribute("type", "text")
+
+    inputEl.addEventListener("keyup", (ev) => {
+        if (ev.isComposing || ev.code !== "Enter") return
+
+        submitCb(ev.currentTarget.value)
+    })
+
+    return inputEl
+}
+
 function makeFilterCb(cb, filterActiveClass) {
     return (ev) => {
         if (ev.target.classList.contains(filterActiveClass)) return
@@ -119,6 +136,7 @@ function itemsRender(items, {doneCb, notDoneCb}) {
 }
 
 function render(items, {
+    newItemCb,
     doneCb, notDoneCb, 
     showAllCb, showDoneCb, showNotDoneCb, 
     deleteDoneCb,
@@ -127,10 +145,11 @@ function render(items, {
     const container = document.createElement("div")
     container.classList.add("container")
 
+    const inputEl = inputRender(newItemCb)
     const controlsEl = controlsRender({showAllCb, showDoneCb, showNotDoneCb, deleteDoneCb, showAll, showDone})
     const itemsEl = itemsRender(items, {doneCb, notDoneCb})
 
-    container.append(controlsEl, itemsEl)
+    container.append(inputEl, controlsEl, itemsEl)
 
     const containerPrev = document.querySelector(".container")
 
@@ -149,6 +168,12 @@ function main(items, showAll, showDone) {
                 ? itemsDone(items)
                 : itemsNotDone(items),
         {
+            newItemCb: (itemLabel) => {
+                main(
+                    itemAppend({label: itemLabel, done: false}, items),
+                    showAll, showDone
+                )
+            },
             doneCb: (i) => {
                 main(
                     itemUpdateDone(true, i, items),
@@ -180,24 +205,7 @@ function main(items, showAll, showDone) {
 
 document.addEventListener("DOMContentLoaded", () => {
     main(
-        [
-            {
-                done: false,
-                label: "item 0"
-            },
-            {
-                done: true,
-                label: "item 1"
-            },
-            {
-                done: true,
-                label: "item 2"
-            },
-            {
-                done: false,
-                label: "item 3"
-            }
-        ].map((item, i) => ({i, item})),
+        [],
         true,
         false
     )
