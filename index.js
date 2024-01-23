@@ -51,8 +51,41 @@ function itemsRender(items, {
     
 }
 
-function main() {
-    let items = [
+function main(items, showAll, showDone) {
+    itemsRender(
+        showAll 
+            ? items
+            : showDone
+                ? itemsDone(items)
+                : itemsNotDone(items),
+        {
+            doneCb: (i) => {
+                main(
+                    itemUpdateDone(true, i, items),
+                    showAll, showDone
+                )
+            },
+            notDoneCb: (i) => {
+                main(
+                    itemUpdateDone(false, i, items),
+                    showAll, showDone
+                )
+            },
+            showDoneCb: () => {
+                main(items, false, true)
+            }, 
+            showNotDoneCb: () => {
+                main(items, false, false)
+            },
+            deleteDoneCb: () => {
+                main(itemsDeleteDone(items), showAll, showDone)
+            }, 
+        }
+    )
+}
+
+main(
+    [
         {
             done: false,
             title: "item 0"
@@ -69,54 +102,7 @@ function main() {
             done: false,
             title: "item 3"
         }
-    ]
-
-    let showAll = true
-    let showDone = null
-
-    itemsRender(itemsFormat(items), {
-        doneCb: (i) => {
-            items = itemUpdateDone(true, i, items)
-
-            if (null === showDone) throw new Error()
-
-            itemsRender(
-                showAll 
-                    ? itemsFormat(items)
-                    : showDone
-                        ? itemsDone(items)
-                        : itemsNotDone(items)
-            )
-        },
-        notDoneCb: () => {
-            items = itemUpdateDone(true, i, items)
-
-            itemsRender(itemsFormat)
-        },
-        showDoneCb: () => {
-            showAll = false
-            showDone = true
-
-            itemsRender(itemsDone(items))
-        }, 
-        showNotDoneCb: () => {
-            showAll = false
-            showDone = false
-
-            itemsRender(itemsNotDone(items))
-        },
-        deleteDoneCb: () => {
-            items = itemsDeleteDone(items)
-
-            if (null === showDone) throw new Error()
-
-            itemsRender(
-                showAll 
-                    ? itemsFormat(items)
-                    : showDone
-                        ? itemsDone(items)
-                        : itemsNotDone(items)
-            )
-        }, 
-    })
-}
+    ].map((item, i) => ({i, item})),
+    true,
+    false
+)
