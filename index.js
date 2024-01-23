@@ -1,3 +1,6 @@
+/*
+    deal with items data
+*/
 function itemUpdateDone(done, i, items) {
     return items.map((item) => 
         i === item.i
@@ -36,17 +39,100 @@ function itemsDone(items) {
     }, [])
 }
 
-function itemRender(item, {doneCb, notDoneCb}) {
-    // doneCb(item.i)
-    // notDoneCb(item.i)
+/*
+    Render items
+*/
+function makeFilterCb(cb, filterActiveClass) {
+    return (ev) => {
+        if (ev.target.classList.contains(filterActiveClass)) return
+
+        cb()
+    }
 }
 
-function itemsRender(items, {
-    doneCb, notDoneCb, 
-    showDoneCb, showNotDoneCb, 
-    deleteDoneCb
-}) {
+function controlsRender({showAllCb, showDoneCb, showNotDoneCb, deleteDoneCb, showAll, showDone}) {
+    const container = document.createElement("div")
+    const filterClass = "filter", filterActiveClass = "active"
+
+    const deleteDoneEl = document.createElement("button")
+    const showAllEl = document.createElement("button")
+    const showDoneEl = document.createElement("button")
+    const showNotDoneEl = document.createElement("button")
+
+    showAllEl.classList.add(filterClass)
+    showDoneEl.classList.add(filterClass)
+    showNotDoneEl.classList.add(filterClass)
+
+    if (showAll) {
+        showAllEl.classList.add(filterActiveClass)
+    } else if (showDone) {
+        showDoneEl.classList.add(filterActiveClass)
+    } else {
+        showNotDoneEl.classList.add(filterActiveClass)
+    }
+
+    deleteDoneEl.addEventListener("click", deleteDoneCb)
+    showAllEl.addEventListener("click", makeFilterCb(showAllCb, filterActiveClass))
+    showDoneEl.addEventListener("click", makeFilterCb(showDoneCb, filterActiveClass))
+    showNotDoneEl.addEventListener("click", makeFilterCb(showNotDoneCb, filterActiveClass))
+
+    container.append(deleteDoneEl, showAllEl, showDoneEl, showNotDoneEl)
+
+    return container
+}
+
+function itemRender(item, {doneCb, notDoneCb}) {
+    const container = document.createElement("li")
+    const input = document.createElement("input")
+    const label = document.createElement("label")
+
+    input.setAttribute("type", "checkbox")
+    input.id = item.i.toString()
+    label.setAttribute("for", input.id)
+
+    label.innerText = item.item.label
+
+    container.append(input, label)
     
+    container.addEventListener("click", (ev) => {
+        ev.currentTarget.querySelector('input').checked
+            ? doneCb(item.i)
+            : notDoneCb(item.i)
+    })
+
+    return container
+}
+
+function itemsRender(items, {doneCb, notDoneCb}) {
+    const container = document.createElement("ul")
+    const itemsEls = items.map(item => itemRender(item, {doneCb, notDoneCb}))
+
+    container.append(...itemsEls)
+
+    return container
+}
+
+function render(items, {
+    doneCb, notDoneCb, 
+    showAllCb, showDoneCb, showNotDoneCb, 
+    deleteDoneCb,
+    showAll, showDone
+}) {
+    const container = document.createElement("div")
+    container.classList.add("container")
+
+    const controlsEl = controlsRender({showAllCb, showDoneCb, showNotDoneCb, deleteDoneCb, showAll, showDone})
+    const itemsEl = itemsRender(items, {doneCb, notDoneCb})
+
+    container.append(controlsEl, itemsEl)
+
+    const containerPrev = document.querySelector(".container")
+
+    if (containerPrev) {
+        containerPrev.replace(container)
+    } else {
+        document.querySelector(".app").appendChild(container)
+    }
 }
 
 function main(items, showAll, showDone) {
@@ -69,6 +155,9 @@ function main(items, showAll, showDone) {
                     showAll, showDone
                 )
             },
+            showAllCb: () => {
+                main(items, true, showDone)
+            },
             showDoneCb: () => {
                 main(items, false, true)
             }, 
@@ -86,19 +175,19 @@ main(
     [
         {
             done: false,
-            title: "item 0"
+            label: "item 0"
         },
         {
             done: true,
-            title: "item 1"
+            label: "item 1"
         },
         {
             done: true,
-            title: "item 2"
+            label: "item 2"
         },
         {
             done: false,
-            title: "item 3"
+            label: "item 3"
         }
     ].map((item, i) => ({i, item})),
     true,
