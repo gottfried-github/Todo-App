@@ -62,6 +62,7 @@ function inputRender(submitCb) {
     inputEl.setAttribute("type", "text")
 
     inputEl.addEventListener("keyup", (ev) => {
+        // for .isComposing see https://developer.mozilla.org/en-US/docs/Web/API/Element/keyup_event
         if (ev.isComposing || ev.code !== "Enter") return
 
         submitCb(ev.currentTarget.value)
