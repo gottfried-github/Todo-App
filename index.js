@@ -9,6 +9,17 @@ function itemUpdateDone(done, i, items) {
     )
 }
 
+function itemDelete(i, items) {
+    return items.reduce((items, item) => {
+        if (i === item.i) return items
+
+        items.push(item)
+        return items
+    }, []).map((item, i) => {
+        return {...item, i}
+    })
+}
+
 function itemAppend(item, items) {
     return [...items, {i: items.length, item}]
 }
@@ -20,7 +31,7 @@ function itemsDeleteDone(items) {
         itemsNotDone.push({...item})
 
         return itemsNotDone
-    }, [])
+    }, []).map((item, i) => ({...item, i}))
 }
 
 function itemsNotDone(items) {
@@ -103,10 +114,11 @@ function controlsRender({showAllCb, showDoneCb, showNotDoneCb, deleteDoneCb, sho
     return container
 }
 
-function itemRender(item, {doneCb, notDoneCb}) {
+function itemRender(item, {doneCb, notDoneCb, deleteCb}) {
     const container = document.createElement("li")
     const input = document.createElement("input")
     const label = document.createElement("label")
+    const deleteBtn = document.createElement("button")
 
     input.setAttribute("type", "checkbox")
     input.id = item.i.toString()
@@ -114,21 +126,24 @@ function itemRender(item, {doneCb, notDoneCb}) {
     label.setAttribute("for", input.id)
 
     label.innerText = item.item.label
+    deleteBtn.innerText = "delete"
 
-    container.append(input, label)
+    container.append(input, label, deleteBtn)
     
-    container.addEventListener("click", (ev) => {
-        ev.currentTarget.querySelector('input').checked
+    input.addEventListener("click", (ev) => {
+        input.checked
             ? doneCb(item.i)
             : notDoneCb(item.i)
     })
 
+    deleteBtn.addEventListener("click", () => {deleteCb(item.i)})
+
     return container
 }
 
-function itemsRender(items, {doneCb, notDoneCb}) {
+function itemsRender(items, {doneCb, notDoneCb, deleteCb}) {
     const container = document.createElement("ul")
-    const itemsEls = items.map(item => itemRender(item, {doneCb, notDoneCb}))
+    const itemsEls = items.map(item => itemRender(item, {doneCb, notDoneCb, deleteCb}))
 
     container.append(...itemsEls)
 
@@ -137,7 +152,7 @@ function itemsRender(items, {doneCb, notDoneCb}) {
 
 function render(items, {
     newItemCb,
-    doneCb, notDoneCb, 
+    doneCb, notDoneCb, deleteCb,
     showAllCb, showDoneCb, showNotDoneCb, 
     deleteDoneCb,
     showAll, showDone
@@ -147,7 +162,7 @@ function render(items, {
 
     const inputEl = inputRender(newItemCb)
     const controlsEl = controlsRender({showAllCb, showDoneCb, showNotDoneCb, deleteDoneCb, showAll, showDone})
-    const itemsEl = itemsRender(items, {doneCb, notDoneCb})
+    const itemsEl = itemsRender(items, {doneCb, notDoneCb, deleteCb})
 
     container.append(inputEl, controlsEl, itemsEl)
 
@@ -161,6 +176,8 @@ function render(items, {
 }
 
 function main(items, showAll, showDone) {
+    console.log("main, items:", items)
+
     render(
         showAll 
             ? items
@@ -183,6 +200,12 @@ function main(items, showAll, showDone) {
             notDoneCb: (i) => {
                 main(
                     itemUpdateDone(false, i, items),
+                    showAll, showDone
+                )
+            },
+            deleteCb: (i) => {
+                main(
+                    itemDelete(i, items),
                     showAll, showDone
                 )
             },
