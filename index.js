@@ -4,7 +4,7 @@
 function itemUpdateDone(done, i, items) {
     return items.map((item) => 
         i === item.i
-            ? {...item, item: {...item, done}}
+            ? {...item, item: {...item.item, done}}
             : item
     )
 }
@@ -21,7 +21,7 @@ function itemsDeleteDone(items) {
 
 function itemsNotDone(items) {
     return items.reduce((itemsNotDone, item) => {
-        if (item.done) return itemsNotDone
+        if (item.item.done) return itemsNotDone
 
         itemsNotDone.push({...item})
 
@@ -31,7 +31,7 @@ function itemsNotDone(items) {
 
 function itemsDone(items) {
     return items.reduce((itemsDone, item) => {
-        if (!item.done) return itemsDone
+        if (!item.item.done) return itemsDone
 
         itemsDone.push({...item})
 
@@ -71,6 +71,11 @@ function controlsRender({showAllCb, showDoneCb, showNotDoneCb, deleteDoneCb, sho
         showNotDoneEl.classList.add(filterActiveClass)
     }
 
+    deleteDoneEl.innerText = "delete"
+    showAllEl.innerText = "all"
+    showDoneEl.innerText = "done"
+    showNotDoneEl.innerText = "active"
+
     deleteDoneEl.addEventListener("click", deleteDoneCb)
     showAllEl.addEventListener("click", makeFilterCb(showAllCb, filterActiveClass))
     showDoneEl.addEventListener("click", makeFilterCb(showDoneCb, filterActiveClass))
@@ -88,6 +93,7 @@ function itemRender(item, {doneCb, notDoneCb}) {
 
     input.setAttribute("type", "checkbox")
     input.id = item.i.toString()
+    input.checked = item.item.done
     label.setAttribute("for", input.id)
 
     label.innerText = item.item.label
@@ -129,14 +135,14 @@ function render(items, {
     const containerPrev = document.querySelector(".container")
 
     if (containerPrev) {
-        containerPrev.replace(container)
+        containerPrev.replaceWith(container)
     } else {
         document.querySelector(".app").appendChild(container)
     }
 }
 
 function main(items, showAll, showDone) {
-    itemsRender(
+    render(
         showAll 
             ? items
             : showDone
@@ -166,30 +172,33 @@ function main(items, showAll, showDone) {
             },
             deleteDoneCb: () => {
                 main(itemsDeleteDone(items), showAll, showDone)
-            }, 
+            },
+            showAll, showDone
         }
     )
 }
 
-main(
-    [
-        {
-            done: false,
-            label: "item 0"
-        },
-        {
-            done: true,
-            label: "item 1"
-        },
-        {
-            done: true,
-            label: "item 2"
-        },
-        {
-            done: false,
-            label: "item 3"
-        }
-    ].map((item, i) => ({i, item})),
-    true,
-    false
-)
+document.addEventListener("DOMContentLoaded", () => {
+    main(
+        [
+            {
+                done: false,
+                label: "item 0"
+            },
+            {
+                done: true,
+                label: "item 1"
+            },
+            {
+                done: true,
+                label: "item 2"
+            },
+            {
+                done: false,
+                label: "item 3"
+            }
+        ].map((item, i) => ({i, item})),
+        true,
+        false
+    )
+})
