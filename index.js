@@ -36,10 +36,6 @@ function itemsDone(items) {
     }, [])
 }
 
-function itemsFormat(items) {
-    return items.map((item, i) => ({i, item: {...item}}))
-}
-
 function itemRender(item, {doneCb, notDoneCb}) {
     // doneCb(item.i)
     // notDoneCb(item.i)
