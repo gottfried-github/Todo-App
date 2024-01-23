@@ -1,36 +1,38 @@
 function itemUpdateDone(done, i, items) {
-    return items.map((item, _i) => 
-        i === _i 
-            ? {...item, done}
+    return items.map((item) => 
+        i === item.i
+            ? {...item, item: {...item, done}}
             : item
     )
 }
 
 function itemsDeleteDone(items) {
     return items.reduce((itemsNotDone, item) => {
-        if (item.done) return itemsNotDone
+        if (item.item.done) return itemsNotDone
 
         itemsNotDone.push({...item})
+
+        return itemsNotDone
     }, [])
 }
 
 function itemsNotDone(items) {
-    return items.reduce((itemsNotDone, item, _i) => {
+    return items.reduce((itemsNotDone, item) => {
         if (item.done) return itemsNotDone
 
-        itemsNotDone.push({
-            i: _i, item: {...item}
-        })
+        itemsNotDone.push({...item})
+
+        return itemsNotDone
     }, [])
 }
 
 function itemsDone(items) {
-    return items.reduce((itemsDone, item, _i) => {
+    return items.reduce((itemsDone, item) => {
         if (!item.done) return itemsDone
 
-        itemsDone.push({
-            i: _i, item: {...item}
-        })
+        itemsDone.push({...item})
+
+        return itemsDone
     }, [])
 }
 
