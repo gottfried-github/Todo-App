@@ -177,8 +177,6 @@ function render(items, {
 }
 
 function main(items, showAll, showDone) {
-    console.log("main, items:", items)
-
     render(
         showAll 
             ? items
