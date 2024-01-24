@@ -1,20 +1,33 @@
 .container {
     width: 450px;
+    margin: auto;
+    padding: 4px;
+
+    background-color: #F2F2F2;
 }
 
 .add {
     box-sizing: border-box;
     width: 100%;
+
+    margin-bottom: 8px;
 }
 
 .controls {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
+
+    margin-bottom: 8px;
 }
 
 .controls .counter {
     display: block;
+}
+
+.controls .filters {
+    display: flex;
+    column-gap: 2px;
 }
 
 .items {
@@ -33,6 +46,12 @@
 .item .input-container {
     display: flex;
     flex-grow: 2;
+
+    column-gap: 8px;
+}
+
+.item .input-container input {
+    margin: 0;
 }
 
 .item .input-container label {
@@ -41,4 +60,16 @@
 
 .item .delete {
     justify-self: flex-end;
+}
+
+button {
+    padding: 2px 4px;
+    margin: 0;
+
+    background-color: rgba(0, 0, 0, 0.1);
+    border: none;
+}
+
+button.active, button:hover {
+    background-color: rgba(0, 0, 0, 0.3);
 }
