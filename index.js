@@ -62,6 +62,7 @@ function inputRender(submitCb) {
 
     inputEl.classList.add("add")
     inputEl.setAttribute("type", "text")
+    inputEl.placeholder = "What needs to be done"
 
     inputEl.addEventListener("keyup", (ev) => {
         // for .isComposing see https://developer.mozilla.org/en-US/docs/Web/API/Element/keyup_event
@@ -157,6 +158,7 @@ function itemRender(item, {doneCb, notDoneCb, deleteCb}) {
     input.id = item.i.toString()
     input.checked = item.item.done
     label.setAttribute("for", input.id)
+    if (item.item.done) label.classList.add("checked")
 
     label.innerText = item.item.label
     deleteBtn.innerText = "delete"
