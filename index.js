@@ -72,10 +72,10 @@ function countersRender() {
     const counterClass = "counter"
 
     const container = createElement("div")
-    const doneEl = createElement("span", null, [counterClass], `${items.filter(item => item.done).length} items done`)
-    const notDoneEl = createElement("span", null, [counterClass], `${items.filter(item => !item.done).length} items left`)
+    const doneEl = createElement("span", null, [counterClass], `${items.filter(item => item.done).length} completed`)
+    const notDoneEl = createElement("span", null, [counterClass], `${items.filter(item => !item.done).length} left`)
 
-    container.append(doneEl, notDoneEl)
+    container.append(doneEl, ", ", notDoneEl)
 
     return container
 }
