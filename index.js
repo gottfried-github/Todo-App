@@ -174,14 +174,20 @@ function render(items, {
     showAll, showDone,
     doneCount, notDoneCount
 }) {
+    const renderControls = doneCount + notDoneCount > 0
+
     const container = document.createElement("div")
     container.classList.add("container")
 
     const inputEl = inputRender(newItemCb)
-    const controlsEl = controlsRender({showAllCb, showDoneCb, showNotDoneCb, deleteDoneCb, showAll, showDone, doneCount, notDoneCount})
     const itemsEl = itemsRender(items, {doneCb, notDoneCb, deleteCb})
 
-    container.append(inputEl, controlsEl, itemsEl)
+    if (renderControls) {
+        const controlsEl = controlsRender({showAllCb, showDoneCb, showNotDoneCb, deleteDoneCb, showAll, showDone, doneCount, notDoneCount})
+        container.append(inputEl, controlsEl, itemsEl)
+    } else {
+        container.append(inputEl, itemsEl)
+    }
 
     const containerPrev = document.querySelector(".container")
 
