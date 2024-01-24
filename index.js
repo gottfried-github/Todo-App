@@ -107,10 +107,10 @@ function controlsRender({showAllCb, showDoneCb, showNotDoneCb, deleteDoneCb, sho
         showNotDoneEl.classList.add(filterActiveClass)
     }
 
-    deleteDoneEl.innerText = "delete"
-    showAllEl.innerText = "all"
-    showDoneEl.innerText = "done"
-    showNotDoneEl.innerText = "active"
+    deleteDoneEl.textContent = "delete"
+    showAllEl.textContent = "all"
+    showDoneEl.textContent = "done"
+    showNotDoneEl.textContent = "active"
 
     deleteDoneEl.addEventListener("click", deleteDoneCb)
     showAllEl.addEventListener("click", makeFilterCb(showAllCb, filterActiveClass))
@@ -135,8 +135,8 @@ function countersRender({doneCount, notDoneCount}) {
     doneEl.classList.add(counterClass)
     notDoneEl.classList.add(counterClass)
 
-    doneEl.innerText = `${doneCount} items done`
-    notDoneEl.innerText = `${notDoneCount} items left`
+    doneEl.textContent = `${doneCount} items done`
+    notDoneEl.textContent = `${notDoneCount} items left`
 
     container.append(doneEl, notDoneEl)
 
@@ -160,8 +160,8 @@ function itemRender(item, {doneCb, notDoneCb, deleteCb}) {
     label.setAttribute("for", input.id)
     if (item.item.done) label.classList.add("checked")
 
-    label.innerText = item.item.label
-    deleteBtn.innerText = "delete"
+    label.textContent = item.item.label
+    deleteBtn.textContent = "delete"
 
     containerInput.append(input, label)
     container.append(containerInput, deleteBtn)
