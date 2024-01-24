@@ -28,7 +28,7 @@ function itemsDeleteDone(items) {
     return items.reduce((itemsNotDone, item) => {
         if (item.item.done) return itemsNotDone
 
-        itemsNotDone.push({...item})
+        itemsNotDone.push(item)
 
         return itemsNotDone
     }, []).map((item, i) => ({...item, i}))
@@ -38,7 +38,7 @@ function itemsNotDone(items) {
     return items.reduce((itemsNotDone, item) => {
         if (item.item.done) return itemsNotDone
 
-        itemsNotDone.push({...item})
+        itemsNotDone.push(item)
 
         return itemsNotDone
     }, [])
@@ -48,7 +48,7 @@ function itemsDone(items) {
     return items.reduce((itemsDone, item) => {
         if (!item.item.done) return itemsDone
 
-        itemsDone.push({...item})
+        itemsDone.push(item)
 
         return itemsDone
     }, [])
