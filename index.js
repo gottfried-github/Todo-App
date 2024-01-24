@@ -33,10 +33,19 @@ function itemsDeleteDone() {
 /*
     Render the component
 */
-function inputRender() {
-    const inputEl = document.createElement("input")
+function createElement(tag, id, classes, textContent) {
+    const el = document.createElement(tag)
+    
+    if (id) el.id = id
+    if (classes?.length) el.classList.add(...classes)
+    if(textContent) el.textContent = textContent
 
-    inputEl.classList.add("add")
+    return el
+}
+
+function inputRender() {
+    const inputEl = createElement("input", null, ["add"])
+
     inputEl.setAttribute("type", "text")
     inputEl.placeholder = "What needs to be done"
 
@@ -60,21 +69,15 @@ function makeFilterCb(cb, filterActiveClass) {
 }
 
 function controlsRender() {
-    const container = document.createElement("div")
-    const containerFilters = document.createElement("div")
+    const container = createElement("div", null, ["controls"])
+    const containerFilters = createElement("div", null, ["filters"])
     
     const filterClass = "filter", filterActiveClass = "active"
 
-    const deleteDoneEl = document.createElement("button")
-    const showAllEl = document.createElement("button")
-    const showDoneEl = document.createElement("button")
-    const showNotDoneEl = document.createElement("button")
-
-    container.classList.add("controls")
-    containerFilters.classList.add("filters")
-    showAllEl.classList.add(filterClass)
-    showDoneEl.classList.add(filterClass)
-    showNotDoneEl.classList.add(filterClass)
+    const deleteDoneEl = createElement("button", null, null, "clear completed")
+    const showAllEl = createElement("button", null, [filterClass], "all")
+    const showDoneEl = createElement("button", null, [filterClass], "completed")
+    const showNotDoneEl = createElement("button", null, [filterClass], "active")
 
     if ('all' === filter) {
         showAllEl.classList.add(filterActiveClass)
@@ -83,11 +86,6 @@ function controlsRender() {
     } else {
         showNotDoneEl.classList.add(filterActiveClass)
     }
-
-    deleteDoneEl.textContent = "delete"
-    showAllEl.textContent = "all"
-    showDoneEl.textContent = "done"
-    showNotDoneEl.textContent = "active"
 
     deleteDoneEl.addEventListener("click", deleteDoneCb)
     showAllEl.addEventListener("click", makeFilterCb(showAllCb, filterActiveClass))
@@ -105,15 +103,9 @@ function controlsRender() {
 function countersRender() {
     const counterClass = "counter"
 
-    const container = document.createElement("div")
-    const doneEl = document.createElement("span")
-    const notDoneEl = document.createElement("span")
-
-    doneEl.classList.add(counterClass)
-    notDoneEl.classList.add(counterClass)
-
-    doneEl.textContent = `${items.filter(item => item.done).length} items done`
-    notDoneEl.textContent = `${items.filter(item => !item.done).length} items left`
+    const container = createElement("div")
+    const doneEl = createElement("span", null, [counterClass], `${items.filter(item => item.done).length} items done`)
+    const notDoneEl = createElement("span", null, [counterClass], `${items.filter(item => !item.done).length} items left`)
 
     container.append(doneEl, notDoneEl)
 
@@ -121,24 +113,16 @@ function countersRender() {
 }
 
 function itemRender(item) {
-    const container = document.createElement("li")
-    const containerInput = document.createElement("div")
-    const input = document.createElement("input")
-    const label = document.createElement("label")
-    const deleteBtn = document.createElement("button")
-
-    container.classList.add("item")
-    containerInput.classList.add("input-container")
-    deleteBtn.classList.add("delete")
+    const container = createElement("li", null, ["item"])
+    const containerInput = createElement("div", null, ["input-container"])
+    const input = createElement("input", item.id)
+    const label = createElement("label", null, null, item.label)
+    const deleteBtn = createElement("button", null, ["delete"], "delete")
 
     input.setAttribute("type", "checkbox")
-    input.id = item.id
     input.checked = item.done
     label.setAttribute("for", input.id)
     if (item.done) label.classList.add("checked")
-
-    label.textContent = item.label
-    deleteBtn.textContent = "delete"
 
     containerInput.append(input, label)
     container.append(containerInput, deleteBtn)
@@ -155,8 +139,7 @@ function itemRender(item) {
 }
 
 function itemsRender() {
-    const container = document.createElement("ul")
-    container.classList.add("items")
+    const container = createElement("ul", null, ["items"])
 
     const _items = filter === "all"
         ? items
@@ -174,8 +157,7 @@ function itemsRender() {
 function render() {
     const renderControls = items.length > 0
 
-    const container = document.createElement("div")
-    container.classList.add("container")
+    const container = createElement("div", null, ["container"])
 
     const inputEl = inputRender()
     const itemsEl = itemsRender()
