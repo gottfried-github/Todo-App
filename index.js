@@ -38,26 +38,6 @@ function itemsDeleteDone() {
     }, []).map((item, i) => ({...item, i}))
 }
 
-function itemsNotDone() {
-    return items.reduce((itemsNotDone, item) => {
-        if (item.item.done) return itemsNotDone
-
-        itemsNotDone.push(item)
-
-        return itemsNotDone
-    }, [])
-}
-
-function itemsDone() {
-    return items.reduce((itemsDone, item) => {
-        if (!item.item.done) return itemsDone
-
-        itemsDone.push(item)
-
-        return itemsDone
-    }, [])
-}
-
 /*
     Render the component
 */
@@ -189,8 +169,8 @@ function itemsRender() {
     const _items = filter === "all"
         ? items
         : filter === "done"
-            ? itemsDone(items)
-            : itemsNotDone(items)
+            ? items.filter(item => item.item.done)
+            : items.filter(item => !item.item.done)
 
     const itemsEls = _items.map(item => itemRender(item))
 
@@ -231,17 +211,17 @@ function newItemCb(itemLabel) {
 }
 
 function doneCb(i) {
-    itemUpdateDone(true, i, items)
+    itemUpdateDone(true, i)
     render()
 }
 
 function notDoneCb(i) {
-    itemUpdateDone(false, i, items)
+    itemUpdateDone(false, i)
     render()
 }
 
 function deleteCb(i) {
-    itemDelete(i, items)
+    itemDelete(i)
     render()
 }
 
@@ -261,7 +241,7 @@ function showNotDoneCb() {
 }
 
 function deleteDoneCb() {
-    itemsDeleteDone(items)
+    itemsDeleteDone()
     render()
 }
 
