@@ -33,6 +33,15 @@ function itemsDeleteDone() {
 /*
     Render the component
 */
+function makeFilterCb(cb, filterActiveClass) {
+    return (ev) => {
+        if (ev.target.classList.contains(filterActiveClass)) return
+        console.log("filter cb, ev:", ev)
+
+        cb()
+    }
+}
+
 function createElement(tag, id, classes, textContent) {
     const el = document.createElement(tag)
     
@@ -59,13 +68,16 @@ function inputRender() {
     return inputEl
 }
 
-function makeFilterCb(cb, filterActiveClass) {
-    return (ev) => {
-        if (ev.target.classList.contains(filterActiveClass)) return
-        console.log("filter cb, ev:", ev)
+function countersRender() {
+    const counterClass = "counter"
 
-        cb()
-    }
+    const container = createElement("div")
+    const doneEl = createElement("span", null, [counterClass], `${items.filter(item => item.done).length} items done`)
+    const notDoneEl = createElement("span", null, [counterClass], `${items.filter(item => !item.done).length} items left`)
+
+    container.append(doneEl, notDoneEl)
+
+    return container
 }
 
 function controlsRender() {
@@ -96,18 +108,6 @@ function controlsRender() {
 
     containerFilters.append(showAllEl, showDoneEl, showNotDoneEl)
     container.append(countersEl, containerFilters, deleteDoneEl)
-
-    return container
-}
-
-function countersRender() {
-    const counterClass = "counter"
-
-    const container = createElement("div")
-    const doneEl = createElement("span", null, [counterClass], `${items.filter(item => item.done).length} items done`)
-    const notDoneEl = createElement("span", null, [counterClass], `${items.filter(item => !item.done).length} items left`)
-
-    container.append(doneEl, notDoneEl)
 
     return container
 }
