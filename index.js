@@ -5,16 +5,16 @@ let filter = 'all'
 /*
     deal with items data
 */
-function itemUpdateDone(done, i, items) {
-    return items.map((item) => 
+function itemUpdateDone(done, i) {
+    items = items.map((item) => 
         i === item.i
             ? {...item, item: {...item.item, done}}
             : item
     )
 }
 
-function itemDelete(i, items) {
-    return items.reduce((items, item) => {
+function itemDelete(i) {
+    items = items.reduce((items, item) => {
         if (i === item.i) return items
 
         items.push(item)
@@ -24,12 +24,12 @@ function itemDelete(i, items) {
     })
 }
 
-function itemAppend(item, items) {
-    return [...items, {i: items.length, item}]
+function itemAppend(item) {
+    items.push({i: items.length, item})
 }
 
-function itemsDeleteDone(items) {
-    return items.reduce((itemsNotDone, item) => {
+function itemsDeleteDone() {
+    items = items.reduce((itemsNotDone, item) => {
         if (item.item.done) return itemsNotDone
 
         itemsNotDone.push(item)
@@ -38,7 +38,7 @@ function itemsDeleteDone(items) {
     }, []).map((item, i) => ({...item, i}))
 }
 
-function itemsNotDone(items) {
+function itemsNotDone() {
     return items.reduce((itemsNotDone, item) => {
         if (item.item.done) return itemsNotDone
 
@@ -48,7 +48,7 @@ function itemsNotDone(items) {
     }, [])
 }
 
-function itemsDone(items) {
+function itemsDone() {
     return items.reduce((itemsDone, item) => {
         if (!item.item.done) return itemsDone
 
@@ -87,7 +87,7 @@ function makeFilterCb(cb, filterActiveClass) {
     }
 }
 
-function controlsRender({doneCount, notDoneCount}) {
+function controlsRender() {
     const container = document.createElement("div")
     const containerFilters = document.createElement("div")
     
@@ -122,7 +122,7 @@ function controlsRender({doneCount, notDoneCount}) {
     showDoneEl.addEventListener("click", makeFilterCb(showDoneCb, filterActiveClass))
     showNotDoneEl.addEventListener("click", makeFilterCb(showNotDoneCb, filterActiveClass))
 
-    const countersEl = countersRender({doneCount, notDoneCount})
+    const countersEl = countersRender()
 
     containerFilters.append(showAllEl, showDoneEl, showNotDoneEl)
     container.append(countersEl, containerFilters, deleteDoneEl)
@@ -130,7 +130,7 @@ function controlsRender({doneCount, notDoneCount}) {
     return container
 }
 
-function countersRender({doneCount, notDoneCount}) {
+function countersRender() {
     const counterClass = "counter"
 
     const container = document.createElement("div")
@@ -140,8 +140,8 @@ function countersRender({doneCount, notDoneCount}) {
     doneEl.classList.add(counterClass)
     notDoneEl.classList.add(counterClass)
 
-    doneEl.textContent = `${doneCount} items done`
-    notDoneEl.textContent = `${notDoneCount} items left`
+    doneEl.textContent = `${items.filter(item => item.item.done).length} items done`
+    notDoneEl.textContent = `${items.filter(item => !item.item.done).length} items left`
 
     container.append(doneEl, notDoneEl)
 
@@ -199,10 +199,8 @@ function itemsRender() {
     return container
 }
 
-function render({
-    doneCount, notDoneCount
-}) {
-    const renderControls = doneCount + notDoneCount > 0
+function render() {
+    const renderControls = items.length > 0
 
     const container = document.createElement("div")
     container.classList.add("container")
@@ -211,7 +209,7 @@ function render({
     const itemsEl = itemsRender()
 
     if (renderControls) {
-        const controlsEl = controlsRender({doneCount, notDoneCount})
+        const controlsEl = controlsRender()
         container.append(inputEl, controlsEl, itemsEl)
     } else {
         container.append(inputEl, itemsEl)
@@ -228,53 +226,48 @@ function render({
 
 /* Event handlers */
 function newItemCb(itemLabel) {
-    items = itemAppend({label: itemLabel, done: false}, items)
-    main()
+    itemAppend({label: itemLabel, done: false}, items)
+    render()
 }
 
 function doneCb(i) {
-    items = itemUpdateDone(true, i, items)
-    main()
+    itemUpdateDone(true, i, items)
+    render()
 }
 
 function notDoneCb(i) {
-    items = itemUpdateDone(false, i, items)
-    main()
+    itemUpdateDone(false, i, items)
+    render()
 }
 
 function deleteCb(i) {
-    items = itemDelete(i, items)
-    main()
+    itemDelete(i, items)
+    render()
 }
 
 function showAllCb() {
-    main()
     filter = "all"
+    render()
 }
 
 function showDoneCb() {
     filter = "done"
-    main()
+    render()
 }
 
 function showNotDoneCb() {
     filter = "notDone"
-    main()
+    render()
 }
 
 function deleteDoneCb() {
-    items = itemsDeleteDone(items)
-    main()
+    itemsDeleteDone(items)
+    render()
 }
 
 /* Main */
 function main() {
-    render(
-        {
-            doneCount: itemsDone(items).length,
-            notDoneCount: itemsNotDone(items).length
-        }
-    )
+    render()
 }
 
 document.addEventListener("DOMContentLoaded", () => {
