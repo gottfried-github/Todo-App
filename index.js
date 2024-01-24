@@ -202,18 +202,18 @@ function newItemCb(itemLabel) {
     render()
 }
 
-function doneCb(i) {
-    itemUpdateDone(true, i)
+function doneCb(id) {
+    itemUpdateDone(true, id)
     render()
 }
 
-function notDoneCb(i) {
-    itemUpdateDone(false, i)
+function notDoneCb(id) {
+    itemUpdateDone(false, id)
     render()
 }
 
-function deleteCb(i) {
-    itemDelete(i)
+function deleteCb(id) {
+    itemDelete(id)
     render()
 }
 
