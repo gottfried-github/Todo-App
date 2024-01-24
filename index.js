@@ -55,7 +55,7 @@ function itemsDone(items) {
 }
 
 /*
-    Render items
+    Render the component
 */
 function inputRender(submitCb) {
     const inputEl = document.createElement("input")
@@ -79,7 +79,7 @@ function makeFilterCb(cb, filterActiveClass) {
     }
 }
 
-function controlsRender({showAllCb, showDoneCb, showNotDoneCb, deleteDoneCb, showAll, showDone}) {
+function controlsRender({showAllCb, showDoneCb, showNotDoneCb, deleteDoneCb, showAll, showDone, doneCount, notDoneCount}) {
     const container = document.createElement("div")
     const filterClass = "filter", filterActiveClass = "active"
 
@@ -110,7 +110,22 @@ function controlsRender({showAllCb, showDoneCb, showNotDoneCb, deleteDoneCb, sho
     showDoneEl.addEventListener("click", makeFilterCb(showDoneCb, filterActiveClass))
     showNotDoneEl.addEventListener("click", makeFilterCb(showNotDoneCb, filterActiveClass))
 
-    container.append(deleteDoneEl, showAllEl, showDoneEl, showNotDoneEl)
+    const countersEl = countersRender({doneCount, notDoneCount})
+
+    container.append(countersEl, deleteDoneEl, showAllEl, showDoneEl, showNotDoneEl)
+
+    return container
+}
+
+function countersRender({doneCount, notDoneCount}) {
+    const container = document.createElement("div")
+    const doneEl = document.createElement("span")
+    const notDoneEl = document.createElement("span")
+
+    doneEl.innerText = `${doneCount} items are done`
+    notDoneEl.innerText = `${notDoneCount} items left`
+
+    container.append(doneEl, notDoneEl)
 
     return container
 }
@@ -156,13 +171,14 @@ function render(items, {
     doneCb, notDoneCb, deleteCb,
     showAllCb, showDoneCb, showNotDoneCb, 
     deleteDoneCb,
-    showAll, showDone
+    showAll, showDone,
+    doneCount, notDoneCount
 }) {
     const container = document.createElement("div")
     container.classList.add("container")
 
     const inputEl = inputRender(newItemCb)
-    const controlsEl = controlsRender({showAllCb, showDoneCb, showNotDoneCb, deleteDoneCb, showAll, showDone})
+    const controlsEl = controlsRender({showAllCb, showDoneCb, showNotDoneCb, deleteDoneCb, showAll, showDone, doneCount, notDoneCount})
     const itemsEl = itemsRender(items, {doneCb, notDoneCb, deleteCb})
 
     container.append(inputEl, controlsEl, itemsEl)
@@ -220,7 +236,9 @@ function main(items, showAll, showDone) {
             deleteDoneCb: () => {
                 main(itemsDeleteDone(items), showAll, showDone)
             },
-            showAll, showDone
+            showAll, showDone,
+            doneCount: itemsDone(items).length,
+            notDoneCount: itemsNotDone(items).length
         }
     )
 }
