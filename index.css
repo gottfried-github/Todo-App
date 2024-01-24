@@ -23,7 +23,13 @@ button.active, button:hover {
 }
 
 .container {
+    display: grid;
+    grid-template-rows: auto auto 1fr;
+    row-gap: 8px;
+
     width: 450px;
+    height: 450px;
+    
     margin: auto;
     padding: 4px;
 
@@ -33,16 +39,12 @@ button.active, button:hover {
 
 .add {
     width: 100%;
-
-    margin-bottom: 8px;
 }
 
 .controls {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-
-    margin-bottom: 8px;
 }
 
 .controls .counter {
@@ -55,6 +57,9 @@ button.active, button:hover {
 }
 
 .items {
+    height: 100%;
+    overflow-y: scroll;
+
     margin: 0;
     padding: 0;
 
