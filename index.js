@@ -1,3 +1,7 @@
+/* Global state */
+let items = []
+let filter = 'all'
+
 /*
     deal with items data
 */
@@ -57,7 +61,7 @@ function itemsDone(items) {
 /*
     Render the component
 */
-function inputRender(submitCb) {
+function inputRender() {
     const inputEl = document.createElement("input")
 
     inputEl.classList.add("add")
@@ -68,7 +72,7 @@ function inputRender(submitCb) {
         // for .isComposing see https://developer.mozilla.org/en-US/docs/Web/API/Element/keyup_event
         if (ev.isComposing || ev.code !== "Enter") return
 
-        submitCb(ev.currentTarget.value)
+        newItemCb(ev.currentTarget.value)
     })
 
     return inputEl
@@ -77,12 +81,13 @@ function inputRender(submitCb) {
 function makeFilterCb(cb, filterActiveClass) {
     return (ev) => {
         if (ev.target.classList.contains(filterActiveClass)) return
+        console.log("filter cb, ev:", ev)
 
         cb()
     }
 }
 
-function controlsRender({showAllCb, showDoneCb, showNotDoneCb, deleteDoneCb, showAll, showDone, doneCount, notDoneCount}) {
+function controlsRender({doneCount, notDoneCount}) {
     const container = document.createElement("div")
     const containerFilters = document.createElement("div")
     
@@ -99,9 +104,9 @@ function controlsRender({showAllCb, showDoneCb, showNotDoneCb, deleteDoneCb, sho
     showDoneEl.classList.add(filterClass)
     showNotDoneEl.classList.add(filterClass)
 
-    if (showAll) {
+    if ('all' === filter) {
         showAllEl.classList.add(filterActiveClass)
-    } else if (showDone) {
+    } else if ('done' === filter) {
         showDoneEl.classList.add(filterActiveClass)
     } else {
         showNotDoneEl.classList.add(filterActiveClass)
@@ -143,7 +148,7 @@ function countersRender({doneCount, notDoneCount}) {
     return container
 }
 
-function itemRender(item, {doneCb, notDoneCb, deleteCb}) {
+function itemRender(item) {
     const container = document.createElement("li")
     const containerInput = document.createElement("div")
     const input = document.createElement("input")
@@ -177,23 +182,24 @@ function itemRender(item, {doneCb, notDoneCb, deleteCb}) {
     return container
 }
 
-function itemsRender(items, {doneCb, notDoneCb, deleteCb}) {
+function itemsRender() {
     const container = document.createElement("ul")
     container.classList.add("items")
 
-    const itemsEls = items.map(item => itemRender(item, {doneCb, notDoneCb, deleteCb}))
+    const _items = filter === "all"
+        ? items
+        : filter === "done"
+            ? itemsDone(items)
+            : itemsNotDone(items)
+
+    const itemsEls = _items.map(item => itemRender(item))
 
     container.append(...itemsEls)
 
     return container
 }
 
-function render(items, {
-    newItemCb,
-    doneCb, notDoneCb, deleteCb,
-    showAllCb, showDoneCb, showNotDoneCb, 
-    deleteDoneCb,
-    showAll, showDone,
+function render({
     doneCount, notDoneCount
 }) {
     const renderControls = doneCount + notDoneCount > 0
@@ -201,11 +207,11 @@ function render(items, {
     const container = document.createElement("div")
     container.classList.add("container")
 
-    const inputEl = inputRender(newItemCb)
-    const itemsEl = itemsRender(items, {doneCb, notDoneCb, deleteCb})
+    const inputEl = inputRender()
+    const itemsEl = itemsRender()
 
     if (renderControls) {
-        const controlsEl = controlsRender({showAllCb, showDoneCb, showNotDoneCb, deleteDoneCb, showAll, showDone, doneCount, notDoneCount})
+        const controlsEl = controlsRender({doneCount, notDoneCount})
         container.append(inputEl, controlsEl, itemsEl)
     } else {
         container.append(inputEl, itemsEl)
@@ -220,51 +226,51 @@ function render(items, {
     }
 }
 
-function main(items, showAll, showDone) {
+/* Event handlers */
+function newItemCb(itemLabel) {
+    items = itemAppend({label: itemLabel, done: false}, items)
+    main()
+}
+
+function doneCb(i) {
+    items = itemUpdateDone(true, i, items)
+    main()
+}
+
+function notDoneCb(i) {
+    items = itemUpdateDone(false, i, items)
+    main()
+}
+
+function deleteCb(i) {
+    items = itemDelete(i, items)
+    main()
+}
+
+function showAllCb() {
+    main()
+    filter = "all"
+}
+
+function showDoneCb() {
+    filter = "done"
+    main()
+}
+
+function showNotDoneCb() {
+    filter = "notDone"
+    main()
+}
+
+function deleteDoneCb() {
+    items = itemsDeleteDone(items)
+    main()
+}
+
+/* Main */
+function main() {
     render(
-        showAll 
-            ? items
-            : showDone
-                ? itemsDone(items)
-                : itemsNotDone(items),
         {
-            newItemCb: (itemLabel) => {
-                main(
-                    itemAppend({label: itemLabel, done: false}, items),
-                    showAll, showDone
-                )
-            },
-            doneCb: (i) => {
-                main(
-                    itemUpdateDone(true, i, items),
-                    showAll, showDone
-                )
-            },
-            notDoneCb: (i) => {
-                main(
-                    itemUpdateDone(false, i, items),
-                    showAll, showDone
-                )
-            },
-            deleteCb: (i) => {
-                main(
-                    itemDelete(i, items),
-                    showAll, showDone
-                )
-            },
-            showAllCb: () => {
-                main(items, true, showDone)
-            },
-            showDoneCb: () => {
-                main(items, false, true)
-            }, 
-            showNotDoneCb: () => {
-                main(items, false, false)
-            },
-            deleteDoneCb: () => {
-                main(itemsDeleteDone(items), showAll, showDone)
-            },
-            showAll, showDone,
             doneCount: itemsDone(items).length,
             notDoneCount: itemsNotDone(items).length
         }
@@ -272,9 +278,5 @@ function main(items, showAll, showDone) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    main(
-        [],
-        true,
-        false
-    )
+    main()
 })
