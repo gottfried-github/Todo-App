@@ -2,40 +2,32 @@
 let items = []
 let filter = 'all'
 
+class Item {
+    constructor(label) {
+        this.id = new Date().toString()
+        this.done = false
+        this.label = label
+    }
+}
+
 /*
     deal with items data
 */
-function itemUpdateDone(done, i) {
-    items = items.map((item) => 
-        i === item.i
-            ? {...item, item: {...item.item, done}}
-            : item
-    )
+function itemUpdateDone(done, id) {
+    const i = items.map(item => item.id).indexOf(id)
+    items[i].done = done
 }
 
-function itemDelete(i) {
-    items = items.reduce((items, item) => {
-        if (i === item.i) return items
-
-        items.push(item)
-        return items
-    }, []).map((item, i) => {
-        return {...item, i}
-    })
+function itemDelete(id) {
+    items = items.filter(item => id !== item.id)
 }
 
 function itemAppend(item) {
-    items.push({i: items.length, item})
+    items.push(item)
 }
 
 function itemsDeleteDone() {
-    items = items.reduce((itemsNotDone, item) => {
-        if (item.item.done) return itemsNotDone
-
-        itemsNotDone.push(item)
-
-        return itemsNotDone
-    }, []).map((item, i) => ({...item, i}))
+    items = items.filter(item => !item.done)
 }
 
 /*
@@ -120,8 +112,8 @@ function countersRender() {
     doneEl.classList.add(counterClass)
     notDoneEl.classList.add(counterClass)
 
-    doneEl.textContent = `${items.filter(item => item.item.done).length} items done`
-    notDoneEl.textContent = `${items.filter(item => !item.item.done).length} items left`
+    doneEl.textContent = `${items.filter(item => item.done).length} items done`
+    notDoneEl.textContent = `${items.filter(item => !item.done).length} items left`
 
     container.append(doneEl, notDoneEl)
 
@@ -140,12 +132,12 @@ function itemRender(item) {
     deleteBtn.classList.add("delete")
 
     input.setAttribute("type", "checkbox")
-    input.id = item.i.toString()
-    input.checked = item.item.done
+    input.id = item.id
+    input.checked = item.done
     label.setAttribute("for", input.id)
-    if (item.item.done) label.classList.add("checked")
+    if (item.done) label.classList.add("checked")
 
-    label.textContent = item.item.label
+    label.textContent = item.label
     deleteBtn.textContent = "delete"
 
     containerInput.append(input, label)
@@ -153,11 +145,11 @@ function itemRender(item) {
     
     containerInput.addEventListener("click", (ev) => {
         input.checked
-            ? doneCb(item.i)
-            : notDoneCb(item.i)
+            ? doneCb(item.id)
+            : notDoneCb(item.id)
     })
 
-    deleteBtn.addEventListener("click", () => {deleteCb(item.i)})
+    deleteBtn.addEventListener("click", () => {deleteCb(item.id)})
 
     return container
 }
@@ -169,8 +161,8 @@ function itemsRender() {
     const _items = filter === "all"
         ? items
         : filter === "done"
-            ? items.filter(item => item.item.done)
-            : items.filter(item => !item.item.done)
+            ? items.filter(item => item.done)
+            : items.filter(item => !item.done)
 
     const itemsEls = _items.map(item => itemRender(item))
 
@@ -206,7 +198,7 @@ function render() {
 
 /* Event handlers */
 function newItemCb(itemLabel) {
-    itemAppend({label: itemLabel, done: false}, items)
+    itemAppend(new Item(itemLabel))
     render()
 }
 
