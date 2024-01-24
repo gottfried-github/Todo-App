@@ -59,6 +59,8 @@ function itemsDone(items) {
 */
 function inputRender(submitCb) {
     const inputEl = document.createElement("input")
+
+    inputEl.classList.add("add")
     inputEl.setAttribute("type", "text")
 
     inputEl.addEventListener("keyup", (ev) => {
@@ -81,6 +83,8 @@ function makeFilterCb(cb, filterActiveClass) {
 
 function controlsRender({showAllCb, showDoneCb, showNotDoneCb, deleteDoneCb, showAll, showDone, doneCount, notDoneCount}) {
     const container = document.createElement("div")
+    const containerFilters = document.createElement("div")
+    
     const filterClass = "filter", filterActiveClass = "active"
 
     const deleteDoneEl = document.createElement("button")
@@ -88,6 +92,8 @@ function controlsRender({showAllCb, showDoneCb, showNotDoneCb, deleteDoneCb, sho
     const showDoneEl = document.createElement("button")
     const showNotDoneEl = document.createElement("button")
 
+    container.classList.add("controls")
+    containerFilters.classList.add("filters")
     showAllEl.classList.add(filterClass)
     showDoneEl.classList.add(filterClass)
     showNotDoneEl.classList.add(filterClass)
@@ -112,17 +118,23 @@ function controlsRender({showAllCb, showDoneCb, showNotDoneCb, deleteDoneCb, sho
 
     const countersEl = countersRender({doneCount, notDoneCount})
 
-    container.append(countersEl, deleteDoneEl, showAllEl, showDoneEl, showNotDoneEl)
+    containerFilters.append(showAllEl, showDoneEl, showNotDoneEl)
+    container.append(countersEl, containerFilters, deleteDoneEl)
 
     return container
 }
 
 function countersRender({doneCount, notDoneCount}) {
+    const counterClass = "counter"
+
     const container = document.createElement("div")
     const doneEl = document.createElement("span")
     const notDoneEl = document.createElement("span")
 
-    doneEl.innerText = `${doneCount} items are done`
+    doneEl.classList.add(counterClass)
+    notDoneEl.classList.add(counterClass)
+
+    doneEl.innerText = `${doneCount} items done`
     notDoneEl.innerText = `${notDoneCount} items left`
 
     container.append(doneEl, notDoneEl)
@@ -132,9 +144,14 @@ function countersRender({doneCount, notDoneCount}) {
 
 function itemRender(item, {doneCb, notDoneCb, deleteCb}) {
     const container = document.createElement("li")
+    const containerInput = document.createElement("div")
     const input = document.createElement("input")
     const label = document.createElement("label")
     const deleteBtn = document.createElement("button")
+
+    container.classList.add("item")
+    containerInput.classList.add("input-container")
+    deleteBtn.classList.add("delete")
 
     input.setAttribute("type", "checkbox")
     input.id = item.i.toString()
@@ -144,9 +161,10 @@ function itemRender(item, {doneCb, notDoneCb, deleteCb}) {
     label.innerText = item.item.label
     deleteBtn.innerText = "delete"
 
-    container.append(input, label, deleteBtn)
+    containerInput.append(input, label)
+    container.append(containerInput, deleteBtn)
     
-    input.addEventListener("click", (ev) => {
+    containerInput.addEventListener("click", (ev) => {
         input.checked
             ? doneCb(item.i)
             : notDoneCb(item.i)
@@ -159,6 +177,8 @@ function itemRender(item, {doneCb, notDoneCb, deleteCb}) {
 
 function itemsRender(items, {doneCb, notDoneCb, deleteCb}) {
     const container = document.createElement("ul")
+    container.classList.add("items")
+
     const itemsEls = items.map(item => itemRender(item, {doneCb, notDoneCb, deleteCb}))
 
     container.append(...itemsEls)
