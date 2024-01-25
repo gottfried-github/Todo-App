@@ -1,20 +1,30 @@
+import EventEmitter from '../lib/event-emitter.js'
+import Events from '../events.js'
 import {Item} from './helpers.js'
 
 const FILTERS = ["all", "done", "notDone"]
 
-class Store {
+export default class Store {
     constructor() {
         this.state = {
             items: [],
             filter: "all"
         }
     }
-    
-    append(item) {
+
+    init() {
+        EventEmitter.subscribe(Events.ITEM_APPEND_ONE, this._append)
+        EventEmitter.subscribe(Events.ITEM_UPDATE_STATUS_ONE, this._updateStatus)
+        EventEmitter.subscribe(Events.ITEM_DELETE_ONE, this._delete)
+        EventEmitter.subscribe(Events.ITEM_DELETE_DONE, this._deleteDone)
+        EventEmitter.subscribe(Events.SET_FILTER, this._setFilter)
+    }
+
+    _append(item) {
         this.state.items.push(item)
     }
 
-    updateStatus(done, id) {
+    _updateStatus(done, id) {
         this.state.items.map(item => {
             if (id === item.id) {
                 return {
@@ -24,15 +34,15 @@ class Store {
         })
     }
     
-    delete(id) {
+    _delete(id) {
         this.state.items = this.state.items.filter(item => id !== item.id)
     }
     
-    deleteDone() {
+    _deleteDone() {
         this.state.items = this.state.items.filter(item => !item.done)
     }
 
-    setFilter(filter) {
+    _setFilter(filter) {
         if (!FILTERS.includes(filter)) {
             throw new Error("invalid filter name")
         }
@@ -61,5 +71,13 @@ class Store {
         }
 
         return count
+    }
+
+    getItems() {
+        return this.state.items
+    }
+
+    getFilter() {
+        return this.state.filter
     }
 }

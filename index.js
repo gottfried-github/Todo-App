@@ -2,33 +2,12 @@
 let items = []
 let filter = 'all'
 
-class Item {
-    constructor(label) {
-        this.id = new Date().toString()
-        this.done = false
-        this.label = label
-    }
-}
+
 
 /*
     deal with items data
 */
-function itemUpdateDone(done, id) {
-    const i = items.map(item => item.id).indexOf(id)
-    items[i].done = done
-}
 
-function itemDelete(id) {
-    items = items.filter(item => id !== item.id)
-}
-
-function itemAppend(item) {
-    items.push(item)
-}
-
-function itemsDeleteDone() {
-    items = items.filter(item => !item.done)
-}
 
 /*
     Render the component
