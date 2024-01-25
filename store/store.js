@@ -68,8 +68,10 @@ export default class Store {
         }
     }
 
-    getItems() {
-        switch (this.state.filter) {
+    getItems(filter) {
+        const _filter = filter || this.state.filter
+
+        switch (_filter) {
             case "all":
                 return this.state.items
             
@@ -80,7 +82,7 @@ export default class Store {
                 return this.state.items.filter(item => !item.done)
 
             default:
-                throw new Error("invalid filter value in Store's state")
+                throw new Error("invalid filter value")
         }
     }
 
