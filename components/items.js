@@ -3,12 +3,14 @@ import {createElement} from "../lib/helpers.js"
 
 import Item from "./item.js"
 
-export default function Items() {
-    const container = createElement("ul", null, ["items"])
+export default class Items {
+    render() {
+        const container = createElement("ul", null, ["items"])
 
-    const itemsEls = Store.getItems().map(item => Item(item))
+        const itemsEls = Store.getItems().map(item => new Item().render(item))
 
-    container.append(...itemsEls)
+        container.append(...itemsEls)
 
-    return container
+        return container
+    }
 }
