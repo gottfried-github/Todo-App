@@ -21,6 +21,8 @@ function main() {
     EventEmitter.subscribe(Events.ITEM_DELETE_ONE, render)
     EventEmitter.subscribe(Events.ITEM_DELETE_DONE, render)
     EventEmitter.subscribe(Events.SET_FILTER, render)
+
+    render()
 }
 
 document.addEventListener("DOMContentLoaded", () => {
