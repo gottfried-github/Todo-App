@@ -4,14 +4,9 @@ import Events from "./events.js"
 import Todo from "./components/todo.js"
 
 function render() {
-    const container = Todo()
-    const containerPrev = document.querySelector(".container")
-
-    if (containerPrev) {
-        containerPrev.replaceWith(container)
-    } else {
-        document.querySelector(".app").appendChild(container)
-    }
+    const todo = Todo()
+    
+    document.querySelector(".app").replaceChildren(todo)
 }
 
 /* Main */
