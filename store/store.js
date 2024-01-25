@@ -20,8 +20,8 @@ export default class Store {
         EventEmitter.subscribe(Events.SET_FILTER, this._setFilter)
     }
 
-    _append(item) {
-        this.state.items.push(item)
+    _append(label, done) {
+        this.state.items.push(new Item(label, done))
     }
 
     _updateStatus(done, id) {
