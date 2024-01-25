@@ -1,23 +1,41 @@
 import EventEmitter from '../lib/event-emitter.js'
 import Events from '../events.js'
-import {Item} from './helpers.js'
+import {Item} from '../lib/helpers.js'
 
 const FILTERS = ["all", "done", "notDone"]
 
-export default class Store {
+export class Store {
     constructor() {
+        this._subscriptions = {}
+
         this.state = {
             items: [],
             filter: "all"
         }
+
+        this.init()
     }
 
     init() {
-        EventEmitter.subscribe(Events.ITEM_APPEND_ONE, this._append)
-        EventEmitter.subscribe(Events.ITEM_UPDATE_STATUS_ONE, this._updateStatus)
-        EventEmitter.subscribe(Events.ITEM_DELETE_ONE, this._delete)
-        EventEmitter.subscribe(Events.ITEM_DELETE_DONE, this._deleteDone)
-        EventEmitter.subscribe(Events.SET_FILTER, this._setFilter)
+        this._subscriptions._append = this._append.bind(this)
+        this._subscriptions._updateStatus = this._updateStatus.bind(this)
+        this._subscriptions._delete = this._delete.bind(this)
+        this._subscriptions._deleteDone = this._deleteDone.bind(this)
+        this._subscriptions._setFilter = this._setFilter.bind(this)
+
+        EventEmitter.subscribe(Events.ITEM_APPEND_ONE, this._subscriptions._append)
+        EventEmitter.subscribe(Events.ITEM_UPDATE_STATUS_ONE, this._subscriptions._updateStatus)
+        EventEmitter.subscribe(Events.ITEM_DELETE_ONE, this._subscriptions._delete)
+        EventEmitter.subscribe(Events.ITEM_DELETE_DONE, this._subscriptions._deleteDone)
+        EventEmitter.subscribe(Events.SET_FILTER, this._subscriptions._setFilter)
+    }
+
+    unsubscribe() {
+        EventEmitter.unsubscribe(Events.ITEM_APPEND_ONE, this._subscriptions._append)
+        EventEmitter.unsubscribe(Events.ITEM_UPDATE_STATUS_ONE, this._subscriptions._updateStatus)
+        EventEmitter.unsubscribe(Events.ITEM_DELETE_ONE, this._subscriptions._delete)
+        EventEmitter.unsubscribe(Events.ITEM_DELETE_DONE, this._subscriptions._deleteDone)
+        EventEmitter.unsubscribe(Events.SET_FILTER, this._subscriptions._setFilter)
     }
 
     _append(label) {
@@ -25,12 +43,14 @@ export default class Store {
     }
 
     _updateStatus({id, done}) {
-        this.state.items.map(item => {
+        this.state.items = this.state.items.map(item => {
             if (id === item.id) {
                 return {
                     ...item, done
                 }
             }
+
+            return item
         })
     }
     
@@ -47,7 +67,7 @@ export default class Store {
             throw new Error("invalid filter name")
         }
 
-        this.filter = filter
+        this.state.filter = filter
     }
 
     getCount(filter) {
@@ -55,13 +75,13 @@ export default class Store {
 
         switch (filter) {
             case "all":
-                return this.state.items
+                return this.state.items.length
             
             case "done":
-                return this.state.items.filter(item => item.done)
+                return this.state.items.filter(item => item.done).length
 
             case "notDone":
-                return this.state.items.filter(item => !item.done)
+                return this.state.items.filter(item => !item.done).length
 
             default:
                 throw new Error("invalid filter value in Store's state")
@@ -90,3 +110,5 @@ export default class Store {
         return this.state.filter
     }
 }
+
+export default new Store()
