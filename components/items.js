@@ -7,7 +7,7 @@ export default class Items {
     render() {
         const container = createElement("ul", null, ["items"])
 
-        const itemsEls = Store.getItems().map(item => new Item().render(item))
+        const itemsEls = Store.getItems().map(item => new Item(item).render())
 
         container.append(...itemsEls)
 
