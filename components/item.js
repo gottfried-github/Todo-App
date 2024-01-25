@@ -1,4 +1,6 @@
 import EventEmitter from "../lib/event-emitter.js"
+import {createElement} from "../lib/helpers.js"
+
 import Events from "../events.js"
 
 export default function Item(item) {

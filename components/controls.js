@@ -1,5 +1,7 @@
 import EventEmitter from "../lib/event-emitter.js"
 import Store from "../store/store.js"
+import {createElement, makeFilterCb} from "../lib/helpers.js"
+
 import Events from "../events.js"
 
 import Counters from "./counters.js"

@@ -1,3 +1,6 @@
+import Store from "../store/store.js"
+import {createElement} from "../lib/helpers.js"
+
 import Input from "./input.js"
 import Items from "./items.js"
 import Controls from "./controls.js"

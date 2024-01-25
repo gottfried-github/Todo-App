@@ -1,5 +1,7 @@
 import EventEmitter from '../lib/event-emitter.js'
-import {ITEM_APPEND_ONE} from '../events.js'
+import {createElement} from "../lib/helpers.js"
+
+import Events from '../events.js'
 
 export default function Input() {
     const inputEl = createElement("input", null, ["add"])
@@ -11,7 +13,7 @@ export default function Input() {
         // for .isComposing see https://developer.mozilla.org/en-US/docs/Web/API/Element/keyup_event
         if (ev.isComposing || ev.code !== "Enter") return
 
-        EventEmitter.emit(ITEM_APPEND_ONE, ev.currentTarget.value)
+        EventEmitter.emit(Events.ITEM_APPEND_ONE, ev.currentTarget.value)
     })
 
     return inputEl
