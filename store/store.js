@@ -20,11 +20,11 @@ export default class Store {
         EventEmitter.subscribe(Events.SET_FILTER, this._setFilter)
     }
 
-    _append(label, done) {
-        this.state.items.push(new Item(label, done))
+    _append(label) {
+        this.state.items.push(new Item(label, false))
     }
 
-    _updateStatus(done, id) {
+    _updateStatus({id, done}) {
         this.state.items.map(item => {
             if (id === item.id) {
                 return {
@@ -51,30 +51,37 @@ export default class Store {
     }
 
     getCount(filter) {
-        let count = null
+        if (!filter) return this.getItems().length
 
         switch (filter) {
             case "all":
-                count = this.state.items.length
-                break
+                return this.state.items
             
             case "done":
-                count = this.state.items.filter(item => item.done).length
-                break
+                return this.state.items.filter(item => item.done)
 
             case "notDone":
-                count = this.state.items.filter(item => !item.done).length
-                break
+                return this.state.items.filter(item => !item.done)
 
             default:
-                throw new Error("invalid filter value")
+                throw new Error("invalid filter value in Store's state")
         }
-
-        return count
     }
 
     getItems() {
-        return this.state.items
+        switch (this.state.filter) {
+            case "all":
+                return this.state.items
+            
+            case "done":
+                return this.state.items.filter(item => item.done)
+
+            case "notDone":
+                return this.state.items.filter(item => !item.done)
+
+            default:
+                throw new Error("invalid filter value in Store's state")
+        }
     }
 
     getFilter() {
