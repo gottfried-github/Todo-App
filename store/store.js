@@ -53,11 +53,11 @@ export class Store {
         this.state.items = [...this.state.items, new Item(label, false)]
     }
 
-    _updateStatus = ({id, done}) => {
+    _updateStatus = ({id}) => {
         this.state.items = this.state.items.map(item => {
             if (id === item.id) {
                 return {
-                    ...item, done
+                    ...item, done: !item.done
                 }
             }
 

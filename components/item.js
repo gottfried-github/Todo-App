@@ -29,10 +29,8 @@ export default class Item extends Component {
         containerInput.append(input, label)
         container.append(containerInput, deleteBtn)
         
-        containerInput.addEventListener("click", (ev) => {
-            input.checked
-                ? EventEmitter.emit(Events.ITEM_UPDATE_STATUS_ONE, {id: this.item.id, done: true})
-                : EventEmitter.emit(Events.ITEM_UPDATE_STATUS_ONE, {id: this.item.id, done: false})
+        input.addEventListener("click", () => {
+            EventEmitter.emit(Events.ITEM_UPDATE_STATUS_ONE, {id: this.item.id})
         })
 
         deleteBtn.addEventListener("click", () => {
