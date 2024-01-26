@@ -11,11 +11,7 @@ function render() {
 
 /* Main */
 function main() {
-    EventEmitter.subscribe(Events.ITEM_APPEND_ONE, render)
-    EventEmitter.subscribe(Events.ITEM_UPDATE_STATUS_ONE, render)
-    EventEmitter.subscribe(Events.ITEM_DELETE_ONE, render)
-    EventEmitter.subscribe(Events.ITEM_DELETE_DONE, render)
-    EventEmitter.subscribe(Events.SET_FILTER, render)
+    EventEmitter.subscribe(Events.STORAGE_UPDATED, render)
 
     render()
 }

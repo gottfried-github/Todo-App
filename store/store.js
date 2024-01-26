@@ -6,15 +6,22 @@ const FILTERS = ["all", "done", "notDone"]
 
 export class Store {
     constructor() {
-        this.state = {
-            items: [],
-            filter: "all"
-        }
-
         this.init()
     }
 
     init = () => {
+        this.state = new Proxy({
+            items: [],
+            filter: "all"
+        }, {
+            set(target, propName, v) {
+                target[propName] = v
+                EventEmitter.emit(Events.STORAGE_UPDATED)
+
+                return true
+            }
+        })
+
         EventEmitter.subscribe(Events.ITEM_APPEND_ONE, this._append)
         EventEmitter.subscribe(Events.ITEM_UPDATE_STATUS_ONE, this._updateStatus)
         EventEmitter.subscribe(Events.ITEM_DELETE_ONE, this._delete)
@@ -31,7 +38,7 @@ export class Store {
     }
 
     _append = (label) => {
-        this.state.items.push(new Item(label, false))
+        this.state.items = [...this.state.items, new Item(label, false)]
     }
 
     _updateStatus = ({id, done}) => {
