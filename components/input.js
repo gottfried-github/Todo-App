@@ -1,10 +1,16 @@
 import EventEmitter from '../lib/event-emitter.js'
-import {createElement} from "../lib/helpers.js"
+import {Component, createElement} from "../lib/helpers.js"
 
 import Events from '../events.js'
 
-export default class Input {
-    render() {
+export default class Input extends Component {
+    constructor() {
+        super()
+
+        this.el = this.content()
+    }
+
+    content() {
         const inputEl = createElement("input", null, ["add"])
 
         inputEl.setAttribute("type", "text")
@@ -15,6 +21,7 @@ export default class Input {
             if (ev.isComposing || ev.code !== "Enter") return
 
             EventEmitter.emit(Events.ITEM_APPEND_ONE, ev.currentTarget.value)
+            ev.currentTarget.value = ""
         })
 
         return inputEl

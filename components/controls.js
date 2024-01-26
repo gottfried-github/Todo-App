@@ -1,13 +1,26 @@
 import EventEmitter from "../lib/event-emitter.js"
 import Store from "../store/store.js"
-import {createElement, makeFilterCb} from "../lib/helpers.js"
+import {Component, createElement, makeFilterCb} from "../lib/helpers.js"
 
 import Events from "../events.js"
 
 import Counters from "./counters.js"
 
-export default class Controls {
-    render() {
+export default class Controls extends Component {
+    constructor() {
+        super()
+
+        this.counters = new Counters()
+
+        this.el = this.content()
+
+        EventEmitter.subscribe(Events.STORAGE_ITEMS_UPDATED, this.render)
+        EventEmitter.subscribe(Events.STORAGE_FILTER_UPDATED, this.render)
+    }
+
+    content() {
+        if (Store.getCount("all") === 0) return createElement("div")
+        
         const container = createElement("div", null, ["controls"])
         const containerFilters = createElement("div", null, ["filters"])
         
@@ -42,10 +55,8 @@ export default class Controls {
             EventEmitter.emit(Events.SET_FILTER, "notDone")
         }, filterActiveClass))
 
-        const countersEl = new Counters().render()
-
         containerFilters.append(showAllEl, showDoneEl, showNotDoneEl)
-        container.append(countersEl, containerFilters, deleteDoneEl)
+        container.append(this.counters.el, containerFilters, deleteDoneEl)
 
         return container
     }

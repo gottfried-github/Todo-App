@@ -1,24 +1,28 @@
 import Store from "../store/store.js"
-import {createElement} from "../lib/helpers.js"
+import {Component, createElement} from "../lib/helpers.js"
 
 import Input from "./input.js"
 import Items from "./items.js"
 import Controls from "./controls.js"
 
-export default class Todo {
-    render() {
-        const renderControls = Store.getCount("all") > 0
+export default class Todo extends Component {
+    constructor() {
+        super()
 
+        this.input = new Input()
+        this.items = new Items()
+        this.controls = new Controls()
+
+        this.el = this.content()
+    }
+
+    content = () => {
         const container = createElement("div", null, ["container"])
 
-        const inputEl = new Input().render()
-        const itemsEl = new Items().render()
-
-        if (renderControls) {
-            const controlsEl = new Controls().render()
-            container.append(inputEl, controlsEl, itemsEl)
+        if (this.controls.el) {
+            container.append(this.input.el, this.controls.el, this.items.el)
         } else {
-            container.append(inputEl, itemsEl)
+            container.append(this.input.el, this.items.el)
         }
 
         return container

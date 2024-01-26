@@ -15,8 +15,20 @@ export class Store {
             filter: "all"
         }, {
             set(target, propName, v) {
-                target[propName] = v
-                EventEmitter.emit(Events.STORAGE_UPDATED)
+                switch(propName) {
+                    case "items":
+                        target[propName] = v
+                        EventEmitter.emit(Events.STORAGE_ITEMS_UPDATED)
+                        break
+
+                    case "filter":
+                        target[propName] = v
+                        EventEmitter.emit(Events.STORAGE_FILTER_UPDATED)
+                        break
+
+                    default:
+                        break
+                }
 
                 return true
             }

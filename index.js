@@ -11,8 +11,6 @@ function render() {
 
 /* Main */
 function main() {
-    EventEmitter.subscribe(Events.STORAGE_UPDATED, render)
-
     render()
 }
 

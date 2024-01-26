@@ -1,14 +1,20 @@
 import EventEmitter from "../lib/event-emitter.js"
-import {createElement} from "../lib/helpers.js"
+import {Component, createElement} from "../lib/helpers.js"
 
 import Events from "../events.js"
 
-export default class Item {
+export default class Item extends Component {
     constructor(item) {
+        super()
+
         this.item = item
+
+        this.el = this.content()
+        
+        EventEmitter.subscribe(Events.STORAGE_ITEMS_UPDATED, this.render)
     }
 
-    render() {
+    content() {
         const container = createElement("li", null, ["item"])
         const containerInput = createElement("div", null, ["input-container"])
         const input = createElement("input", this.item.id)
