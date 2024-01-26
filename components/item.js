@@ -14,6 +14,14 @@ export default class Item extends Component {
         EventEmitter.subscribe(Events.STORAGE_ITEMS_UPDATED, this.render)
     }
 
+    handleUpdateStatus = () => {
+        EventEmitter.emit(Events.ITEM_UPDATE_STATUS_ONE, {id: this.item.id})
+    }
+
+    handleDelete = () => {
+        EventEmitter.emit(Events.ITEM_DELETE_ONE, this.item.id)     
+    }
+
     content() {
         const container = createElement("li", null, ["item"])
         const containerInput = createElement("div", null, ["input-container"])
@@ -29,13 +37,8 @@ export default class Item extends Component {
         containerInput.append(input, label)
         container.append(containerInput, deleteBtn)
         
-        input.addEventListener("click", () => {
-            EventEmitter.emit(Events.ITEM_UPDATE_STATUS_ONE, {id: this.item.id})
-        })
-
-        deleteBtn.addEventListener("click", () => {
-            EventEmitter.emit(Events.ITEM_DELETE_ONE, this.item.id)
-        })
+        input.addEventListener("click", this.handleUpdateStatus)
+        deleteBtn.addEventListener("click", this.handleDelete)
 
         return container
     }

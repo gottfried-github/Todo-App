@@ -11,11 +11,31 @@ export default class Controls extends Component {
         super()
 
         this.counters = new Counters()
+        this.filterActiveClass = "active"
 
         this.el = this.content()
 
         EventEmitter.subscribe(Events.STORAGE_ITEMS_UPDATED, this.render)
         EventEmitter.subscribe(Events.STORAGE_FILTER_UPDATED, this.render)
+    }
+
+    handleDeleteDone = () => {
+        EventEmitter.emit(Events.ITEM_DELETE_DONE)
+    }
+
+    handleShowAll = ev => {
+        if (ev.target.classList.contains(this.filterActiveClass)) return
+        EventEmitter.emit(Events.SET_FILTER, "all")
+    }
+
+    handleShowDone = ev => {
+        if (ev.target.classList.contains(this.filterActiveClass)) return
+        EventEmitter.emit(Events.SET_FILTER, "done")
+    }
+
+    handleShowNotDone = ev => {
+        if (ev.target.classList.contains(this.filterActiveClass)) return
+        EventEmitter.emit(Events.SET_FILTER, "notDone")
     }
 
     content() {
@@ -24,7 +44,7 @@ export default class Controls extends Component {
         const container = createElement("div", null, ["controls"])
         const containerFilters = createElement("div", null, ["filters"])
         
-        const filterClass = "filter", filterActiveClass = "active"
+        const filterClass = "filter"
 
         const deleteDoneEl = createElement("button", null, null, "clear completed")
         const showAllEl = createElement("button", null, [filterClass], "all")
@@ -32,28 +52,17 @@ export default class Controls extends Component {
         const showNotDoneEl = createElement("button", null, [filterClass], "active")
 
         if ('all' === Store.getFilter()) {
-            showAllEl.classList.add(filterActiveClass)
+            showAllEl.classList.add(this.filterActiveClass)
         } else if ('done' === Store.getFilter()) {
-            showDoneEl.classList.add(filterActiveClass)
+            showDoneEl.classList.add(this.filterActiveClass)
         } else {
-            showNotDoneEl.classList.add(filterActiveClass)
+            showNotDoneEl.classList.add(this.filterActiveClass)
         }
 
-        deleteDoneEl.addEventListener("click", () => {
-            EventEmitter.emit(Events.ITEM_DELETE_DONE)
-        })
-
-        showAllEl.addEventListener("click", makeFilterCb(() => {
-            EventEmitter.emit(Events.SET_FILTER, "all")
-        }, filterActiveClass))
-
-        showDoneEl.addEventListener("click", makeFilterCb(() => {
-            EventEmitter.emit(Events.SET_FILTER, "done")
-        }, filterActiveClass))
-
-        showNotDoneEl.addEventListener("click", makeFilterCb(() => {
-            EventEmitter.emit(Events.SET_FILTER, "notDone")
-        }, filterActiveClass))
+        deleteDoneEl.addEventListener("click", this.handleDeleteDone)
+        showAllEl.addEventListener("click", this.handleShowAll)
+        showDoneEl.addEventListener("click", this.handleShowDone)
+        showNotDoneEl.addEventListener("click", this.handleShowNotDone)
 
         containerFilters.append(showAllEl, showDoneEl, showNotDoneEl)
         container.append(this.counters.el, containerFilters, deleteDoneEl)
