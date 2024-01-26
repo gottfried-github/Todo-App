@@ -38,7 +38,7 @@ export default class Controls extends Component {
         EventEmitter.emit(Events.SET_FILTER, "notDone")
     }
 
-    content() {
+    content = () => {
         if (Store.getCount("all") === 0) return createElement("div")
         
         const container = createElement("div", null, ["controls"])

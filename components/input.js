@@ -10,7 +10,7 @@ export default class Input extends Component {
         this.el = this.content()
     }
 
-    handleSubmit(ev) {
+    handleSubmit = (ev) => {
         // for .isComposing see https://developer.mozilla.org/en-US/docs/Web/API/Element/keyup_event
         if (ev.isComposing || ev.code !== "Enter") return
 
@@ -18,7 +18,7 @@ export default class Input extends Component {
         ev.currentTarget.value = ""
     }
 
-    content() {
+    content = () => {
         const inputEl = createElement("input", null, ["add"])
 
         inputEl.setAttribute("type", "text")

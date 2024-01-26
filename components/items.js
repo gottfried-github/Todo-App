@@ -16,7 +16,7 @@ export default class Items extends Component {
         EventEmitter.subscribe(Events.STORAGE_FILTER_UPDATED, this.render)
     }
 
-    content() {
+    content = () => {
         const container = createElement("ul", null, ["items"])
 
         const itemsEls = Store.getItems().map(item => new Item(item).el)

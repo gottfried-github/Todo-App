@@ -22,7 +22,7 @@ export default class Item extends Component {
         EventEmitter.emit(Events.ITEM_DELETE_ONE, this.item.id)     
     }
 
-    content() {
+    content = () => {
         const container = createElement("li", null, ["item"])
         const containerInput = createElement("div", null, ["input-container"])
         const input = createElement("input", this.item.id)

@@ -9,11 +9,11 @@ export default class Counters extends Component {
         super()
 
         this.el = this.content()
-        
+
         EventEmitter.subscribe(Events.STORAGE_ITEMS_UPDATED, this.render)
     }
 
-    content() {
+    content = () => {
         const counterClass = "counter"
 
         const container = createElement("div")
