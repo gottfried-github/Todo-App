@@ -36,6 +36,7 @@ export class Store {
 
         EventEmitter.subscribe(Events.ITEM_APPEND_ONE, this._append)
         EventEmitter.subscribe(Events.ITEM_UPDATE_STATUS_ONE, this._updateStatus)
+        EventEmitter.subscribe(Events.ITEM_UPDATE_LABEL_ONE, this._updateLabel)
         EventEmitter.subscribe(Events.ITEM_DELETE_ONE, this._delete)
         EventEmitter.subscribe(Events.ITEM_DELETE_DONE, this._deleteDone)
         EventEmitter.subscribe(Events.SET_FILTER, this._setFilter)
@@ -58,6 +59,18 @@ export class Store {
             if (id === item.id) {
                 return {
                     ...item, done: !item.done
+                }
+            }
+
+            return item
+        })
+    }
+
+    _updateLabel = ({id, label}) => {
+        this.state.items = this.state.items.map(item => {
+            if (id === item.id) {
+                return {
+                    ...item, label
                 }
             }
 

@@ -10,16 +10,32 @@ export default class Items extends Component {
     constructor() {
         super()
 
+        this.editingId = null
+
         this.el = this.content()
 
         EventEmitter.subscribe(Events.STORAGE_ITEMS_UPDATED, this.render)
         EventEmitter.subscribe(Events.STORAGE_FILTER_UPDATED, this.render)
     }
 
+    handleEditing = (itemId) => {
+        if (!this.editingId) {
+            this.editingId = itemId
+        } else if (this.editingId === itemId) {
+            this.editingId = null
+        } else {
+            this.editingId = itemId
+        }
+
+        this.render()
+    }
+
     content = () => {
         const container = createElement("ul", null, ["items"])
 
-        const itemsEls = Store.getItems().map(item => new Item(item).el)
+        const itemsEls = Store.getItems().map(item => 
+            new Item(item, this.editingId === item.id, this.handleEditing).el
+        )
 
         container.append(...itemsEls)
 

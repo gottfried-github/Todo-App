@@ -4,10 +4,12 @@ import {Component, createElement} from "../lib/helpers.js"
 import Events from "../events.js"
 
 export default class Item extends Component {
-    constructor(item) {
+    constructor(item, isEditing, handleEditCb) {
         super()
 
         this.item = item
+        this.isEditing = isEditing
+        this.handleEditCb = handleEditCb
 
         this.el = this.content()
         
@@ -22,22 +24,52 @@ export default class Item extends Component {
         EventEmitter.emit(Events.ITEM_DELETE_ONE, this.item.id)     
     }
 
+    handleEdit = () => {
+        this.handleEditCb(this.item.id)
+    }
+
+    handleSubmitLabel = (ev) => {
+        // for .isComposing see https://developer.mozilla.org/en-US/docs/Web/API/Element/keyup_event
+        if (ev.isComposing || ev.code !== "Enter") return
+
+        EventEmitter.emit(Events.ITEM_UPDATE_LABEL_ONE, {
+            id: this.item.id, 
+            label: ev.target.value
+        })
+
+        this.handleEdit()
+    }
+
     content = () => {
         const container = createElement("li", null, ["item"])
         const containerInput = createElement("div", null, ["input-container"])
-        const input = createElement("input", this.item.id)
-        const label = createElement("label", null, null, this.item.label)
+        const inputCheckbox = createElement("input", this.item.id)
+
+        let label = null 
+        
+        if (this.isEditing) {
+            label = createElement("input", null, null)
+            label.setAttribute("type", "text")
+            label.value = this.item.label
+
+            label.addEventListener("keyup", this.handleSubmitLabel)
+        } else {
+            label = createElement("label", null, null, this.item.label)
+            label.setAttribute("for", inputCheckbox.id)
+            if (this.item.done) label.classList.add("checked")
+        }
+
+        const editBtn = createElement("button", null, ["edit"], "edit")
         const deleteBtn = createElement("button", null, ["delete"], "delete")
 
-        input.setAttribute("type", "checkbox")
-        input.checked = this.item.done
-        label.setAttribute("for", input.id)
-        if (this.item.done) label.classList.add("checked")
+        inputCheckbox.setAttribute("type", "checkbox")
+        inputCheckbox.checked = this.item.done
 
-        containerInput.append(input, label)
-        container.append(containerInput, deleteBtn)
+        containerInput.append(inputCheckbox, label)
+        container.append(containerInput, editBtn, deleteBtn)
         
-        input.addEventListener("click", this.handleUpdateStatus)
+        inputCheckbox.addEventListener("click", this.handleUpdateStatus)
+        editBtn.addEventListener("click", this.handleEdit)
         deleteBtn.addEventListener("click", this.handleDelete)
 
         return container
