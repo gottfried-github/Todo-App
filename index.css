@@ -26,7 +26,7 @@ button:hover {
 }
 
 button.active, button:hover {
-    border: 1px solid rgba(0, 0, 0, 0.5);
+    background-color: #b3e9f2;
 }
 
 .container {
@@ -42,17 +42,18 @@ button.active, button:hover {
     font-size: 0.875rem;
 
     background-color: #d3f1f3;
+    border-radius: 12px;
     box-shadow: 2px 4px 8px 0px rgba(86, 100, 104, 0.16);
 }
 
-.add {
+.add-form .add {
     width: 100%;
     padding: 8px 8px;
 
     border: none;
 }
 
-.add-btn {
+.add-form .add-btn {
     background-color: #b3e9f2;
 }
 
@@ -76,6 +77,7 @@ button.active, button:hover {
 }
 
 .controls .delete-done {
+    font-weight: 800;
     color: #d34463;
 }
 
@@ -98,6 +100,7 @@ button.active, button:hover {
     margin-bottom: 8px;
 
     background-color: #c1e3ef;
+    border-radius: 5px;
 }
 
 .item .input-container {
