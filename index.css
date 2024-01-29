@@ -61,6 +61,7 @@ button.active, button:hover {
     padding: 8px 8px;
 
     border: none;
+    border-radius: 5px;
 }
 
 .add-form .add-btn {

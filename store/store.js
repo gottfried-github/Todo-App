@@ -1,8 +1,15 @@
 import EventEmitter from '../lib/event-emitter.js'
 import Events from '../events.js'
-import {Item} from '../lib/helpers.js'
 
 const FILTERS = ["all", "done", "notDone"]
+
+class Item {
+    constructor(label) {
+        this.id = new Date()
+        this.done = false
+        this.label = label
+    }
+}
 
 export class Store {
     constructor() {
