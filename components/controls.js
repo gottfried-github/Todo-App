@@ -44,7 +44,7 @@ export default class Controls extends Component {
         
         const filterClass = "filter"
 
-        const deleteDoneEl = createElement("button", null, null, "clear completed")
+        const deleteDoneEl = createElement("button", null, ["delete-done"], "clear completed")
         const showAllEl = createElement("button", null, [filterClass], "all")
         const showDoneEl = createElement("button", null, [filterClass], "completed")
         const showNotDoneEl = createElement("button", null, [filterClass], "active")

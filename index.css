@@ -40,7 +40,7 @@ button.active, button:hover {
 
     font-size: 0.875rem;
 
-    background-color: white;
+    background-color: #d3f1f3;
     box-shadow: 2px 4px 8px 0px rgba(86, 100, 104, 0.16);
 }
 
@@ -50,6 +50,10 @@ button.active, button:hover {
 
     border: none;
     border-bottom: 1px solid #E6E6E6;
+}
+
+.add-btn {
+    background-color: #b3e9f2;
 }
 
 .controls {
@@ -64,9 +68,17 @@ button.active, button:hover {
     border-bottom: 1px solid #E6E6E6;
 }
 
+.controls .counter {
+    color: #589054;
+}
+
 .controls .filters {
     display: flex;
     column-gap: 2px;
+}
+
+.controls .delete-done {
+    color: #d34463;
 }
 
 .items {
@@ -86,6 +98,7 @@ button.active, button:hover {
 
     padding: 8px 8px;
 
+    background-color: #c1e3ef;
     border-bottom: 1px solid #E6E6E6;
 }
 
