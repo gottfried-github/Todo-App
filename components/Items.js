@@ -7,36 +7,36 @@ import Events from "../events.js"
 import Item from "./Item.js"
 
 export default class Items extends Component {
-    constructor() {
-        super()
-
-        this.editingId = null
-
-        EventEmitter.subscribe(Events.STORAGE_ITEMS_UPDATED, this.render)
-        EventEmitter.subscribe(Events.STORAGE_FILTER_UPDATED, this.render)
+  constructor() {
+    super()
+    
+    this.editingId = null
+    
+    EventEmitter.subscribe(Events.STORAGE_ITEMS_UPDATED, this.render)
+    EventEmitter.subscribe(Events.STORAGE_FILTER_UPDATED, this.render)
+  }
+  
+  handleEditing = (itemId) => {
+    if (!this.editingId) {
+      this.editingId = itemId
+    } else if (this.editingId === itemId) {
+      this.editingId = null
+    } else {
+      this.editingId = itemId
     }
-
-    handleEditing = (itemId) => {
-        if (!this.editingId) {
-            this.editingId = itemId
-        } else if (this.editingId === itemId) {
-            this.editingId = null
-        } else {
-            this.editingId = itemId
-        }
-
-        this.render()
+    
+    this.render()
+  }
+  
+  content = () => {
+    const container = createElement("ul", null, ["items"])
+    
+    const itemsEls = Store.getItems().map(item => 
+      new Item(item, this.editingId === item.id, this.handleEditing).render()
+      )
+      
+      container.append(...itemsEls)
+      
+      return container
     }
-
-    content = () => {
-        const container = createElement("ul", null, ["items"])
-
-        const itemsEls = Store.getItems().map(item => 
-            new Item(item, this.editingId === item.id, this.handleEditing).render()
-        )
-
-        container.append(...itemsEls)
-
-        return container
-    }
-}
+  }
