@@ -34,9 +34,10 @@ button.active, button:hover {
     grid-template-rows: auto auto 1fr;
 
     width: 650px;
-    height: 650px;
+    max-height: 650px;
     
     margin: auto;
+    padding: 16px 45px;
 
     font-size: 0.875rem;
 
@@ -49,7 +50,6 @@ button.active, button:hover {
     padding: 8px 8px;
 
     border: none;
-    border-bottom: 1px solid #E6E6E6;
 }
 
 .add-btn {
@@ -64,8 +64,6 @@ button.active, button:hover {
     padding: 8px 8px;
 
     color: rgba(0,0,0, 0.5);
-
-    border-bottom: 1px solid #E6E6E6;
 }
 
 .controls .counter {
@@ -97,9 +95,9 @@ button.active, button:hover {
     justify-content: space-between;
 
     padding: 8px 8px;
+    margin-bottom: 8px;
 
     background-color: #c1e3ef;
-    border-bottom: 1px solid #E6E6E6;
 }
 
 .item .input-container {
