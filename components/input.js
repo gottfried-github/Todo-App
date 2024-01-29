@@ -13,6 +13,8 @@ export default class Input extends Component {
     handleSubmit = (ev) => {
         ev.preventDefault()
         
+        if (!this.inputEl.value.length) return
+
         EventEmitter.emit(Events.ITEM_APPEND_ONE, this.inputEl.value)
         this.state.value = ""
     }
