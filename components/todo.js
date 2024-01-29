@@ -12,18 +12,12 @@ export default class Todo extends Component {
         this.input = new Input()
         this.items = new Items()
         this.controls = new Controls()
-
-        this.el = this.content()
     }
 
     content = () => {
         const container = createElement("div", null, ["container"])
 
-        if (this.controls.el) {
-            container.append(this.input.el, this.controls.el, this.items.el)
-        } else {
-            container.append(this.input.el, this.items.el)
-        }
+        container.append(this.input.render(), this.controls.render(), this.items.render())
 
         return container
     }

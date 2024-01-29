@@ -10,8 +10,6 @@ export default class Item extends Component {
         this.item = item
         this.isEditing = isEditing
         this.handleEditCb = handleEditCb
-
-        this.el = this.content()
         
         EventEmitter.subscribe(Events.STORAGE_ITEMS_UPDATED, this.render)
     }

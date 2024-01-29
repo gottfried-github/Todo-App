@@ -4,7 +4,7 @@ import Events from "./events.js"
 import Todo from "./components/todo.js"
 
 function render() {
-    const todo = new Todo().el
+    const todo = new Todo().render()
 
     document.querySelector(".app").replaceChildren(todo)
 }

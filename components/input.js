@@ -6,8 +6,6 @@ import Events from '../events.js'
 export default class Input extends Component {
     constructor() {
         super()
-
-        this.el = this.content()
     }
 
     handleSubmit = (ev) => {

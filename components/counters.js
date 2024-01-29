@@ -8,8 +8,6 @@ export default class Counters extends Component {
     constructor() {
         super()
 
-        this.el = this.content()
-
         EventEmitter.subscribe(Events.STORAGE_ITEMS_UPDATED, this.render)
     }
 

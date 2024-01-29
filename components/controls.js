@@ -13,8 +13,6 @@ export default class Controls extends Component {
         this.counters = new Counters()
         this.filterActiveClass = "active"
 
-        this.el = this.content()
-
         EventEmitter.subscribe(Events.STORAGE_ITEMS_UPDATED, this.render)
         EventEmitter.subscribe(Events.STORAGE_FILTER_UPDATED, this.render)
     }
@@ -65,7 +63,7 @@ export default class Controls extends Component {
         showNotDoneEl.addEventListener("click", this.handleShowNotDone)
 
         containerFilters.append(showAllEl, showDoneEl, showNotDoneEl)
-        container.append(this.counters.el, containerFilters, deleteDoneEl)
+        container.append(this.counters.render(), containerFilters, deleteDoneEl)
 
         return container
     }

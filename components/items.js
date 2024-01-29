@@ -12,8 +12,6 @@ export default class Items extends Component {
 
         this.editingId = null
 
-        this.el = this.content()
-
         EventEmitter.subscribe(Events.STORAGE_ITEMS_UPDATED, this.render)
         EventEmitter.subscribe(Events.STORAGE_FILTER_UPDATED, this.render)
     }
@@ -34,7 +32,7 @@ export default class Items extends Component {
         const container = createElement("ul", null, ["items"])
 
         const itemsEls = Store.getItems().map(item => 
-            new Item(item, this.editingId === item.id, this.handleEditing).el
+            new Item(item, this.editingId === item.id, this.handleEditing).render()
         )
 
         container.append(...itemsEls)
