@@ -7,19 +7,25 @@ export default class Input extends Component {
   constructor() {
     super()
 
+    this.value = ''
     this.state.value = ''
+  }
+
+  handleInputChange = (ev) => {
+    this.value = ev.target.value
   }
 
   handleSubmit = (ev) => {
     ev.preventDefault()
 
-    if (!this.inputEl.value.length) return
+    if (!this.value.length) return
 
     EventEmitter.emit({
       type: Events.ITEM_APPEND_ONE,
-      payload: this.inputEl.value,
+      payload: this.value,
     })
 
+    this.value = ''
     this.state.value = ''
   }
 
@@ -28,12 +34,11 @@ export default class Input extends Component {
     const inputEl = createElement('input', null, ['add'])
     const btnEl = createElement('button', null, ['add-btn'], 'submit')
 
-    this.inputEl = inputEl
-
     inputEl.setAttribute('type', 'text')
     inputEl.value = this.state.value
     inputEl.placeholder = 'What needs to be done?'
 
+    inputEl.addEventListener('input', this.handleInputChange)
     btnEl.addEventListener('click', this.handleSubmit)
 
     formEl.append(inputEl, btnEl)
