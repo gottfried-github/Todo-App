@@ -1,10 +1,7 @@
-import EventEmitter from "./lib/event-emitter.js"
-import Events from "./events.js"
-
-import Todo from "./components/todo.js"
+import Main from "./components/Main.js"
 
 function render() {
-    const todo = new Todo().render()
+    const todo = new Main().render()
 
     document.querySelector(".app").replaceChildren(todo)
 }

@@ -4,7 +4,7 @@ import {Component, createElement} from "../lib/helpers.js"
 
 import Events from "../events.js"
 
-import Item from "./item.js"
+import Item from "./Item.js"
 
 export default class Items extends Component {
     constructor() {

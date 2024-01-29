@@ -4,7 +4,7 @@ import {Component, createElement, makeFilterCb} from "../lib/helpers.js"
 
 import Events from "../events.js"
 
-import Counters from "./counters.js"
+import Counters from "./Counters.js"
 
 export default class Controls extends Component {
     constructor() {

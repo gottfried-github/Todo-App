@@ -1,11 +1,10 @@
-import Store from "../store/store.js"
 import {Component, createElement} from "../lib/helpers.js"
 
-import Input from "./input.js"
-import Items from "./items.js"
-import Controls from "./controls.js"
+import Input from "./Input.js"
+import Items from "./Items.js"
+import Controls from "./Controls.js"
 
-export default class Todo extends Component {
+export default class Main extends Component {
     constructor() {
         super()
 
