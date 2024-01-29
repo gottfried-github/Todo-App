@@ -1,25 +1,16 @@
-import EventEmitter from "./lib/event-emitter.js"
-import Events from "./events.js"
-
-import Todo from "./components/todo.js"
+import Main from './components/Main.js'
 
 function render() {
-    const todo = new Todo().render()
+  const todo = new Main().render()
 
-    document.querySelector(".app").replaceChildren(todo)
+  document.querySelector('.app').replaceChildren(todo)
 }
 
 /* Main */
 function main() {
-    EventEmitter.subscribe(Events.ITEM_APPEND_ONE, render)
-    EventEmitter.subscribe(Events.ITEM_UPDATE_STATUS_ONE, render)
-    EventEmitter.subscribe(Events.ITEM_DELETE_ONE, render)
-    EventEmitter.subscribe(Events.ITEM_DELETE_DONE, render)
-    EventEmitter.subscribe(Events.SET_FILTER, render)
-
-    render()
+  render()
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    main()
+document.addEventListener('DOMContentLoaded', () => {
+  main()
 })

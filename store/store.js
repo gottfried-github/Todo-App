@@ -1,114 +1,150 @@
 import EventEmitter from '../lib/event-emitter.js'
 import Events from '../events.js'
-import {Item} from '../lib/helpers.js'
 
-const FILTERS = ["all", "done", "notDone"]
+const FILTERS = ['all', 'done', 'notDone']
+
+class Item {
+  constructor(label) {
+    this.id = new Date()
+    this.done = false
+    this.label = label
+  }
+}
 
 export class Store {
-    constructor() {
-        this._subscriptions = {}
+  constructor() {
+    this.init()
+  }
 
-        this.state = {
-            items: [],
-            filter: "all"
-        }
+  init = () => {
+    this.state = new Proxy(
+      {
+        items: [],
+        filter: 'all',
+      },
+      {
+        set(target, propName, v) {
+          switch (propName) {
+            case 'items':
+              target[propName] = v
+              EventEmitter.emit({ type: Events.STORAGE_ITEMS_UPDATED })
+              break
 
-        this.init()
-    }
-
-    init() {
-        this._subscriptions._append = this._append.bind(this)
-        this._subscriptions._updateStatus = this._updateStatus.bind(this)
-        this._subscriptions._delete = this._delete.bind(this)
-        this._subscriptions._deleteDone = this._deleteDone.bind(this)
-        this._subscriptions._setFilter = this._setFilter.bind(this)
-
-        EventEmitter.subscribe(Events.ITEM_APPEND_ONE, this._subscriptions._append)
-        EventEmitter.subscribe(Events.ITEM_UPDATE_STATUS_ONE, this._subscriptions._updateStatus)
-        EventEmitter.subscribe(Events.ITEM_DELETE_ONE, this._subscriptions._delete)
-        EventEmitter.subscribe(Events.ITEM_DELETE_DONE, this._subscriptions._deleteDone)
-        EventEmitter.subscribe(Events.SET_FILTER, this._subscriptions._setFilter)
-    }
-
-    unsubscribe() {
-        EventEmitter.unsubscribe(Events.ITEM_APPEND_ONE, this._subscriptions._append)
-        EventEmitter.unsubscribe(Events.ITEM_UPDATE_STATUS_ONE, this._subscriptions._updateStatus)
-        EventEmitter.unsubscribe(Events.ITEM_DELETE_ONE, this._subscriptions._delete)
-        EventEmitter.unsubscribe(Events.ITEM_DELETE_DONE, this._subscriptions._deleteDone)
-        EventEmitter.unsubscribe(Events.SET_FILTER, this._subscriptions._setFilter)
-    }
-
-    _append(label) {
-        this.state.items.push(new Item(label, false))
-    }
-
-    _updateStatus({id, done}) {
-        this.state.items = this.state.items.map(item => {
-            if (id === item.id) {
-                return {
-                    ...item, done
-                }
-            }
-
-            return item
-        })
-    }
-    
-    _delete(id) {
-        this.state.items = this.state.items.filter(item => id !== item.id)
-    }
-    
-    _deleteDone() {
-        this.state.items = this.state.items.filter(item => !item.done)
-    }
-
-    _setFilter(filter) {
-        if (!FILTERS.includes(filter)) {
-            throw new Error("invalid filter name")
-        }
-
-        this.state.filter = filter
-    }
-
-    getCount(filter) {
-        if (!filter) return this.getItems().length
-
-        switch (filter) {
-            case "all":
-                return this.state.items.length
-            
-            case "done":
-                return this.state.items.filter(item => item.done).length
-
-            case "notDone":
-                return this.state.items.filter(item => !item.done).length
+            case 'filter':
+              target[propName] = v
+              EventEmitter.emit({ type: Events.STORAGE_FILTER_UPDATED })
+              break
 
             default:
-                throw new Error("invalid filter value in Store's state")
+              break
+          }
+
+          return true
+        },
+      }
+    )
+
+    EventEmitter.subscribe(Events.ITEM_APPEND_ONE, this._append)
+    EventEmitter.subscribe(Events.ITEM_UPDATE_STATUS_ONE, this._updateStatus)
+    EventEmitter.subscribe(Events.ITEM_UPDATE_LABEL_ONE, this._updateLabel)
+    EventEmitter.subscribe(Events.ITEM_DELETE_ONE, this._delete)
+    EventEmitter.subscribe(Events.ITEM_DELETE_DONE, this._deleteDone)
+    EventEmitter.subscribe(Events.SET_FILTER, this._setFilter)
+  }
+
+  unsubscribe = () => {
+    EventEmitter.unsubscribe(Events.ITEM_APPEND_ONE, this._append)
+    EventEmitter.unsubscribe(Events.ITEM_UPDATE_STATUS_ONE, this._updateStatus)
+    EventEmitter.unsubscribe(Events.ITEM_DELETE_ONE, this._delete)
+    EventEmitter.unsubscribe(Events.ITEM_DELETE_DONE, this._deleteDone)
+    EventEmitter.unsubscribe(Events.SET_FILTER, this._setFilter)
+  }
+
+  _append = (label) => {
+    this.state.items = [...this.state.items, new Item(label, false)]
+  }
+
+  _updateStatus = ({ id }) => {
+    this.state.items = this.state.items.map((item) => {
+      if (id === item.id) {
+        return {
+          ...item,
+          done: !item.done,
         }
-    }
+      }
 
-    getItems(filter) {
-        const _filter = filter || this.state.filter
+      return item
+    })
+  }
 
-        switch (_filter) {
-            case "all":
-                return this.state.items
-            
-            case "done":
-                return this.state.items.filter(item => item.done)
-
-            case "notDone":
-                return this.state.items.filter(item => !item.done)
-
-            default:
-                throw new Error("invalid filter value")
+  _updateLabel = ({ id, label }) => {
+    this.state.items = this.state.items.map((item) => {
+      if (id === item.id) {
+        return {
+          ...item,
+          label,
         }
+      }
+
+      return item
+    })
+  }
+
+  _delete = (id) => {
+    this.state.items = this.state.items.filter((item) => id !== item.id)
+  }
+
+  _deleteDone = () => {
+    this.state.items = this.state.items.filter((item) => !item.done)
+  }
+
+  _setFilter = (filter) => {
+    if (!FILTERS.includes(filter)) {
+      throw new Error('invalid filter name')
     }
 
-    getFilter() {
-        return this.state.filter
+    this.state.filter = filter
+  }
+
+  getCount = (filter) => {
+    if (!filter) return this.getItems().length
+
+    switch (filter) {
+      case 'all':
+        return this.state.items.length
+
+      case 'done':
+        return this.state.items.filter((item) => item.done).length
+
+      case 'notDone':
+        return this.state.items.filter((item) => !item.done).length
+
+      default:
+        throw new Error("invalid filter value in Store's state")
     }
+  }
+
+  getItems = (filter) => {
+    const _filter = filter || this.state.filter
+
+    switch (_filter) {
+      case 'all':
+        return this.state.items
+
+      case 'done':
+        return this.state.items.filter((item) => item.done)
+
+      case 'notDone':
+        return this.state.items.filter((item) => !item.done)
+
+      default:
+        throw new Error('invalid filter value')
+    }
+  }
+
+  getFilter = () => {
+    return this.state.filter
+  }
 }
 
 export default new Store()
