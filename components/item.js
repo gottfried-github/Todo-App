@@ -41,12 +41,12 @@ export default class Item extends Component {
     content = () => {
         const container = createElement("li", null, ["item"])
         const containerInput = createElement("div", null, ["input-container"])
-        const inputCheckbox = createElement("input", this.item.id)
+        const inputCheckbox = createElement("input", this.item.id, ["input-checkbox"])
 
         let label = null 
         
         if (this.isEditing) {
-            label = createElement("input", null, null)
+            label = createElement("input", null, ["input-edit"])
             label.setAttribute("type", "text")
             label.value = this.item.label
 
