@@ -17,12 +17,10 @@ export default class Items extends Component {
   }
 
   handleEditing = (itemId) => {
-    if (!this.state.editingId) {
+    if (!this.state.editingId || this.state.editingId !== itemId) {
       this.state.editingId = itemId
-    } else if (this.state.editingId === itemId) {
-      this.state.editingId = null
     } else {
-      this.state.editingId = itemId
+      this.state.editingId = null
     }
   }
 
