@@ -15,7 +15,11 @@ export default class Input extends Component {
         
         if (!this.inputEl.value.length) return
 
-        EventEmitter.emit(Events.ITEM_APPEND_ONE, this.inputEl.value)
+        EventEmitter.emit({
+            type: Events.ITEM_APPEND_ONE, 
+            payload: this.inputEl.value
+        })
+        
         this.state.value = ""
     }
 

@@ -25,12 +25,12 @@ export class Store {
                 switch(propName) {
                     case "items":
                         target[propName] = v
-                        EventEmitter.emit(Events.STORAGE_ITEMS_UPDATED)
+                        EventEmitter.emit({type: Events.STORAGE_ITEMS_UPDATED})
                         break
 
                     case "filter":
                         target[propName] = v
-                        EventEmitter.emit(Events.STORAGE_FILTER_UPDATED)
+                        EventEmitter.emit({type: Events.STORAGE_FILTER_UPDATED})
                         break
 
                     default:

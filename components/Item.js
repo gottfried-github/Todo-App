@@ -15,11 +15,17 @@ export default class Item extends Component {
     }
 
     handleUpdateStatus = () => {
-        EventEmitter.emit(Events.ITEM_UPDATE_STATUS_ONE, {id: this.item.id})
+        EventEmitter.emit({
+            type: Events.ITEM_UPDATE_STATUS_ONE, 
+            payload: {id: this.item.id}
+        })
     }
 
     handleDelete = () => {
-        EventEmitter.emit(Events.ITEM_DELETE_ONE, this.item.id)     
+        EventEmitter.emit({
+            type: Events.ITEM_DELETE_ONE,
+            payload: this.item.id
+        }) 
     }
 
     handleEdit = () => {
@@ -30,9 +36,12 @@ export default class Item extends Component {
         // for .isComposing see https://developer.mozilla.org/en-US/docs/Web/API/Element/keyup_event
         if (ev.isComposing || ev.code !== "Enter") return
 
-        EventEmitter.emit(Events.ITEM_UPDATE_LABEL_ONE, {
-            id: this.item.id, 
-            label: ev.target.value
+        EventEmitter.emit({
+            type: Events.ITEM_UPDATE_LABEL_ONE, 
+            payload: {
+                id: this.item.id, 
+                label: ev.target.value
+            }
         })
 
         this.handleEdit()

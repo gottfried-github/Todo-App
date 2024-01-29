@@ -1,6 +1,6 @@
 import EventEmitter from "../lib/event-emitter.js"
 import Store from "../store/store.js"
-import {Component, createElement, makeFilterCb} from "../lib/helpers.js"
+import {Component, createElement} from "../lib/helpers.js"
 
 import Events from "../events.js"
 
@@ -18,22 +18,31 @@ export default class Controls extends Component {
     }
 
     handleDeleteDone = () => {
-        EventEmitter.emit(Events.ITEM_DELETE_DONE)
+        EventEmitter.emit({type: Events.ITEM_DELETE_DONE})
     }
 
     handleShowAll = ev => {
         if (ev.target.classList.contains(this.filterActiveClass)) return
-        EventEmitter.emit(Events.SET_FILTER, "all")
+        EventEmitter.emit({
+            type: Events.SET_FILTER, 
+            payload: "all"
+        })
     }
 
     handleShowDone = ev => {
         if (ev.target.classList.contains(this.filterActiveClass)) return
-        EventEmitter.emit(Events.SET_FILTER, "done")
+        EventEmitter.emit({
+            type: Events.SET_FILTER, 
+            payload: "done"
+        })
     }
 
     handleShowNotDone = ev => {
         if (ev.target.classList.contains(this.filterActiveClass)) return
-        EventEmitter.emit(Events.SET_FILTER, "notDone")
+        EventEmitter.emit({
+            type: Events.SET_FILTER, 
+            payload: "notDone"
+        })
     }
 
     content = () => {
