@@ -11,21 +11,26 @@ export default class Input extends Component {
     }
 
     handleSubmit = (ev) => {
-        // for .isComposing see https://developer.mozilla.org/en-US/docs/Web/API/Element/keyup_event
-        if (ev.isComposing || ev.code !== "Enter") return
-
-        EventEmitter.emit(Events.ITEM_APPEND_ONE, ev.currentTarget.value)
-        ev.currentTarget.value = ""
+        ev.preventDefault()
+        
+        EventEmitter.emit(Events.ITEM_APPEND_ONE, this.inputEl.value)
+        this.inputEl.value = ""
     }
 
     content = () => {
+        const formEl = createElement("form", null, ["add-form"])
         const inputEl = createElement("input", null, ["add"])
+        const btnEl = createElement("button", null, ["add-btn"], "submit")
+
+        this.inputEl = inputEl
 
         inputEl.setAttribute("type", "text")
-        inputEl.placeholder = "What needs to be done"
+        inputEl.placeholder = "What needs to be done?"
 
-        inputEl.addEventListener("keyup", this.handleSubmit)
+        btnEl.addEventListener("click", this.handleSubmit)
 
-        return inputEl
+        formEl.append(inputEl, btnEl)
+
+        return formEl
     }
 }
