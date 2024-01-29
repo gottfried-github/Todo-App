@@ -6,13 +6,15 @@ import Events from '../events.js'
 export default class Input extends Component {
     constructor() {
         super()
+
+        this.state.value = ""
     }
 
     handleSubmit = (ev) => {
         ev.preventDefault()
         
         EventEmitter.emit(Events.ITEM_APPEND_ONE, this.inputEl.value)
-        this.inputEl.value = ""
+        this.state.value = ""
     }
 
     content = () => {
@@ -23,6 +25,7 @@ export default class Input extends Component {
         this.inputEl = inputEl
 
         inputEl.setAttribute("type", "text")
+        inputEl.value = this.state.value
         inputEl.placeholder = "What needs to be done?"
 
         btnEl.addEventListener("click", this.handleSubmit)
