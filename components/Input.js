@@ -35,8 +35,14 @@ export default class Input extends Component {
     this.state.value = ''
   }
 
+  componentWillUpdate() {
+    this.inputEl.removeEventListener('blur', this.handleInputBlur)
+  }
+
   componentDidUpdate() {
-    if (this.isInputFocused) this.inputEl.focus()
+    if (this.isInputFocused) {
+      this.inputEl.focus()
+    }
   }
 
   content = () => {
