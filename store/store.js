@@ -17,20 +17,10 @@ export class Store {
   }
 
   init = () => {
-    this.state = new Proxy(
-      {
-        items: [],
-        filter: 'all',
-      },
-      {
-        set(target, propName, v) {
-          target[propName] = v
-          EventEmitter.emit({ type: Events.STORAGE_UPDATED })
-
-          return true
-        },
-      }
-    )
+    this.state = {
+      items: [],
+      filter: 'all',
+    }
 
     EventEmitter.subscribe(Events.ITEM_APPEND_ONE, this._append)
     EventEmitter.subscribe(Events.ITEM_UPDATE_STATUS_ONE, this._updateStatus)
@@ -48,42 +38,71 @@ export class Store {
     EventEmitter.unsubscribe(Events.SET_FILTER, this._setFilter)
   }
 
+  _setState(state) {
+    if (
+      (!state.filter || this.state.filter === state.filter) &&
+      (!state.items || this.state.items === state.items)
+    ) {
+      return
+    } else {
+      if (state.filter && this.state.filter !== state.filter) {
+        this.state.filter = state.filter
+      }
+
+      if (state.items && this.state.items !== state.items) {
+        this.state.items = state.items
+      }
+
+      EventEmitter.emit({ type: Events.STORAGE_UPDATED })
+    }
+  }
+
   _append = (label) => {
-    this.state.items = [...this.state.items, new Item(label, false)]
+    this._setState({
+      items: [...this.state.items, new Item(label, false)],
+    })
   }
 
   _updateStatus = ({ id }) => {
-    this.state.items = this.state.items.map((item) => {
-      if (id === item.id) {
-        return {
-          ...item,
-          done: !item.done,
+    this._setState({
+      items: this.state.items.map((item) => {
+        if (id === item.id) {
+          return {
+            ...item,
+            done: !item.done,
+          }
         }
-      }
 
-      return item
+        return item
+      }),
     })
   }
 
   _updateLabel = ({ id, label }) => {
-    this.state.items = this.state.items.map((item) => {
-      if (id === item.id) {
-        return {
-          ...item,
-          label,
+    this._setState({
+      items: this.state.items.map((item) => {
+        if (id === item.id) {
+          return {
+            ...item,
+            label,
+          }
         }
-      }
 
-      return item
+        return item
+      }),
     })
   }
 
   _delete = (id) => {
-    this.state.items = this.state.items.filter((item) => id !== item.id)
+    this._setState({
+      items: this.state.items.filter((item) => id !== item.id),
+    })
   }
 
   _deleteDone = () => {
-    this.state.items = this.state.items.filter((item) => !item.done)
+    this._setState({
+      items: this.state.items.filter((item) => !item.done),
+    })
   }
 
   _setFilter = (filter) => {
@@ -91,7 +110,7 @@ export class Store {
       throw new Error('invalid filter name')
     }
 
-    this.state.filter = filter
+    this._setState({ filter })
   }
 
   getCount = (filter) => {
