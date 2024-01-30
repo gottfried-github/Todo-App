@@ -1,7 +1,7 @@
-import EventEmitter from '../lib/event-emitter.js'
-import { Component, createElement } from '../lib/helpers.js'
+import EventEmitter from '../lib/event-emitter'
+import { Component, createElement } from '../lib/helpers'
 
-import Events from '../events.js'
+import Events from '../events'
 
 export default class Input extends Component {
   handleSubmit = ev => {

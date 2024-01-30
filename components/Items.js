@@ -1,10 +1,10 @@
-import EventEmitter from '../lib/event-emitter.js'
-import Store from '../store/store.js'
-import { Component, createElement } from '../lib/helpers.js'
+import EventEmitter from '../lib/event-emitter'
+import Store from '../store/store'
+import { Component, createElement } from '../lib/helpers'
 
-import Events from '../events.js'
+import Events from '../events'
 
-import Item from './Item.js'
+import Item from './Item'
 
 export default class Items extends Component {
   constructor() {
