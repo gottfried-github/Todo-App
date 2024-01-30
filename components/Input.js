@@ -36,6 +36,8 @@ export default class Input extends Component {
   }
 
   componentWillUpdate() {
+    if (!this.inputEl) return
+
     this.inputEl.removeEventListener('blur', this.handleInputBlur)
   }
 
