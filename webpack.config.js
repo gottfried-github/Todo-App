@@ -1,10 +1,6 @@
-import path from 'path'
-import { fileURLToPath } from 'url'
+const path = require('path')
 
-// https://stackoverflow.com/a/50052194
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
-
-export default {
+module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'index.js',
@@ -38,7 +34,6 @@ export default {
         test: /\.(js)$/,
         exclude: /(node_modules|bower_components)/,
         loader: 'babel-loader',
-        // options: { presets: ['@babel/env'] },
       },
     ],
   },
