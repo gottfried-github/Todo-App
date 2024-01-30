@@ -12,8 +12,7 @@ export default class Items extends Component {
 
     this.state.editingId = null
 
-    EventEmitter.subscribe(Events.STORAGE_ITEMS_UPDATED, this.render)
-    EventEmitter.subscribe(Events.STORAGE_FILTER_UPDATED, this.render)
+    EventEmitter.subscribe(Events.STORAGE_UPDATED, this.render)
   }
 
   handleEditing = (itemId) => {

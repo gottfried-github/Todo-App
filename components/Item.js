@@ -11,7 +11,7 @@ export default class Item extends Component {
     this.isEditing = isEditing
     this.handleEditCb = handleEditCb
 
-    EventEmitter.subscribe(Events.STORAGE_ITEMS_UPDATED, this.render)
+    EventEmitter.subscribe(Events.STORAGE_UPDATED, this.render)
   }
 
   handleUpdateStatus = () => {

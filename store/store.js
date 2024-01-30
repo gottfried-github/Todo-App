@@ -24,20 +24,8 @@ export class Store {
       },
       {
         set(target, propName, v) {
-          switch (propName) {
-            case 'items':
-              target[propName] = v
-              EventEmitter.emit({ type: Events.STORAGE_ITEMS_UPDATED })
-              break
-
-            case 'filter':
-              target[propName] = v
-              EventEmitter.emit({ type: Events.STORAGE_FILTER_UPDATED })
-              break
-
-            default:
-              break
-          }
+          target[propName] = v
+          EventEmitter.emit({ type: Events.STORAGE_UPDATED })
 
           return true
         },

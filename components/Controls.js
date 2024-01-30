@@ -13,8 +13,7 @@ export default class Controls extends Component {
     this.counters = new Counters()
     this.filterActiveClass = 'active'
 
-    EventEmitter.subscribe(Events.STORAGE_ITEMS_UPDATED, this.render)
-    EventEmitter.subscribe(Events.STORAGE_FILTER_UPDATED, this.render)
+    EventEmitter.subscribe(Events.STORAGE_UPDATED, this.render)
   }
 
   handleDeleteDone = () => {
