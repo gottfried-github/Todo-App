@@ -32,7 +32,7 @@ export default class Item extends Component {
     this.handleEditCb(this.item.id)
   }
 
-  handleSubmitLabel = (ev) => {
+  handleSubmitLabel = ev => {
     // for .isComposing see https://developer.mozilla.org/en-US/docs/Web/API/Element/keyup_event
     if (ev.isComposing || ev.code !== 'Enter') return
 

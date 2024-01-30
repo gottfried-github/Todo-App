@@ -4,7 +4,7 @@ import { Component, createElement } from '../lib/helpers.js'
 import Events from '../events.js'
 
 export default class Input extends Component {
-  handleSubmit = (ev) => {
+  handleSubmit = ev => {
     ev.preventDefault()
 
     if (!this.inputEl.value) return

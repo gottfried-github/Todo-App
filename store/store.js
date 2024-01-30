@@ -37,7 +37,7 @@ export function deepEqual(newV, oldV) {
       if (!keysOld.includes(k)) return false
     }
 
-    const equal = keysNew.map((k) => deepEqual(newV[k], oldV[k]))
+    const equal = keysNew.map(k => deepEqual(newV[k], oldV[k]))
 
     return !equal.includes(false)
   } else {
@@ -79,7 +79,7 @@ export class Store {
     EventEmitter.emit({ type: Events.STORAGE_UPDATED })
   }
 
-  _append = (label) => {
+  _append = label => {
     this._setState({
       ...this.state,
       items: [...this.state.items, new Item(label, false)],
@@ -89,7 +89,7 @@ export class Store {
   _updateStatus = ({ id }) => {
     this._setState({
       ...this.state,
-      items: this.state.items.map((item) => {
+      items: this.state.items.map(item => {
         if (id === item.id) {
           return {
             ...item,
@@ -105,7 +105,7 @@ export class Store {
   _updateLabel = ({ id, label }) => {
     this._setState({
       ...this.state,
-      items: this.state.items.map((item) => {
+      items: this.state.items.map(item => {
         if (id === item.id) {
           return {
             ...item,
@@ -118,21 +118,21 @@ export class Store {
     })
   }
 
-  _delete = (id) => {
+  _delete = id => {
     this._setState({
       ...this.state,
-      items: this.state.items.filter((item) => id !== item.id),
+      items: this.state.items.filter(item => id !== item.id),
     })
   }
 
   _deleteDone = () => {
     this._setState({
       ...this.state,
-      items: this.state.items.filter((item) => !item.done),
+      items: this.state.items.filter(item => !item.done),
     })
   }
 
-  _setFilter = (filter) => {
+  _setFilter = filter => {
     if (!FILTERS.includes(filter)) {
       throw new Error('invalid filter name')
     }
@@ -140,7 +140,7 @@ export class Store {
     this._setState({ ...this.state, filter })
   }
 
-  getCount = (filter) => {
+  getCount = filter => {
     if (!filter) return this.getItems().length
 
     switch (filter) {
@@ -148,17 +148,17 @@ export class Store {
         return this.state.items.length
 
       case 'done':
-        return this.state.items.filter((item) => item.done).length
+        return this.state.items.filter(item => item.done).length
 
       case 'notDone':
-        return this.state.items.filter((item) => !item.done).length
+        return this.state.items.filter(item => !item.done).length
 
       default:
         throw new Error("invalid filter value in Store's state")
     }
   }
 
-  getItems = (filter) => {
+  getItems = filter => {
     const _filter = filter || this.state.filter
 
     switch (_filter) {
@@ -166,10 +166,10 @@ export class Store {
         return this.state.items
 
       case 'done':
-        return this.state.items.filter((item) => item.done)
+        return this.state.items.filter(item => item.done)
 
       case 'notDone':
-        return this.state.items.filter((item) => !item.done)
+        return this.state.items.filter(item => !item.done)
 
       default:
         throw new Error('invalid filter value')

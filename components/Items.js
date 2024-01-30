@@ -15,7 +15,7 @@ export default class Items extends Component {
     EventEmitter.subscribe(Events.STORAGE_UPDATED, this.render)
   }
 
-  handleEditing = (itemId) => {
+  handleEditing = itemId => {
     if (!this.state.editingId || this.state.editingId !== itemId) {
       this.state.editingId = itemId
     } else {
@@ -26,7 +26,7 @@ export default class Items extends Component {
   content = () => {
     const container = createElement('ul', null, ['items'])
 
-    const itemsEls = Store.getItems().map((item) =>
+    const itemsEls = Store.getItems().map(item =>
       new Item(item, this.state.editingId === item.id, this.handleEditing).render()
     )
 

@@ -51,13 +51,13 @@ export default class Controls extends Component {
     }
 
     deleteDoneEl.addEventListener('click', this.handleDeleteDone)
-    showAllEl.addEventListener('click', (ev) => {
+    showAllEl.addEventListener('click', ev => {
       this.handleShow(ev, 'all')
     })
-    showDoneEl.addEventListener('click', (ev) => {
+    showDoneEl.addEventListener('click', ev => {
       this.handleShow(ev, 'done')
     })
-    showNotDoneEl.addEventListener('click', (ev) => {
+    showNotDoneEl.addEventListener('click', ev => {
       this.handleShow(ev, 'notDone')
     })
 
