@@ -11,6 +11,9 @@ export default class Item extends Component {
     this.isEditing = isEditing
     this.handleEditCb = handleEditCb
 
+    this.isInputFocused = false
+    this.state.label = this.item.label
+
     EventEmitter.subscribe(Events.STORAGE_UPDATED, this.render)
   }
 
@@ -32,6 +35,16 @@ export default class Item extends Component {
     this.handleEditCb(this.item.id)
   }
 
+  handleBlurLabel = () => {
+    this.isInputFocused = false
+  }
+
+  handleChangeLabel = (ev) => {
+    this.isInputFocused = document.hasFocus(ev.target)
+
+    this.state.label = ev.target.value
+  }
+
   handleSubmitLabel = (ev) => {
     // for .isComposing see https://developer.mozilla.org/en-US/docs/Web/API/Element/keyup_event
     if (ev.isComposing || ev.code !== 'Enter') return
@@ -40,11 +53,23 @@ export default class Item extends Component {
       type: Events.ITEM_UPDATE_LABEL_ONE,
       payload: {
         id: this.item.id,
-        label: ev.target.value,
+        label: this.state.label,
       },
     })
 
     this.handleEdit()
+  }
+
+  componentWillUpdate() {
+    if (!this.label) return
+
+    this.label.removeEventListener('blur', this.handleBlurLabel)
+  }
+
+  componentDidUpdate() {
+    if (this.isInputFocused && this.label) {
+      this.label.focus()
+    }
   }
 
   content = () => {
@@ -57,10 +82,22 @@ export default class Item extends Component {
     if (this.isEditing) {
       label = createElement('input', null, ['input-edit'])
       label.setAttribute('type', 'text')
-      label.value = this.item.label
+      label.value = this.state.label
 
+      this.label = label
+
+      label.addEventListener('blur', this.handleBlurLabel)
+      label.addEventListener('input', this.handleChangeLabel)
       label.addEventListener('keyup', this.handleSubmitLabel)
     } else {
+      if (this.label) {
+        this.label = null
+      }
+
+      if (this.isInputFocused) {
+        this.isInputFocused = false
+      }
+
       label = createElement('label', null, null, this.item.label)
       label.setAttribute('for', inputCheckbox.id)
       if (this.item.done) label.classList.add('checked')
