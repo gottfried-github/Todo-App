@@ -20,27 +20,12 @@ export default class Controls extends Component {
     EventEmitter.emit({ type: Events.ITEM_DELETE_DONE })
   }
 
-  handleShowAll = (ev) => {
+  handleShow = (ev, filter) => {
     if (ev.target.classList.contains(this.filterActiveClass)) return
-    EventEmitter.emit({
-      type: Events.SET_FILTER,
-      payload: 'all',
-    })
-  }
 
-  handleShowDone = (ev) => {
-    if (ev.target.classList.contains(this.filterActiveClass)) return
     EventEmitter.emit({
       type: Events.SET_FILTER,
-      payload: 'done',
-    })
-  }
-
-  handleShowNotDone = (ev) => {
-    if (ev.target.classList.contains(this.filterActiveClass)) return
-    EventEmitter.emit({
-      type: Events.SET_FILTER,
-      payload: 'notDone',
+      payload: filter,
     })
   }
 
@@ -66,9 +51,15 @@ export default class Controls extends Component {
     }
 
     deleteDoneEl.addEventListener('click', this.handleDeleteDone)
-    showAllEl.addEventListener('click', this.handleShowAll)
-    showDoneEl.addEventListener('click', this.handleShowDone)
-    showNotDoneEl.addEventListener('click', this.handleShowNotDone)
+    showAllEl.addEventListener('click', (ev) => {
+      this.handleShow(ev, 'all')
+    })
+    showDoneEl.addEventListener('click', (ev) => {
+      this.handleShow(ev, 'done')
+    })
+    showNotDoneEl.addEventListener('click', (ev) => {
+      this.handleShow(ev, 'notDone')
+    })
 
     containerFilters.append(showAllEl, showDoneEl, showNotDoneEl)
     container.append(this.counters.render(), containerFilters, deleteDoneEl)
