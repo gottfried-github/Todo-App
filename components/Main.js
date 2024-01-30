@@ -16,7 +16,9 @@ export default class Main extends Component {
   content = () => {
     const container = createElement('div', null, ['container'])
 
-    container.append(this.input.render(), this.controls.render(), this.items.render())
+    const title = createElement('h1', null, ['heading'], 'todo list')
+
+    container.append(title, this.input.render(), this.controls.render(), this.items.render())
 
     return container
   }

@@ -47,6 +47,12 @@ button:hover {
   box-shadow: 2px 4px 8px 0px rgba(86, 100, 104, 0.16);
 }
 
+h1.heading {
+  font-size: 2rem;
+  text-align: center;
+  text-transform: uppercase;
+}
+
 .add-form {
   display: flex;
   flex-direction: column;
