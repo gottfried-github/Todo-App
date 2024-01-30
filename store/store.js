@@ -11,6 +11,40 @@ class Item {
   }
 }
 
+function deepEqual(newV, oldV) {
+  if (Array.isArray(newV) && Array.isArray(oldV)) {
+    if (newV.length !== oldV.length) {
+      return false
+    } else {
+      const equal = newV.map((item, i) => {
+        return deepEqual(item, oldV[i])
+      })
+
+      return equal.includes(false)
+    }
+  } else if (
+    null !== newV &&
+    'object' === typeof newV &&
+    null !== oldV &&
+    'object' === typeof oldV
+  ) {
+    const keysNew = Object.keys(newV)
+    const keysOld = Object.keys(oldV)
+
+    if (keysNew.length !== keysOld.length) return false
+
+    for (const k of keysNew) {
+      if (!keysOld.includes(k)) return false
+    }
+
+    const equal = keysNew.map((k) => deepEqual(newV[k], oldV[k]))
+
+    return equal.includes(false)
+  } else {
+    return newV === oldV
+  }
+}
+
 export class Store {
   constructor() {
     this.init()
