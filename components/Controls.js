@@ -1,6 +1,6 @@
-import EventEmitter from '../lib/event-emitter'
+import EventEmitter from '../utils/event-emitter'
 import Store from '../store/store'
-import { Component, createElement } from '../lib/helpers'
+import { Component, createElement } from '../utils/helpers'
 
 import Events from '../events'
 

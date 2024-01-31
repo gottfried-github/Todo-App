@@ -1,5 +1,5 @@
-import EventEmitter from '../lib/event-emitter'
-import { Component, createElement } from '../lib/helpers'
+import EventEmitter from '../utils/event-emitter'
+import { Component, createElement } from '../utils/helpers'
 
 import Events from '../events'
 

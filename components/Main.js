@@ -1,4 +1,4 @@
-import { Component, createElement } from '../lib/helpers'
+import { Component, createElement } from '../utils/helpers'
 
 import Input from './Input'
 import Items from './Items'

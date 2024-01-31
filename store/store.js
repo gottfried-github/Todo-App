@@ -1,4 +1,4 @@
-import EventEmitter from '../lib/event-emitter'
+import EventEmitter from '../utils/event-emitter'
 import Saga from './sagas'
 import Events from '../events'
 

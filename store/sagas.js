@@ -1,4 +1,4 @@
-import EventEmitter from '../lib/event-emitter'
+import EventEmitter from '../utils/event-emitter'
 import Events from '../events'
 
 const FILTERS = ['all', 'done', 'notDone']
