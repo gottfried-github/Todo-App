@@ -1,6 +1,10 @@
-const path = require('path')
+import path from 'path'
+import { fileURLToPath } from 'url'
 
-module.exports = {
+// https://stackoverflow.com/a/50052194
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+
+export default {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'index.js',
