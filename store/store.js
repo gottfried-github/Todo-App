@@ -1,15 +1,6 @@
 import EventEmitter from '../lib/event-emitter'
+import Saga from './sagas'
 import Events from '../events'
-
-const FILTERS = ['all', 'done', 'notDone']
-
-class Item {
-  constructor(label) {
-    this.id = new Date()
-    this.done = false
-    this.label = label
-  }
-}
 
 export function deepEqual(newV, oldV) {
   if (Array.isArray(newV) && Array.isArray(oldV)) {
@@ -51,25 +42,19 @@ export class Store {
   }
 
   init = () => {
-    this.state = {
-      items: [],
-      filter: 'all',
-    }
+    this.state = Saga.getData()
 
-    EventEmitter.subscribe(Events.ITEM_APPEND_ONE, this._append)
-    EventEmitter.subscribe(Events.ITEM_UPDATE_STATUS_ONE, this._updateStatus)
-    EventEmitter.subscribe(Events.ITEM_UPDATE_LABEL_ONE, this._updateLabel)
-    EventEmitter.subscribe(Events.ITEM_DELETE_ONE, this._delete)
-    EventEmitter.subscribe(Events.ITEM_DELETE_DONE, this._deleteDone)
-    EventEmitter.subscribe(Events.SET_FILTER, this._setFilter)
+    EventEmitter.subscribe(Events.SAGA_ITEM_APPENDED, this._append)
+    EventEmitter.subscribe(Events.SAGA_ITEM_UPDATED, this._updateItem)
+    EventEmitter.subscribe(Events.SAGA_ITEMS_DELETED, this._delete)
+    EventEmitter.subscribe(Events.SAGA_FILTER_SET, this._setFilter)
   }
 
   unsubscribe = () => {
-    EventEmitter.unsubscribe(Events.ITEM_APPEND_ONE, this._append)
-    EventEmitter.unsubscribe(Events.ITEM_UPDATE_STATUS_ONE, this._updateStatus)
-    EventEmitter.unsubscribe(Events.ITEM_DELETE_ONE, this._delete)
-    EventEmitter.unsubscribe(Events.ITEM_DELETE_DONE, this._deleteDone)
-    EventEmitter.unsubscribe(Events.SET_FILTER, this._setFilter)
+    EventEmitter.subscribe(Events.SAGA_ITEM_APPENDED, this._append)
+    EventEmitter.subscribe(Events.SAGA_ITEM_UPDATED, this._updateItem)
+    EventEmitter.subscribe(Events.SAGA_ITEMS_DELETED, this._delete)
+    EventEmitter.subscribe(Events.SAGA_FILTER_SET, this._setFilter)
   }
 
   _setState(state) {
@@ -79,64 +64,34 @@ export class Store {
     EventEmitter.emit({ type: Events.STORAGE_UPDATED })
   }
 
-  _append = label => {
+  _append = item => {
     this._setState({
       ...this.state,
-      items: [...this.state.items, new Item(label, false)],
+      items: [...this.state.items, item],
     })
   }
 
-  _updateStatus = ({ id }) => {
+  _updateItem = item => {
     this._setState({
       ...this.state,
-      items: this.state.items.map(item => {
-        if (id === item.id) {
-          return {
-            ...item,
-            done: !item.done,
-          }
+      items: this.state.items.map(_item => {
+        if (item.id === _item.id) {
+          return item
         }
 
-        return item
+        return _item
       }),
     })
   }
 
-  _updateLabel = ({ id, label }) => {
+  _delete = itemsIds => {
     this._setState({
       ...this.state,
-      items: this.state.items.map(item => {
-        if (id === item.id) {
-          return {
-            ...item,
-            label,
-          }
-        }
-
-        return item
-      }),
-    })
-  }
-
-  _delete = id => {
-    this._setState({
-      ...this.state,
-      items: this.state.items.filter(item => id !== item.id),
-    })
-  }
-
-  _deleteDone = () => {
-    this._setState({
-      ...this.state,
-      items: this.state.items.filter(item => !item.done),
+      items: this.state.items.filter(item => !itemsIds.includes(item.id)),
     })
   }
 
   _setFilter = filter => {
-    if (!FILTERS.includes(filter)) {
-      throw new Error('invalid filter name')
-    }
-
     this._setState({ ...this.state, filter })
   }
 
