@@ -1,34 +1,35 @@
-import EventEmitter from '../lib/event-emitter.js'
-import Store from '../store/store.js'
-import { Component, createElement } from '../lib/helpers.js'
+import EventEmitter from '../utils/event-emitter'
+import Store from '../store/store'
+import { Component, createElement } from '../utils/helpers'
 
-import Events from '../events.js'
+import Events from '../events'
 
-import Item from './Item.js'
+import Item from './Item'
 
 export default class Items extends Component {
   constructor() {
     super()
 
-    this.state.editingId = null
+    this.editingId = null
 
-    EventEmitter.subscribe(Events.STORAGE_ITEMS_UPDATED, this.render)
-    EventEmitter.subscribe(Events.STORAGE_FILTER_UPDATED, this.render)
+    EventEmitter.subscribe(Events.STORAGE_UPDATED, this.render)
   }
 
-  handleEditing = (itemId) => {
-    if (!this.state.editingId || this.state.editingId !== itemId) {
-      this.state.editingId = itemId
+  handleEditing = itemId => {
+    if (!this.editingId || this.editingId !== itemId) {
+      this.editingId = itemId
     } else {
-      this.state.editingId = null
+      this.editingId = null
     }
+
+    this.render()
   }
 
   content = () => {
     const container = createElement('ul', null, ['items'])
 
-    const itemsEls = Store.getItems().map((item) =>
-      new Item(item, this.state.editingId === item.id, this.handleEditing).render()
+    const itemsEls = Store.getItems().map(item =>
+      new Item(item, this.editingId === item.id, this.handleEditing).render()
     )
 
     container.append(...itemsEls)

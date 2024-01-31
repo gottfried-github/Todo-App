@@ -1,0 +1,12 @@
+{
+  "presets": ["@babel/preset-env"],
+  "plugins": [
+    [
+      "babel-plugin-transform-rewrite-imports",
+      {
+        "appendExtension": ".js",
+        "recognizedExtensions": [".html", ".css"]
+      }
+    ]
+  ]
+}

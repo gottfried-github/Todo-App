@@ -1,7 +1,7 @@
-import EventEmitter from '../lib/event-emitter.js'
-import { Component, createElement } from '../lib/helpers.js'
+import EventEmitter from '../utils/event-emitter'
+import { Component, createElement } from '../utils/helpers'
 
-import Events from '../events.js'
+import Events from '../events'
 
 export default class Item extends Component {
   constructor(item, isEditing, handleEditCb) {
@@ -11,7 +11,7 @@ export default class Item extends Component {
     this.isEditing = isEditing
     this.handleEditCb = handleEditCb
 
-    EventEmitter.subscribe(Events.STORAGE_ITEMS_UPDATED, this.render)
+    EventEmitter.subscribe(Events.STORAGE_UPDATED, this.render)
   }
 
   handleUpdateStatus = () => {
@@ -32,7 +32,7 @@ export default class Item extends Component {
     this.handleEditCb(this.item.id)
   }
 
-  handleSubmitLabel = (ev) => {
+  handleSubmitLabel = ev => {
     // for .isComposing see https://developer.mozilla.org/en-US/docs/Web/API/Element/keyup_event
     if (ev.isComposing || ev.code !== 'Enter') return
 

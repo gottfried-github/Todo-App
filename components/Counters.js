@@ -1,14 +1,14 @@
-import EventEmitter from '../lib/event-emitter.js'
-import Store from '../store/store.js'
-import { Component, createElement } from '../lib/helpers.js'
+import EventEmitter from '../utils/event-emitter'
+import Store from '../store/store'
+import { Component, createElement } from '../utils/helpers'
 
-import Events from '../events.js'
+import Events from '../events'
 
 export default class Counters extends Component {
   constructor() {
     super()
 
-    EventEmitter.subscribe(Events.STORAGE_ITEMS_UPDATED, this.render)
+    EventEmitter.subscribe(Events.STORAGE_UPDATED, this.render)
   }
 
   content = () => {

@@ -1,4 +1,7 @@
-import Main from './components/Main.js'
+import './index.html'
+import './index.css'
+
+import Main from './components/Main'
 
 function render() {
   const todo = new Main().render()

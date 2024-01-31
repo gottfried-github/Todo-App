@@ -1,42 +1,20 @@
-import EventEmitter from '../lib/event-emitter.js'
-import { Component, createElement } from '../lib/helpers.js'
+import EventEmitter from '../utils/event-emitter'
+import { Component, createElement } from '../utils/helpers'
 
-import Events from '../events.js'
+import Events from '../events'
 
 export default class Input extends Component {
-  constructor() {
-    super()
-
-    this.isInputFocused = false
-
-    this.state.value = ''
-  }
-
-  handleInputChange = (ev) => {
-    this.isInputFocused = document.hasFocus(ev.target)
-
-    this.state.value = ev.target.value
-  }
-
-  handleInputBlur = () => {
-    this.isInputFocused = false
-  }
-
-  handleSubmit = (ev) => {
+  handleSubmit = ev => {
     ev.preventDefault()
 
-    if (!this.state.value.length) return
+    if (!this.inputEl.value) return
 
     EventEmitter.emit({
       type: Events.ITEM_APPEND_ONE,
-      payload: this.state.value,
+      payload: this.inputEl.value,
     })
 
-    this.state.value = ''
-  }
-
-  componentDidUpdate() {
-    if (this.isInputFocused) this.inputEl.focus()
+    this.inputEl.value = ''
   }
 
   content = () => {
@@ -47,11 +25,9 @@ export default class Input extends Component {
     this.inputEl = inputEl
 
     inputEl.setAttribute('type', 'text')
-    inputEl.value = this.state.value
+    inputEl.value = ''
     inputEl.placeholder = 'What needs to be done?'
 
-    inputEl.addEventListener('input', this.handleInputChange)
-    inputEl.addEventListener('blur', this.handleInputBlur)
     btnEl.addEventListener('click', this.handleSubmit)
 
     formEl.append(inputEl, btnEl)

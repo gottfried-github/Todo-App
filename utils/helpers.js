@@ -1,18 +1,4 @@
 export class Component {
-  constructor() {
-    this.state = new Proxy(
-      {},
-      {
-        set: (target, propName, v) => {
-          target[propName] = v
-          this.render()
-
-          return true
-        },
-      }
-    )
-  }
-
   render = () => {
     const elNew = this.content()
 
@@ -23,8 +9,6 @@ export class Component {
 
     this.el.replaceWith(elNew)
     this.el = elNew
-
-    if (this.componentDidUpdate) this.componentDidUpdate()
 
     return this.el
   }
@@ -41,7 +25,7 @@ export function removeAll(arr, test) {
 }
 
 export function makeFilterCb(cb, filterActiveClass) {
-  return (ev) => {
+  return ev => {
     if (ev.target.classList.contains(filterActiveClass)) return
     console.log('filter cb, ev:', ev)
 

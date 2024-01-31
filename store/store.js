@@ -1,13 +1,38 @@
-import EventEmitter from '../lib/event-emitter.js'
-import Events from '../events.js'
+import EventEmitter from '../utils/event-emitter'
+import Saga from './sagas'
+import Events from '../events'
 
-const FILTERS = ['all', 'done', 'notDone']
+export function deepEqual(newV, oldV) {
+  if (Array.isArray(newV) && Array.isArray(oldV)) {
+    if (newV.length !== oldV.length) {
+      return false
+    } else {
+      const equal = newV.map((item, i) => {
+        return deepEqual(item, oldV[i])
+      })
 
-class Item {
-  constructor(label) {
-    this.id = new Date()
-    this.done = false
-    this.label = label
+      return !equal.includes(false)
+    }
+  } else if (
+    null !== newV &&
+    'object' === typeof newV &&
+    null !== oldV &&
+    'object' === typeof oldV
+  ) {
+    const keysNew = Object.keys(newV)
+    const keysOld = Object.keys(oldV)
+
+    if (keysNew.length !== keysOld.length) return false
+
+    for (const k of keysNew) {
+      if (!keysOld.includes(k)) return false
+    }
+
+    const equal = keysNew.map(k => deepEqual(newV[k], oldV[k]))
+
+    return !equal.includes(false)
+  } else {
+    return newV === oldV
   }
 }
 
@@ -17,96 +42,60 @@ export class Store {
   }
 
   init = () => {
-    this.state = new Proxy(
-      {
-        items: [],
-        filter: 'all',
-      },
-      {
-        set(target, propName, v) {
-          switch (propName) {
-            case 'items':
-              target[propName] = v
-              EventEmitter.emit({ type: Events.STORAGE_ITEMS_UPDATED })
-              break
+    this.state = Saga.getData()
 
-            case 'filter':
-              target[propName] = v
-              EventEmitter.emit({ type: Events.STORAGE_FILTER_UPDATED })
-              break
-
-            default:
-              break
-          }
-
-          return true
-        },
-      }
-    )
-
-    EventEmitter.subscribe(Events.ITEM_APPEND_ONE, this._append)
-    EventEmitter.subscribe(Events.ITEM_UPDATE_STATUS_ONE, this._updateStatus)
-    EventEmitter.subscribe(Events.ITEM_UPDATE_LABEL_ONE, this._updateLabel)
-    EventEmitter.subscribe(Events.ITEM_DELETE_ONE, this._delete)
-    EventEmitter.subscribe(Events.ITEM_DELETE_DONE, this._deleteDone)
-    EventEmitter.subscribe(Events.SET_FILTER, this._setFilter)
+    EventEmitter.subscribe(Events.SAGA_ITEM_APPENDED, this._append)
+    EventEmitter.subscribe(Events.SAGA_ITEM_UPDATED, this._updateItem)
+    EventEmitter.subscribe(Events.SAGA_ITEMS_DELETED, this._delete)
+    EventEmitter.subscribe(Events.SAGA_FILTER_SET, this._setFilter)
   }
 
   unsubscribe = () => {
-    EventEmitter.unsubscribe(Events.ITEM_APPEND_ONE, this._append)
-    EventEmitter.unsubscribe(Events.ITEM_UPDATE_STATUS_ONE, this._updateStatus)
-    EventEmitter.unsubscribe(Events.ITEM_DELETE_ONE, this._delete)
-    EventEmitter.unsubscribe(Events.ITEM_DELETE_DONE, this._deleteDone)
-    EventEmitter.unsubscribe(Events.SET_FILTER, this._setFilter)
+    EventEmitter.subscribe(Events.SAGA_ITEM_APPENDED, this._append)
+    EventEmitter.subscribe(Events.SAGA_ITEM_UPDATED, this._updateItem)
+    EventEmitter.subscribe(Events.SAGA_ITEMS_DELETED, this._delete)
+    EventEmitter.subscribe(Events.SAGA_FILTER_SET, this._setFilter)
   }
 
-  _append = (label) => {
-    this.state.items = [...this.state.items, new Item(label, false)]
+  _setState(state) {
+    if (deepEqual(state, this.state)) return
+
+    this.state = state
+    EventEmitter.emit({ type: Events.STORAGE_UPDATED })
   }
 
-  _updateStatus = ({ id }) => {
-    this.state.items = this.state.items.map((item) => {
-      if (id === item.id) {
-        return {
-          ...item,
-          done: !item.done,
-        }
-      }
-
-      return item
+  _append = item => {
+    this._setState({
+      ...this.state,
+      items: [...this.state.items, item],
     })
   }
 
-  _updateLabel = ({ id, label }) => {
-    this.state.items = this.state.items.map((item) => {
-      if (id === item.id) {
-        return {
-          ...item,
-          label,
+  _updateItem = item => {
+    this._setState({
+      ...this.state,
+      items: this.state.items.map(_item => {
+        if (item.id === _item.id) {
+          return item
         }
-      }
 
-      return item
+        return _item
+      }),
     })
   }
 
-  _delete = (id) => {
-    this.state.items = this.state.items.filter((item) => id !== item.id)
+  _delete = itemsIds => {
+    this._setState({
+      ...this.state,
+      items: this.state.items.filter(item => !itemsIds.includes(item.id)),
+    })
   }
 
-  _deleteDone = () => {
-    this.state.items = this.state.items.filter((item) => !item.done)
+  _setFilter = filter => {
+    this._setState({ ...this.state, filter })
   }
 
-  _setFilter = (filter) => {
-    if (!FILTERS.includes(filter)) {
-      throw new Error('invalid filter name')
-    }
-
-    this.state.filter = filter
-  }
-
-  getCount = (filter) => {
+  getCount = filter => {
     if (!filter) return this.getItems().length
 
     switch (filter) {
@@ -114,17 +103,17 @@ export class Store {
         return this.state.items.length
 
       case 'done':
-        return this.state.items.filter((item) => item.done).length
+        return this.state.items.filter(item => item.done).length
 
       case 'notDone':
-        return this.state.items.filter((item) => !item.done).length
+        return this.state.items.filter(item => !item.done).length
 
       default:
         throw new Error("invalid filter value in Store's state")
     }
   }
 
-  getItems = (filter) => {
+  getItems = filter => {
     const _filter = filter || this.state.filter
 
     switch (_filter) {
@@ -132,10 +121,10 @@ export class Store {
         return this.state.items
 
       case 'done':
-        return this.state.items.filter((item) => item.done)
+        return this.state.items.filter(item => item.done)
 
       case 'notDone':
-        return this.state.items.filter((item) => !item.done)
+        return this.state.items.filter(item => !item.done)
 
       default:
         throw new Error('invalid filter value')

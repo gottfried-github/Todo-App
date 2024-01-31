@@ -1,8 +1,8 @@
-import { Component, createElement } from '../lib/helpers.js'
+import { Component, createElement } from '../utils/helpers'
 
-import Input from './Input.js'
-import Items from './Items.js'
-import Controls from './Controls.js'
+import Input from './Input'
+import Items from './Items'
+import Controls from './Controls'
 
 export default class Main extends Component {
   constructor() {
@@ -16,7 +16,9 @@ export default class Main extends Component {
   content = () => {
     const container = createElement('div', null, ['container'])
 
-    container.append(this.input.render(), this.controls.render(), this.items.render())
+    const title = createElement('h1', null, ['heading'], 'todo list')
+
+    container.append(title, this.input.render(), this.controls.render(), this.items.render())
 
     return container
   }

@@ -1,10 +1,10 @@
-import EventEmitter from '../lib/event-emitter.js'
-import Store from '../store/store.js'
-import { Component, createElement } from '../lib/helpers.js'
+import EventEmitter from '../utils/event-emitter'
+import Store from '../store/store'
+import { Component, createElement } from '../utils/helpers'
 
-import Events from '../events.js'
+import Events from '../events'
 
-import Counters from './Counters.js'
+import Counters from './Counters'
 
 export default class Controls extends Component {
   constructor() {
@@ -13,35 +13,19 @@ export default class Controls extends Component {
     this.counters = new Counters()
     this.filterActiveClass = 'active'
 
-    EventEmitter.subscribe(Events.STORAGE_ITEMS_UPDATED, this.render)
-    EventEmitter.subscribe(Events.STORAGE_FILTER_UPDATED, this.render)
+    EventEmitter.subscribe(Events.STORAGE_UPDATED, this.render)
   }
 
   handleDeleteDone = () => {
     EventEmitter.emit({ type: Events.ITEM_DELETE_DONE })
   }
 
-  handleShowAll = (ev) => {
+  handleShow = (ev, filter) => {
     if (ev.target.classList.contains(this.filterActiveClass)) return
-    EventEmitter.emit({
-      type: Events.SET_FILTER,
-      payload: 'all',
-    })
-  }
 
-  handleShowDone = (ev) => {
-    if (ev.target.classList.contains(this.filterActiveClass)) return
     EventEmitter.emit({
       type: Events.SET_FILTER,
-      payload: 'done',
-    })
-  }
-
-  handleShowNotDone = (ev) => {
-    if (ev.target.classList.contains(this.filterActiveClass)) return
-    EventEmitter.emit({
-      type: Events.SET_FILTER,
-      payload: 'notDone',
+      payload: filter,
     })
   }
 
@@ -67,9 +51,15 @@ export default class Controls extends Component {
     }
 
     deleteDoneEl.addEventListener('click', this.handleDeleteDone)
-    showAllEl.addEventListener('click', this.handleShowAll)
-    showDoneEl.addEventListener('click', this.handleShowDone)
-    showNotDoneEl.addEventListener('click', this.handleShowNotDone)
+    showAllEl.addEventListener('click', ev => {
+      this.handleShow(ev, 'all')
+    })
+    showDoneEl.addEventListener('click', ev => {
+      this.handleShow(ev, 'done')
+    })
+    showNotDoneEl.addEventListener('click', ev => {
+      this.handleShow(ev, 'notDone')
+    })
 
     containerFilters.append(showAllEl, showDoneEl, showNotDoneEl)
     container.append(this.counters.render(), containerFilters, deleteDoneEl)
