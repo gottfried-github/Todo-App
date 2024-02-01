@@ -1,7 +1,14 @@
 import Todo from '../models/todo.js'
+import { ResponseData } from '../utils/utils.js'
 
 export default async function deleteDone() {
-  const res = await Todo.deleteDone()
+  let res = null
 
-  return res
+  try {
+    res = await Todo.deleteDone()
+  } catch (e) {
+    return new ResponseData(500, e)
+  }
+
+  return new ResponseData(200, res)
 }
