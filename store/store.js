@@ -2,25 +2,20 @@ import EventEmitter from '../utils/event-emitter'
 import Saga from './sagas'
 import Events from '../events'
 
-export function deepEqual(newV, oldV) {
-  if (Array.isArray(newV) && Array.isArray(oldV)) {
-    if (newV.length !== oldV.length) {
+export function deepEqual(a, b) {
+  if (Array.isArray(a) && Array.isArray(b)) {
+    if (a.length !== b.length) {
       return false
     } else {
-      const equal = newV.map((item, i) => {
-        return deepEqual(item, oldV[i])
+      const equal = a.map((item, i) => {
+        return deepEqual(item, b[i])
       })
 
       return !equal.includes(false)
     }
-  } else if (
-    null !== newV &&
-    'object' === typeof newV &&
-    null !== oldV &&
-    'object' === typeof oldV
-  ) {
-    const keysNew = Object.keys(newV)
-    const keysOld = Object.keys(oldV)
+  } else if (null !== a && 'object' === typeof a && null !== b && 'object' === typeof b) {
+    const keysNew = Object.keys(a)
+    const keysOld = Object.keys(b)
 
     if (keysNew.length !== keysOld.length) return false
 
@@ -28,11 +23,11 @@ export function deepEqual(newV, oldV) {
       if (!keysOld.includes(k)) return false
     }
 
-    const equal = keysNew.map(k => deepEqual(newV[k], oldV[k]))
+    const equal = keysNew.map(k => deepEqual(a[k], b[k]))
 
     return !equal.includes(false)
   } else {
-    return newV === oldV
+    return a === b
   }
 }
 
