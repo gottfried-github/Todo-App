@@ -20,5 +20,5 @@ export default async function deleteById(id) {
     return new ResponseData(404)
   }
 
-  return new ResponseData(200, res)
+  return new ResponseData(200, { deletedCount: res.deletedCount })
 }
