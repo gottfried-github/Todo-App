@@ -10,5 +10,5 @@ export default async function deleteDone() {
     return new ResponseData(500, e)
   }
 
-  return new ResponseData(200, res)
+  return new ResponseData(200, { deletedCount: res.deletedCount })
 }
