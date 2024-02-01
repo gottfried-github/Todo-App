@@ -11,9 +11,9 @@ export default async function create(data) {
   } catch (e) {
     if (e instanceof mongoose.Error.ValidationError) {
       return new ResponseData(400, e)
-    } else {
-      return new ResponseData(500, e)
     }
+
+    return new ResponseData(500, e)
   }
 
   return new ResponseData(201, todo)

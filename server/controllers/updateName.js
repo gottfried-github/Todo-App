@@ -11,9 +11,9 @@ export default async function updateName({ id, name }) {
   } catch (e) {
     if (e instanceof mongoose.Error.CastError) {
       return new ResponseData(400, e)
-    } else {
-      return new ResponseData(500, e)
     }
+
+    return new ResponseData(500, e)
   }
 
   if (!item) {

@@ -11,9 +11,9 @@ export default async function updateStatus(id) {
   } catch (e) {
     if (e instanceof mongoose.Error.CastError) {
       return new ResponseData(400, e)
-    } else {
-      return new ResponseData(500, e)
     }
+
+    return new ResponseData(500, e)
   }
 
   if (!item) {
