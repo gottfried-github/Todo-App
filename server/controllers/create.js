@@ -1,9 +1,20 @@
-import Todo from '../models.js'
+import mongoose from 'mongoose'
+import { Response } from '../utils/utils.js'
+
+import Todo from '../models/todo.js'
 
 export default async function create(data) {
   const todo = new Todo(data)
 
-  await todo.save()
+  try {
+    await todo.save()
+  } catch (e) {
+    if (e instanceof mongoose.Error.ValidationError) {
+      return new Response(400, e)
+    } else {
+      return new Response(500, e)
+    }
+  }
 
-  return todo
+  return new Response(201, todo)
 }

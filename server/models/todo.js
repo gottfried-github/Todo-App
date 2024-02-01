@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-const schema = new Mongoose.Schema({
+const schema = new mongoose.Schema({
   timeCreated: {
     type: Date,
     index: 1,
