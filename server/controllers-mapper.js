@@ -5,11 +5,15 @@ import deleteById from './controllers/deleteById.js'
 import deleteDone from './controllers/deleteDone.js'
 import getAll from './controllers/getAll.js'
 
-export const CONTROLLERS = {
-  '/todos/create': create,
-  '/todos/updateStatus': updateStatus,
-  '/todos/updateName': updateName,
-  '/todos/deleteById': deleteById,
-  '/todos/deleteDone': deleteDone,
-  '/todos/getAll': getAll,
+export const CONTROLLERS_GET = {
+  GET: {
+    '/todos/getAll': getAll,
+  },
+  POST: {
+    '/todos/create': create,
+    '/todos/updateStatus': updateStatus,
+    '/todos/updateName': updateName,
+    '/todos/deleteById': deleteById,
+    '/todos/deleteDone': deleteDone,
+  },
 }
