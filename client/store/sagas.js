@@ -79,11 +79,12 @@ class Saga {
     })
   }
 
-  _deleteDone = () => {
-    //
-    // EventEmitter.emit({
-    //   type: Events.SAGA_DONE_DELETED,
-    // })
+  _deleteDone = async () => {
+    await axios.post('/todos/deleteDone')
+
+    EventEmitter.emit({
+      type: Events.SAGA_DONE_DELETED,
+    })
   }
 
   async getItems() {
