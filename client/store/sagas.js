@@ -4,10 +4,9 @@ import Events from '../events'
 const FILTERS = ['all', 'done', 'notDone']
 
 class Item {
-  constructor(label) {
-    this.id = Date.now()
-    this.done = false
-    this.label = label
+  constructor(name) {
+    this.name = name
+    this.timeCreated = new Date()
   }
 }
 
