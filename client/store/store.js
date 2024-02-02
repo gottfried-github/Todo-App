@@ -39,17 +39,19 @@ export class Store {
   init = () => {
     this.state = Saga.getData()
 
-    EventEmitter.subscribe(Events.SAGA_ITEM_APPENDED, this._append)
+    EventEmitter.subscribe(Events.SAGA_ITEM_CREATED, this._append)
     EventEmitter.subscribe(Events.SAGA_ITEM_UPDATED, this._updateItem)
-    EventEmitter.subscribe(Events.SAGA_ITEMS_DELETED, this._delete)
-    EventEmitter.subscribe(Events.SAGA_FILTER_SET, this._setFilter)
+    EventEmitter.subscribe(Events.SAGA_ITEM_DELETED, this._delete)
+    EventEmitter.subscribe(Events.SAGA_DONE_DELETED, this._deleteDone)
+    EventEmitter.subscribe(Events.SET_FILTER, this._setFilter)
   }
 
   unsubscribe = () => {
-    EventEmitter.subscribe(Events.SAGA_ITEM_APPENDED, this._append)
-    EventEmitter.subscribe(Events.SAGA_ITEM_UPDATED, this._updateItem)
-    EventEmitter.subscribe(Events.SAGA_ITEMS_DELETED, this._delete)
-    EventEmitter.subscribe(Events.SAGA_FILTER_SET, this._setFilter)
+    EventEmitter.unsubscribe(Events.SAGA_ITEM_CREATED, this._append)
+    EventEmitter.unsubscribe(Events.SAGA_ITEM_UPDATED, this._updateItem)
+    EventEmitter.unsubscribe(Events.SAGA_ITEM_DELETED, this._delete)
+    EventEmitter.unsubscribe(Events.SAGA_DONE_DELETED, this._deleteDone)
+    EventEmitter.unsubscribe(Events.SET_FILTER, this._setFilter)
   }
 
   _setState(state) {
@@ -79,10 +81,17 @@ export class Store {
     })
   }
 
-  _delete = itemsIds => {
+  _delete = id => {
     this._setState({
       ...this.state,
-      items: this.state.items.filter(item => !itemsIds.includes(item.id)),
+      items: this.state.items.filter(item => id !== item.id),
+    })
+  }
+
+  _deleteDone = () => {
+    this._setState({
+      ...this.state,
+      items: this.state.items.filter(item => !item.done),
     })
   }
 
