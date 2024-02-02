@@ -5,7 +5,7 @@ import deleteById from './controllers/deleteById.js'
 import deleteDone from './controllers/deleteDone.js'
 import getAll from './controllers/getAll.js'
 
-export const CONTROLLERS_GET = {
+export const CONTROLLERS = {
   GET: {
     '/todos/getAll': getAll,
   },
