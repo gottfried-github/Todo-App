@@ -57,11 +57,11 @@ export default class Item extends Component {
     if (this.isEditing) {
       label = createElement('input', null, ['input-edit'])
       label.setAttribute('type', 'text')
-      label.value = this.item.label
+      label.value = this.item.name
 
       label.addEventListener('keyup', this.handleSubmitLabel)
     } else {
-      label = createElement('label', null, null, this.item.label)
+      label = createElement('label', null, null, this.item.name)
       label.setAttribute('for', inputCheckbox.id)
       if (this.item.done) label.classList.add('checked')
     }

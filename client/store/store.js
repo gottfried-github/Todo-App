@@ -38,14 +38,23 @@ export class Store {
     this.init()
   }
 
-  init = () => {
-    this.state = Saga.getData()
+  init = async () => {
+    const items = await Saga.getItems()
+
+    console.log('Store.init, items:', items)
+
+    this.state = {
+      items: items,
+      filter: 'all',
+    }
 
     EventEmitter.subscribe(Events.SAGA_ITEM_CREATED, this._append)
     EventEmitter.subscribe(Events.SAGA_ITEM_UPDATED, this._updateItem)
     EventEmitter.subscribe(Events.SAGA_ITEM_DELETED, this._delete)
     EventEmitter.subscribe(Events.SAGA_DONE_DELETED, this._deleteDone)
     EventEmitter.subscribe(Events.SET_FILTER, this._setFilter)
+
+    EventEmitter.emit({ type: Events.STORAGE_UPDATED })
   }
 
   unsubscribe = () => {
@@ -102,6 +111,10 @@ export class Store {
   }
 
   getCount = filter => {
+    if (!this.state) {
+      return null
+    }
+
     if (!filter) return this.getItems().length
 
     switch (filter) {
@@ -120,6 +133,10 @@ export class Store {
   }
 
   getItems = filter => {
+    if (!this.state) {
+      return null
+    }
+
     const _filter = filter || this.state.filter
 
     switch (_filter) {
@@ -138,6 +155,10 @@ export class Store {
   }
 
   getFilter = () => {
+    if (!this.state) {
+      return null
+    }
+
     return this.state.filter
   }
 }

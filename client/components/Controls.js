@@ -30,7 +30,7 @@ export default class Controls extends Component {
   }
 
   content = () => {
-    if (Store.getCount('all') === 0) return createElement('div')
+    if (!Store.getCount('all')) return createElement('div')
 
     const container = createElement('div', null, ['controls'])
     const containerFilters = createElement('div', null, ['filters'])
