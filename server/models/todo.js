@@ -12,6 +12,7 @@ const schema = new mongoose.Schema({
   },
   status: {
     type: Number,
+    default: 2,
     required: true,
   },
 })
