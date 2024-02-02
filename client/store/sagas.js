@@ -70,12 +70,13 @@ class Saga {
     })
   }
 
-  _delete = id => {
-    //
-    // EventEmitter.emit({
-    //   type: Events.SAGA_ITEM_DELETED,
-    //   payload: id,
-    // })
+  _delete = async id => {
+    await axios.post('/todos/deleteById', id)
+
+    EventEmitter.emit({
+      type: Events.SAGA_ITEM_DELETED,
+      payload: id,
+    })
   }
 
   _deleteDone = () => {
