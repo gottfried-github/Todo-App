@@ -20,8 +20,11 @@ async function main() {
         res.end(JSON.stringify(error))
       })
 
-      res.setHeader('Content-Type', CONTENT_TYPE)
       res.setHeader('Access-Control-Allow-Origin', '*')
+      res.setHeader('Access-Control-Allow-Methods', 'GET, POST')
+      res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
+
+      res.setHeader('Content-Type', CONTENT_TYPE)
 
       if ('GET' == req.method) {
         if (!(req.url in CONTROLLERS.GET)) {
@@ -124,6 +127,10 @@ async function main() {
               res.end(JSON.stringify(e))
             }
           })
+      } else if ('OPTIONS' === req.method) {
+        res.statusCode = 200
+
+        res.end()
       } else {
         res.statusCode = 404
 
