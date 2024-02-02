@@ -51,12 +51,13 @@ class Saga {
     })
   }
 
-  _updateStatus = ({ id }) => {
-    //
-    // EventEmitter.emit({
-    //   type: Events.SAGA_ITEM_UPDATED,
-    //   payload: item,
-    // })
+  _updateStatus = async ({ id }) => {
+    const response = await axios.post('/todos/updateStatus', id)
+
+    EventEmitter.emit({
+      type: Events.SAGA_ITEM_UPDATED,
+      payload: response.data,
+    })
   }
 
   _updateName = ({ id, name }) => {
