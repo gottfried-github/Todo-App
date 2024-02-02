@@ -13,6 +13,7 @@ const schema = new mongoose.Schema(
     },
     status: {
       type: Number,
+      enum: [1, 2],
       default: 2,
       required: true,
     },
