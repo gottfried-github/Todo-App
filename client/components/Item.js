@@ -70,7 +70,7 @@ export default class Item extends Component {
     const deleteBtn = createElement('button', null, ['delete'], 'delete')
 
     inputCheckbox.setAttribute('type', 'checkbox')
-    inputCheckbox.checked = this.item.done
+    inputCheckbox.checked = 1 === this.item.status
 
     containerInput.append(inputCheckbox, label)
     container.append(containerInput, editBtn, deleteBtn)
