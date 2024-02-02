@@ -37,10 +37,10 @@ export default class Item extends Component {
     if (ev.isComposing || ev.code !== 'Enter') return
 
     EventEmitter.emit({
-      type: Events.ITEM_UPDATE_LABEL_ONE,
+      type: Events.ITEM_UPDATE_NAME,
       payload: {
         id: this.item.id,
-        label: ev.target.value,
+        name: ev.target.value,
       },
     })
 
