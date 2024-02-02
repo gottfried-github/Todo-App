@@ -1,13 +1,22 @@
 import http from 'http'
+import { Buffer } from 'buffer'
 import mongoose from 'mongoose'
 
 import { CONTROLLERS } from './controllers-mapper.js'
+
+const CONTENT_TYPE = 'application/json'
 
 async function main() {
   await mongoose.connect(process.env.DB_CONNECTION)
 
   http.createServer((req, res) => {
-    res.setHeader('Content-Type', 'application/json')
+    res.on('error', error => {
+      res.setHeader('Content-Type', CONTENT_TYPE)
+
+      res.end(JSON.stringify(error))
+    })
+
+    res.setHeader('Content-Type', CONTENT_TYPE)
 
     if ('GET' == req.method) {
       if (!(req.url in CONTROLLERS.GET)) {
@@ -28,17 +37,22 @@ async function main() {
         return res.end(JSON.stringify({ message: "endpoint doesn't exist or wrong HTTP method" }))
       }
 
-      if ('application/json' !== req.headers['content-type']) {
+      if (CONTENT_TYPE !== req.headers['content-type']) {
         res.statusCode = 400
 
         return res.end(
-          JSON.stringify({ message: "server only supports 'application/json' content-type" })
+          JSON.stringify({ message: `server only supports ${CONTENT_TYPE} content-type` })
         )
       }
 
       const dataRawChunks = []
 
-      req
+      return req
+        .on('error', error => {
+          res.statusCode = 500
+
+          res.end(JSON.stringify(error))
+        })
         .on('data', chunk => {
           dataRawChunks.push(chunk)
         })
