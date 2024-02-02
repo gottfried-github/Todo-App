@@ -26,7 +26,7 @@ class Saga {
   init = () => {
     //
 
-    EventEmitter.subscribe(Events.ITEM_CREATE, this._append)
+    EventEmitter.subscribe(Events.ITEM_CREATE, this._create)
     EventEmitter.subscribe(Events.ITEM_UPDATE_STATUS_ONE, this._updateStatus)
     EventEmitter.subscribe(Events.ITEM_UPDATE_LABEL_ONE, this._updateLabel)
     EventEmitter.subscribe(Events.ITEM_DELETE_ONE, this._delete)
@@ -40,12 +40,15 @@ class Saga {
     EventEmitter.unsubscribe(Events.ITEM_DELETE_DONE, this._deleteDone)
   }
 
-  _create = name => {
-    //
-    // EventEmitter.emit({
-    //   type: Events.SAGA_ITEM_CREATED,
-    //   payload: item,
-    // })
+  _create = async name => {
+    const item = new Item(name)
+
+    const response = await axios.post('todos/create', item)
+
+    EventEmitter.emit({
+      type: Events.SAGA_ITEM_CREATED,
+      payload: response.data,
+    })
   }
 
   _updateStatus = ({ id }) => {
