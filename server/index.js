@@ -68,14 +68,6 @@ async function main() {
           return res.end(JSON.stringify({ message: "endpoint doesn't exist or wrong HTTP method" }))
         }
 
-        if (CONTENT_TYPE !== req.headers['content-type']) {
-          res.statusCode = 400
-
-          return res.end(
-            JSON.stringify({ message: `server only supports ${CONTENT_TYPE} content-type` })
-          )
-        }
-
         const dataRawChunks = []
 
         return req
@@ -94,6 +86,14 @@ async function main() {
 
             if (dataRawChunks.length) {
               body = Buffer.concat(dataRawChunks).toString()
+
+              if (CONTENT_TYPE !== req.headers['content-type']) {
+                res.statusCode = 400
+
+                return res.end(
+                  JSON.stringify({ message: `server only supports ${CONTENT_TYPE} content-type` })
+                )
+              }
             }
 
             let _res = null
