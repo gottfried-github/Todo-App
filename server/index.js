@@ -21,6 +21,7 @@ async function main() {
       })
 
       res.setHeader('Content-Type', CONTENT_TYPE)
+      res.setHeader('Access-Control-Allow-Origin', '*')
 
       if ('GET' == req.method) {
         if (!(req.url in CONTROLLERS.GET)) {
