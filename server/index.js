@@ -10,8 +10,11 @@ async function main() {
   await mongoose.connect(process.env.DB_CONNECTION)
 
   http
-    .createServer((req, res) => {
+    .createServer(async (req, res) => {
       res.on('error', error => {
+        console.log(`Server, res error event occured - error:`, error)
+
+        res.statusCode = 500
         res.setHeader('Content-Type', CONTENT_TYPE)
 
         res.end(JSON.stringify(error))
@@ -26,11 +29,34 @@ async function main() {
           return res.end(JSON.stringify({ message: "endpoint doesn't exist or wrong HTTP method" }))
         }
 
-        const _res = CONTROLLERS.GET[req.url]()
+        let _res = null
+
+        try {
+          _res = await CONTROLLERS.GET[req.url]()
+        } catch (e) {
+          console.log(`Server, 'GET' ${req.url}, controller errored - error:`, e)
+
+          res.statusCode = 500
+
+          return res.end(JSON.stringify(e))
+        }
+
+        // console.log(`Server, GET ${req.url}, _res:`, _res)
 
         res.statusCode = _res.status
 
-        return res.end(JSON.stringify(_res.data))
+        try {
+          return res.end(JSON.stringify(_res.data))
+        } catch (e) {
+          console.log(
+            `Server, 'GET' ${req.url}, trying to send response from controller, res.end errored - error:`,
+            e
+          )
+
+          res.statusCode = 500
+
+          return res.end(JSON.stringify(e))
+        }
       } else if ('POST' === req.method) {
         if (!(req.url in CONTROLLERS.POST)) {
           res.statusCode = 404
@@ -50,6 +76,8 @@ async function main() {
 
         return req
           .on('error', error => {
+            console.log(`Server, req error event occured - error:`, error)
+
             res.statusCode = 500
 
             res.end(JSON.stringify(error))
@@ -57,14 +85,43 @@ async function main() {
           .on('data', chunk => {
             dataRawChunks.push(chunk)
           })
-          .on('end', () => {
-            const body = Buffer.concat(body).toString()
+          .on('end', async () => {
+            let body = null
 
-            const _res = CONTROLLERS.POST[req.url](body)
+            if (dataRawChunks.length) {
+              body = Buffer.concat(dataRawChunks).toString()
+            }
+
+            let _res = null
+
+            try {
+              if (body) {
+                _res = await CONTROLLERS.POST[req.url](JSON.parse(body))
+              } else {
+                _res = await CONTROLLERS.POST[req.url]()
+              }
+            } catch (e) {
+              console.log(`Server, 'POST' ${req.url}, controller errored - error:`, e)
+
+              res.statusCode = 500
+
+              return res.end(JSON.stringify(e))
+            }
 
             res.statusCode = _res.status
 
-            res.end(JSON.stringify(_res.data))
+            try {
+              res.end(JSON.stringify(_res.data))
+            } catch (e) {
+              console.log(
+                `Server, 'POST' ${req.url}, trying to send response from controller, res.end errored - error:`,
+                e
+              )
+
+              res.statusCode = 500
+
+              res.end(JSON.stringify(e))
+            }
           })
       } else {
         res.statusCode = 404
@@ -78,3 +135,5 @@ async function main() {
     })
     .listen(process.env.HTTP_PORT)
 }
+
+main()
