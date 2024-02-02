@@ -2,6 +2,8 @@ import EventEmitter from '../utils/event-emitter'
 import Saga from './sagas'
 import Events from '../events'
 
+const FILTERS = ['all', 'done', 'notDone']
+
 export function deepEqual(a, b) {
   if (Array.isArray(a) && Array.isArray(b)) {
     if (a.length !== b.length) {

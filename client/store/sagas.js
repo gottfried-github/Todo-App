@@ -1,8 +1,6 @@
 import EventEmitter from '../utils/event-emitter'
 import Events from '../events'
 
-const FILTERS = ['all', 'done', 'notDone']
-
 class Item {
   constructor(name) {
     this.name = name
