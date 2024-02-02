@@ -1,5 +1,15 @@
+import axios from 'axios'
+
 import EventEmitter from '../utils/event-emitter'
 import Events from '../events'
+
+axios.defaults.baseURL = 'http://localhost:3000'
+axios.defaults.headers = {
+  'Content-Type': 'application/json',
+  Accept: 'application/json',
+}
+axios.defaults.transformRequest = [data => JSON.stringify(data)]
+axios.defaults.transformResponse = [data => JSON.parse(data)]
 
 class Item {
   constructor(name) {
