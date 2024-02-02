@@ -102,7 +102,7 @@ export class Store {
   _deleteDone = () => {
     this._setState({
       ...this.state,
-      items: this.state.items.filter(item => !item.done),
+      items: this.state.items.filter(item => item.status === 2),
     })
   }
 
@@ -122,10 +122,10 @@ export class Store {
         return this.state.items.length
 
       case 'done':
-        return this.state.items.filter(item => item.done).length
+        return this.state.items.filter(item => item.status === 1).length
 
       case 'notDone':
-        return this.state.items.filter(item => !item.done).length
+        return this.state.items.filter(item => item.status === 2).length
 
       default:
         throw new Error("invalid filter value in Store's state")
@@ -144,10 +144,10 @@ export class Store {
         return this.state.items
 
       case 'done':
-        return this.state.items.filter(item => item.done)
+        return this.state.items.filter(item => item.status === 1)
 
       case 'notDone':
-        return this.state.items.filter(item => !item.done)
+        return this.state.items.filter(item => item.status === 2)
 
       default:
         throw new Error('invalid filter value')
