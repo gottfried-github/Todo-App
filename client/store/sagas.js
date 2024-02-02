@@ -40,60 +40,49 @@ class Saga {
     EventEmitter.unsubscribe(Events.ITEM_DELETE_DONE, this._deleteDone)
   }
 
-  _getItems() {
-    return JSON.parse(localStorage.getItem('items'))
-  }
-
-  _setItems(items) {
-    localStorage.setItem('items', JSON.stringify(items))
-  }
-
   _create = name => {
     //
-
-    EventEmitter.emit({
-      type: Events.SAGA_ITEM_CREATED,
-      payload: item,
-    })
+    // EventEmitter.emit({
+    //   type: Events.SAGA_ITEM_CREATED,
+    //   payload: item,
+    // })
   }
 
   _updateStatus = ({ id }) => {
     //
-
-    EventEmitter.emit({
-      type: Events.SAGA_ITEM_UPDATED,
-      payload: item,
-    })
+    // EventEmitter.emit({
+    //   type: Events.SAGA_ITEM_UPDATED,
+    //   payload: item,
+    // })
   }
 
   _updateName = ({ id, name }) => {
     //
-
-    EventEmitter.emit({
-      type: Events.SAGA_ITEM_UPDATED,
-      payload: item,
-    })
+    // EventEmitter.emit({
+    //   type: Events.SAGA_ITEM_UPDATED,
+    //   payload: item,
+    // })
   }
 
   _delete = id => {
     //
-
-    EventEmitter.emit({
-      type: Events.SAGA_ITEM_DELETED,
-      payload: id,
-    })
+    // EventEmitter.emit({
+    //   type: Events.SAGA_ITEM_DELETED,
+    //   payload: id,
+    // })
   }
 
   _deleteDone = () => {
     //
-
-    EventEmitter.emit({
-      type: Events.SAGA_DONE_DELETED,
-    })
+    // EventEmitter.emit({
+    //   type: Events.SAGA_DONE_DELETED,
+    // })
   }
 
-  getItems() {
-    //
+  async getItems() {
+    const response = await axios.get('/todos/getAll')
+
+    return response.data
   }
 }
 
