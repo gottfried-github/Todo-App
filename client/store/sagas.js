@@ -53,20 +53,20 @@ class Saga {
   }
 
   _updateStatus = async ({ id, status }) => {
-    const response = await axios.patch(`/todos/${id}`, { status })
+    await axios.patch(`/todos/${id}`, { status })
 
     EventEmitter.emit({
       type: Events.SAGA_ITEM_UPDATED,
-      payload: response.data,
+      payload: { id, fields: { status } },
     })
   }
 
   _updateName = async ({ id, name }) => {
-    const response = await axios.patch(`/todos/${id}`, { name })
+    await axios.patch(`/todos/${id}`, { name })
 
     EventEmitter.emit({
       type: Events.SAGA_ITEM_UPDATED,
-      payload: response.data,
+      payload: { id, fields: { name } },
     })
   }
 
