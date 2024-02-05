@@ -93,9 +93,11 @@ async function main() {
             res.end(JSON.stringify(error))
           })
           .on('data', chunk => {
-            console.log("Server, req.on('data'), chunk:", chunk)
-
             body += chunk
+
+            if (body.length > 1e6) {
+              req.destroy()
+            }
           })
           .on('end', async () => {
             if (!body) {
@@ -159,9 +161,11 @@ async function main() {
             res.end(JSON.stringify(error))
           })
           .on('data', chunk => {
-            console.log("Server, req.on('data'), chunk:", chunk)
-
             body += chunk
+
+            if (body.length > 1e6) {
+              req.destroy()
+            }
           })
           .on('end', async () => {
             if (!body) {
