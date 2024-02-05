@@ -5,7 +5,7 @@ import mongoose from 'mongoose'
 import { parseUrl } from './utils/utils.js'
 
 import create from './controllers/create.js'
-import update from './controllers/updateStatus.js'
+import update from './controllers/update.js'
 import deleteById from './controllers/deleteById.js'
 import deleteDone from './controllers/deleteDone.js'
 import getAll from './controllers/getAll.js'
