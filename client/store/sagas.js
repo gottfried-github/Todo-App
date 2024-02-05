@@ -71,7 +71,7 @@ class Saga {
   }
 
   _delete = async id => {
-    await axios.post('/todos/deleteById', id)
+    await axios.delete(`/todos/${id}`)
 
     EventEmitter.emit({
       type: Events.SAGA_ITEM_DELETED,
@@ -80,7 +80,7 @@ class Saga {
   }
 
   _deleteDone = async () => {
-    await axios.post('/todos/deleteDone')
+    await axios.delete('/todos')
 
     EventEmitter.emit({
       type: Events.SAGA_DONE_DELETED,
@@ -88,7 +88,7 @@ class Saga {
   }
 
   async getItems() {
-    const response = await axios.get('/todos/getAll')
+    const response = await axios.get('/todos')
 
     return response.data
   }
