@@ -9,7 +9,7 @@ axios.defaults.headers = {
   Accept: 'application/json',
 }
 axios.defaults.transformRequest = [data => JSON.stringify(data)]
-axios.defaults.transformResponse = [data => JSON.parse(data)]
+axios.defaults.transformResponse = [data => (data ? JSON.parse(data) : null)]
 
 class Item {
   constructor(name) {
