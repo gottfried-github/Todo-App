@@ -37,3 +37,28 @@ export function parseUrl(url) {
 
   return res
 }
+
+export function parseBody(req, cb) {
+  let body = ''
+
+  req.setEncoding('utf8')
+
+  return req
+    .on('error', error => {
+      console.log(`Server, req error event occured - error:`, error)
+
+      res.statusCode = 500
+
+      res.end(JSON.stringify(error))
+    })
+    .on('data', chunk => {
+      body += chunk
+
+      if (body.length > 1e6) {
+        req.destroy()
+      }
+    })
+    .on('end', () => {
+      cb(body)
+    })
+}
