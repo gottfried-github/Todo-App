@@ -16,8 +16,6 @@ async function main() {
 
   http
     .createServer(async (req, res) => {
-      console.log('Server, req.url', req.url)
-
       res.on('error', error => {
         console.log(`Server, res error event occured - error:`, error)
 
@@ -42,32 +40,7 @@ async function main() {
       }
 
       if ('GET' == req.method) {
-        let _res = null
-
-        try {
-          _res = await getAll()
-        } catch (e) {
-          console.log(`Server, 'GET' ${req.url}, controller errored - error:`, e)
-
-          res.statusCode = 500
-
-          return res.end(JSON.stringify(e))
-        }
-
-        res.statusCode = _res.status
-
-        try {
-          return res.end(JSON.stringify(_res.data))
-        } catch (e) {
-          console.log(
-            `Server, 'GET' ${req.url}, trying to send response from controller, res.end errored - error:`,
-            e
-          )
-
-          res.statusCode = 500
-
-          return res.end(JSON.stringify(e))
-        }
+        return getAll(req, res)
       } else if ('PUT' === req.method) {
         if (params.id) {
           res.statusCode = 400
