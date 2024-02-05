@@ -1,5 +1,4 @@
 import http from 'http'
-import { Buffer } from 'buffer'
 import mongoose from 'mongoose'
 
 import { parseUrl } from './utils/utils.js'
@@ -117,7 +116,7 @@ async function main() {
             let _res = null
 
             try {
-              _res = await update(params.id, JSON.parse(body))
+              _res = await create(params.id, JSON.parse(body))
             } catch (e) {
               console.log(`Server, 'PATCH' ${req.url}, controller errored - error:`, e)
 
