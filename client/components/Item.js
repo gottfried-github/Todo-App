@@ -15,9 +15,17 @@ export default class Item extends Component {
   }
 
   handleUpdateStatus = () => {
+    let status = null
+
+    if (this.item.status === 1) {
+      status = 2
+    } else {
+      status = 1
+    }
+
     EventEmitter.emit({
       type: Events.ITEM_UPDATE_STATUS_ONE,
-      payload: { id: this.item.id },
+      payload: { id: this.item.id, status },
     })
   }
 

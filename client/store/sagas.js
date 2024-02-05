@@ -44,7 +44,7 @@ class Saga {
   _create = async name => {
     const item = new Item(name)
 
-    const response = await axios.post('todos/create', item)
+    const response = await axios.put('/todos', item)
 
     EventEmitter.emit({
       type: Events.SAGA_ITEM_CREATED,
