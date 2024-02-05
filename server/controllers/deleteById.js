@@ -1,24 +1,28 @@
 import mongoose from 'mongoose'
-import { ResponseData } from '../utils/utils.js'
 
 import Todo from '../models/todo.js'
 
-export default async function deleteById(id) {
-  let res = null
-
+export default async function deleteById(req, res) {
   try {
-    res = await Todo.deleteOne({ _id: id })
-  } catch (e) {
-    if (e instanceof mongoose.Error.CastError) {
-      return new ResponseData(400, e)
+    const _res = await Todo.deleteOne({ _id: req.params.id })
+
+    if (0 === _res.deletedCount) {
+      res.statusCode = 404
+
+      return res.end()
     }
 
-    return new ResponseData(500, e)
-  }
+    res.statusCode = 200
 
-  if (0 === res.deletedCount) {
-    return new ResponseData(404)
-  }
+    return res.end(JSON.stringify({ deletedCount: _res.deletedCount }))
+  } catch (e) {
+    if (e instanceof mongoose.Error.CastError) {
+      res.statusCode = 400
 
-  return new ResponseData(200, { deletedCount: res.deletedCount })
+      return res.end(JSON.stringify(e))
+    }
+
+    res.statusCode = 500
+    return res.end(JSON.stringify(e))
+  }
 }
