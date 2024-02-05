@@ -2,7 +2,13 @@ import http from 'http'
 import { Buffer } from 'buffer'
 import mongoose from 'mongoose'
 
-import { CONTROLLERS } from './controllers-mapper.js'
+import { parseUrl } from './utils/utils.js'
+
+import create from './controllers/create.js'
+import update from './controllers/updateStatus.js'
+import deleteById from './controllers/deleteById.js'
+import deleteDone from './controllers/deleteDone.js'
+import getAll from './controllers/getAll.js'
 
 const CONTENT_TYPE = 'application/json'
 
@@ -11,6 +17,8 @@ async function main() {
 
   http
     .createServer(async (req, res) => {
+      console.log('Server, req.url', req.url)
+
       res.on('error', error => {
         console.log(`Server, res error event occured - error:`, error)
 
@@ -21,22 +29,24 @@ async function main() {
       })
 
       res.setHeader('Access-Control-Allow-Origin', '*')
-      res.setHeader('Access-Control-Allow-Methods', 'GET, POST')
+      res.setHeader('Access-Control-Allow-Methods', 'GET, PATCH, DELETE')
       res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
 
       res.setHeader('Content-Type', CONTENT_TYPE)
 
+      const params = parseUrl(req.url)
+
+      if (!params) {
+        res.statusCode = 404
+
+        return res.end(JSON.stringify({ message: "endpoint doesn't exist" }))
+      }
+
       if ('GET' == req.method) {
-        if (!(req.url in CONTROLLERS.GET)) {
-          res.statusCode = 404
-
-          return res.end(JSON.stringify({ message: "endpoint doesn't exist or wrong HTTP method" }))
-        }
-
         let _res = null
 
         try {
-          _res = await CONTROLLERS.GET[req.url]()
+          _res = await getAll()
         } catch (e) {
           console.log(`Server, 'GET' ${req.url}, controller errored - error:`, e)
 
@@ -44,8 +54,6 @@ async function main() {
 
           return res.end(JSON.stringify(e))
         }
-
-        // console.log(`Server, GET ${req.url}, _res:`, _res)
 
         res.statusCode = _res.status
 
@@ -61,11 +69,11 @@ async function main() {
 
           return res.end(JSON.stringify(e))
         }
-      } else if ('POST' === req.method) {
-        if (!(req.url in CONTROLLERS.POST)) {
-          res.statusCode = 404
+      } else if ('PATCH' === req.method) {
+        if (!params.id) {
+          res.statusCode = 400
 
-          return res.end(JSON.stringify({ message: "endpoint doesn't exist or wrong HTTP method" }))
+          return res.end(JSON.stringify({ message: 'no item specified' }))
         }
 
         const dataRawChunks = []
@@ -96,16 +104,18 @@ async function main() {
               }
             }
 
+            if (!body) {
+              res.statusCode = 400
+
+              return res.end(JSON.stringify({ message: 'no item data specified' }))
+            }
+
             let _res = null
 
             try {
-              if (body) {
-                _res = await CONTROLLERS.POST[req.url](JSON.parse(body))
-              } else {
-                _res = await CONTROLLERS.POST[req.url]()
-              }
+              _res = await update(params.id, JSON.parse(body))
             } catch (e) {
-              console.log(`Server, 'POST' ${req.url}, controller errored - error:`, e)
+              console.log(`Server, 'PATCH' ${req.url}, controller errored - error:`, e)
 
               res.statusCode = 500
 
@@ -118,7 +128,7 @@ async function main() {
               res.end(JSON.stringify(_res.data))
             } catch (e) {
               console.log(
-                `Server, 'POST' ${req.url}, trying to send response from controller, res.end errored - error:`,
+                `Server, 'PATCH' ${req.url}, trying to send response from controller, res.end errored - error:`,
                 e
               )
 
@@ -127,6 +137,62 @@ async function main() {
               res.end(JSON.stringify(e))
             }
           })
+      } else if ('DELETE' === req.method) {
+        if (!params.id) {
+          let _res = null
+
+          try {
+            _res = await deleteDone()
+          } catch (e) {
+            console.log(`Server, 'DELETE' ${req.url}, controller errored - error:`, e)
+
+            res.statusCode = 500
+
+            return res.end(JSON.stringify(e))
+          }
+
+          res.statusCode = _res.status
+
+          try {
+            res.end(JSON.stringify(_res.data))
+          } catch (e) {
+            console.log(
+              `Server, 'DELETE' ${req.url}, trying to send response from controller, res.end errored - error:`,
+              e
+            )
+
+            res.statusCode = 500
+
+            res.end(JSON.stringify(e))
+          }
+        } else {
+          let _res = null
+
+          try {
+            _res = await deleteById(params.id)
+          } catch (e) {
+            console.log(`Server, 'DELETE' ${req.url}, controller errored - error:`, e)
+
+            res.statusCode = 500
+
+            return res.end(JSON.stringify(e))
+          }
+
+          res.statusCode = _res.status
+
+          try {
+            res.end(JSON.stringify(_res.data))
+          } catch (e) {
+            console.log(
+              `Server, 'DELETE' ${req.url}, trying to send response from controller, res.end errored - error:`,
+              e
+            )
+
+            res.statusCode = 500
+
+            res.end(JSON.stringify(e))
+          }
+        }
       } else if ('OPTIONS' === req.method) {
         res.statusCode = 200
 
