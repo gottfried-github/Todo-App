@@ -10,7 +10,7 @@ export default class Input extends Component {
     if (!this.inputEl.value) return
 
     EventEmitter.emit({
-      type: Events.ITEM_APPEND_ONE,
+      type: Events.ITEM_CREATE,
       payload: this.inputEl.value,
     })
 

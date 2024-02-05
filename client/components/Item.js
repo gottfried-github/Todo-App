@@ -37,10 +37,10 @@ export default class Item extends Component {
     if (ev.isComposing || ev.code !== 'Enter') return
 
     EventEmitter.emit({
-      type: Events.ITEM_UPDATE_LABEL_ONE,
+      type: Events.ITEM_UPDATE_NAME,
       payload: {
         id: this.item.id,
-        label: ev.target.value,
+        name: ev.target.value,
       },
     })
 
@@ -57,11 +57,11 @@ export default class Item extends Component {
     if (this.isEditing) {
       label = createElement('input', null, ['input-edit'])
       label.setAttribute('type', 'text')
-      label.value = this.item.label
+      label.value = this.item.name
 
       label.addEventListener('keyup', this.handleSubmitLabel)
     } else {
-      label = createElement('label', null, null, this.item.label)
+      label = createElement('label', null, null, this.item.name)
       label.setAttribute('for', inputCheckbox.id)
       if (this.item.done) label.classList.add('checked')
     }
@@ -70,7 +70,7 @@ export default class Item extends Component {
     const deleteBtn = createElement('button', null, ['delete'], 'delete')
 
     inputCheckbox.setAttribute('type', 'checkbox')
-    inputCheckbox.checked = this.item.done
+    inputCheckbox.checked = 1 === this.item.status
 
     containerInput.append(inputCheckbox, label)
     container.append(containerInput, editBtn, deleteBtn)

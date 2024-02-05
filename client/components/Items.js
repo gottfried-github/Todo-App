@@ -26,6 +26,8 @@ export default class Items extends Component {
   }
 
   content = () => {
+    if (null === Store.getItems()) return createElement('div')
+
     const container = createElement('ul', null, ['items'])
 
     const itemsEls = Store.getItems().map(item =>

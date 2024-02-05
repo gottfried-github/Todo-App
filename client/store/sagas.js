@@ -1,13 +1,20 @@
+import axios from 'axios'
+
 import EventEmitter from '../utils/event-emitter'
 import Events from '../events'
 
-const FILTERS = ['all', 'done', 'notDone']
+axios.defaults.baseURL = 'http://localhost:3000'
+axios.defaults.headers = {
+  'Content-Type': 'application/json',
+  Accept: 'application/json',
+}
+axios.defaults.transformRequest = [data => JSON.stringify(data)]
+axios.defaults.transformResponse = [data => JSON.parse(data)]
 
 class Item {
-  constructor(label) {
-    this.id = Date.now()
-    this.done = false
-    this.label = label
+  constructor(name) {
+    this.name = name
+    this.timeCreated = new Date()
   }
 }
 
@@ -17,146 +24,73 @@ class Saga {
   }
 
   init = () => {
-    if (!localStorage.getItem('items')) {
-      localStorage.setItem('items', JSON.stringify([]))
-    }
+    //
 
-    if (!localStorage.getItem('filter')) {
-      localStorage.setItem('filter', 'all')
-    }
-
-    EventEmitter.subscribe(Events.ITEM_APPEND_ONE, this._append)
+    EventEmitter.subscribe(Events.ITEM_CREATE, this._create)
     EventEmitter.subscribe(Events.ITEM_UPDATE_STATUS_ONE, this._updateStatus)
-    EventEmitter.subscribe(Events.ITEM_UPDATE_LABEL_ONE, this._updateLabel)
+    EventEmitter.subscribe(Events.ITEM_UPDATE_NAME, this._updateName)
     EventEmitter.subscribe(Events.ITEM_DELETE_ONE, this._delete)
     EventEmitter.subscribe(Events.ITEM_DELETE_DONE, this._deleteDone)
-    EventEmitter.subscribe(Events.SET_FILTER, this._updateFilter)
   }
 
   unsubscribe = () => {
-    EventEmitter.unsubscribe(Events.ITEM_APPEND_ONE, this._append)
-    EventEmitter.unsubscribe(Events.ITEM_UPDATE_STATUS_ONE, this._updateStatus)
-    EventEmitter.unsubscribe(Events.ITEM_DELETE_ONE, this._delete)
-    EventEmitter.unsubscribe(Events.ITEM_DELETE_DONE, this._deleteDone)
-    EventEmitter.unsubscribe(Events.SET_FILTER, this._updateFilter)
+    EventEmitter.subscribe(Events.ITEM_CREATE, this._create)
+    EventEmitter.subscribe(Events.ITEM_UPDATE_STATUS_ONE, this._updateStatus)
+    EventEmitter.subscribe(Events.ITEM_UPDATE_NAME, this._updateName)
+    EventEmitter.subscribe(Events.ITEM_DELETE_ONE, this._delete)
+    EventEmitter.subscribe(Events.ITEM_DELETE_DONE, this._deleteDone)
   }
 
-  _getItems() {
-    return JSON.parse(localStorage.getItem('items'))
-  }
+  _create = async name => {
+    const item = new Item(name)
 
-  _setItems(items) {
-    localStorage.setItem('items', JSON.stringify(items))
-  }
-
-  _getFilter() {
-    return localStorage.getItem('filter')
-  }
-
-  _setFilter(filter) {
-    localStorage.setItem('filter', filter)
-  }
-
-  _append = label => {
-    const item = new Item(label, false)
-    const items = this._getItems()
-
-    this._setItems([...items, item])
+    const response = await axios.post('todos/create', item)
 
     EventEmitter.emit({
-      type: Events.SAGA_ITEM_APPENDED,
-      payload: item,
+      type: Events.SAGA_ITEM_CREATED,
+      payload: response.data,
     })
   }
 
-  _updateStatus = ({ id }) => {
-    const items = this._getItems()
-
-    const itemsNew = items.map(item => {
-      if (id === item.id) {
-        return {
-          ...item,
-          done: !item.done,
-        }
-      }
-
-      return item
-    })
-
-    this._setItems(itemsNew)
+  _updateStatus = async ({ id }) => {
+    const response = await axios.post('/todos/updateStatus', id)
 
     EventEmitter.emit({
       type: Events.SAGA_ITEM_UPDATED,
-      payload: itemsNew.find(item => id === item.id),
+      payload: response.data,
     })
   }
 
-  _updateLabel = ({ id, label }) => {
-    const items = this._getItems()
-
-    const itemsNew = items.map(item => {
-      if (id === item.id) {
-        return {
-          ...item,
-          label,
-        }
-      }
-
-      return item
-    })
-
-    this._setItems(itemsNew)
+  _updateName = async ({ id, name }) => {
+    const response = await axios.post('/todos/updateName', { id, name })
 
     EventEmitter.emit({
       type: Events.SAGA_ITEM_UPDATED,
-      payload: itemsNew.find(item => id === item.id),
+      payload: response.data,
     })
   }
 
-  _delete = id => {
-    const items = this._getItems()
-
-    const item = items.find(item => id === item.id)
-
-    this._setItems(items.filter(item => id !== item.id))
+  _delete = async id => {
+    await axios.post('/todos/deleteById', id)
 
     EventEmitter.emit({
-      type: Events.SAGA_ITEMS_DELETED,
-      payload: [item.id],
+      type: Events.SAGA_ITEM_DELETED,
+      payload: id,
     })
   }
 
-  _deleteDone = () => {
-    const items = this._getItems()
-
-    const itemsDeleted = items.filter(item => item.done)
-
-    this._setItems(items.filter(item => !item.done))
+  _deleteDone = async () => {
+    await axios.post('/todos/deleteDone')
 
     EventEmitter.emit({
-      type: Events.SAGA_ITEMS_DELETED,
-      payload: itemsDeleted.map(item => item.id),
+      type: Events.SAGA_DONE_DELETED,
     })
   }
 
-  _updateFilter = filter => {
-    if (!FILTERS.includes(filter)) {
-      throw new Error('invalid filter name')
-    }
+  async getItems() {
+    const response = await axios.get('/todos/getAll')
 
-    this._setFilter(filter)
-
-    EventEmitter.emit({
-      type: Events.SAGA_FILTER_SET,
-      payload: filter,
-    })
-  }
-
-  getData() {
-    return {
-      items: this._getItems(),
-      filter: this._getFilter(),
-    }
+    return response.data
   }
 }
 

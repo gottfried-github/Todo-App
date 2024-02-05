@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import { Response } from '../utils/utils.js'
+import { ResponseData } from '../utils/utils.js'
 
 import Todo from '../models/todo.js'
 
@@ -10,11 +10,11 @@ export default async function create(data) {
     await todo.save()
   } catch (e) {
     if (e instanceof mongoose.Error.ValidationError) {
-      return new Response(400, e)
-    } else {
-      return new Response(500, e)
+      return new ResponseData(400, e)
     }
+
+    return new ResponseData(500, e)
   }
 
-  return new Response(201, todo)
+  return new ResponseData(201, todo)
 }

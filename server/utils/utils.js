@@ -1,4 +1,4 @@
-export class Response {
+export class ResponseData {
   constructor(status, data) {
     this.status = status || 200
     this.data = data || null

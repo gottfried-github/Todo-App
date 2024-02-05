@@ -12,6 +12,8 @@ export default class Counters extends Component {
   }
 
   content = () => {
+    if (null === Store.getCount()) return createElement('div')
+
     const counterClass = 'counter'
 
     const container = createElement('div')

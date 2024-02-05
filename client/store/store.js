@@ -2,6 +2,8 @@ import EventEmitter from '../utils/event-emitter'
 import Saga from './sagas'
 import Events from '../events'
 
+const FILTERS = ['all', 'done', 'notDone']
+
 export function deepEqual(a, b) {
   if (Array.isArray(a) && Array.isArray(b)) {
     if (a.length !== b.length) {
@@ -36,20 +38,31 @@ export class Store {
     this.init()
   }
 
-  init = () => {
-    this.state = Saga.getData()
+  init = async () => {
+    const items = await Saga.getItems()
 
-    EventEmitter.subscribe(Events.SAGA_ITEM_APPENDED, this._append)
+    console.log('Store.init, items:', items)
+
+    this.state = {
+      items: items,
+      filter: 'all',
+    }
+
+    EventEmitter.subscribe(Events.SAGA_ITEM_CREATED, this._append)
     EventEmitter.subscribe(Events.SAGA_ITEM_UPDATED, this._updateItem)
-    EventEmitter.subscribe(Events.SAGA_ITEMS_DELETED, this._delete)
-    EventEmitter.subscribe(Events.SAGA_FILTER_SET, this._setFilter)
+    EventEmitter.subscribe(Events.SAGA_ITEM_DELETED, this._delete)
+    EventEmitter.subscribe(Events.SAGA_DONE_DELETED, this._deleteDone)
+    EventEmitter.subscribe(Events.SET_FILTER, this._setFilter)
+
+    EventEmitter.emit({ type: Events.STORAGE_UPDATED })
   }
 
   unsubscribe = () => {
-    EventEmitter.subscribe(Events.SAGA_ITEM_APPENDED, this._append)
-    EventEmitter.subscribe(Events.SAGA_ITEM_UPDATED, this._updateItem)
-    EventEmitter.subscribe(Events.SAGA_ITEMS_DELETED, this._delete)
-    EventEmitter.subscribe(Events.SAGA_FILTER_SET, this._setFilter)
+    EventEmitter.unsubscribe(Events.SAGA_ITEM_CREATED, this._append)
+    EventEmitter.unsubscribe(Events.SAGA_ITEM_UPDATED, this._updateItem)
+    EventEmitter.unsubscribe(Events.SAGA_ITEM_DELETED, this._delete)
+    EventEmitter.unsubscribe(Events.SAGA_DONE_DELETED, this._deleteDone)
+    EventEmitter.unsubscribe(Events.SET_FILTER, this._setFilter)
   }
 
   _setState(state) {
@@ -79,18 +92,33 @@ export class Store {
     })
   }
 
-  _delete = itemsIds => {
+  _delete = id => {
     this._setState({
       ...this.state,
-      items: this.state.items.filter(item => !itemsIds.includes(item.id)),
+      items: this.state.items.filter(item => id !== item.id),
+    })
+  }
+
+  _deleteDone = () => {
+    this._setState({
+      ...this.state,
+      items: this.state.items.filter(item => item.status === 2),
     })
   }
 
   _setFilter = filter => {
+    if (!FILTERS.includes(filter)) {
+      throw new Error('invalid filter')
+    }
+
     this._setState({ ...this.state, filter })
   }
 
   getCount = filter => {
+    if (!this.state) {
+      return null
+    }
+
     if (!filter) return this.getItems().length
 
     switch (filter) {
@@ -98,10 +126,10 @@ export class Store {
         return this.state.items.length
 
       case 'done':
-        return this.state.items.filter(item => item.done).length
+        return this.state.items.filter(item => item.status === 1).length
 
       case 'notDone':
-        return this.state.items.filter(item => !item.done).length
+        return this.state.items.filter(item => item.status === 2).length
 
       default:
         throw new Error("invalid filter value in Store's state")
@@ -109,6 +137,10 @@ export class Store {
   }
 
   getItems = filter => {
+    if (!this.state) {
+      return null
+    }
+
     const _filter = filter || this.state.filter
 
     switch (_filter) {
@@ -116,10 +148,10 @@ export class Store {
         return this.state.items
 
       case 'done':
-        return this.state.items.filter(item => item.done)
+        return this.state.items.filter(item => item.status === 1)
 
       case 'notDone':
-        return this.state.items.filter(item => !item.done)
+        return this.state.items.filter(item => item.status === 2)
 
       default:
         throw new Error('invalid filter value')
@@ -127,6 +159,10 @@ export class Store {
   }
 
   getFilter = () => {
+    if (!this.state) {
+      return null
+    }
+
     return this.state.filter
   }
 }
