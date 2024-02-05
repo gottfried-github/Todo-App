@@ -1,5 +1,3 @@
-import { removeAll } from './helpers'
-
 export class EventEmitter {
   constructor() {
     this.callbacksByEvent = {}
@@ -16,7 +14,7 @@ export class EventEmitter {
   unsubscribe(evName, cb) {
     if (!this.callbacksByEvent[evName] || !this.callbacksByEvent[evName].length) return
 
-    this.callbacksByEvent[evName] = removeAll(_cb => cb === _cb)
+    this.callbacksByEvent[evName] = this.callbacksByEvent[evName].filter(_cb => cb !== _cb)
   }
 
   emit({ type, payload }) {
