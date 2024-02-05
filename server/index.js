@@ -64,32 +64,7 @@ async function main() {
         return update(req, res)
       } else if ('DELETE' === req.method) {
         if (!req.params.id) {
-          let _res = null
-
-          try {
-            _res = await deleteDone()
-          } catch (e) {
-            console.log(`Server, 'DELETE' ${req.url}, controller errored - error:`, e)
-
-            res.statusCode = 500
-
-            return res.end(JSON.stringify(e))
-          }
-
-          res.statusCode = _res.status
-
-          try {
-            res.end(JSON.stringify(_res.data))
-          } catch (e) {
-            console.log(
-              `Server, 'DELETE' ${req.url}, trying to send response from controller, res.end errored - error:`,
-              e
-            )
-
-            res.statusCode = 500
-
-            res.end(JSON.stringify(e))
-          }
+          return deleteDone(req, res)
         } else {
           let _res = null
 
