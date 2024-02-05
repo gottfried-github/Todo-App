@@ -52,8 +52,8 @@ class Saga {
     })
   }
 
-  _updateStatus = async ({ id }) => {
-    const response = await axios.post('/todos/updateStatus', id)
+  _updateStatus = async ({ id, status }) => {
+    const response = await axios.patch(`/todos/${id}`, { status })
 
     EventEmitter.emit({
       type: Events.SAGA_ITEM_UPDATED,
@@ -62,7 +62,7 @@ class Saga {
   }
 
   _updateName = async ({ id, name }) => {
-    const response = await axios.post('/todos/updateName', { id, name })
+    const response = await axios.patch(`/todos/${id}`, { name })
 
     EventEmitter.emit({
       type: Events.SAGA_ITEM_UPDATED,
