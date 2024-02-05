@@ -107,6 +107,10 @@ export class Store {
   }
 
   _setFilter = filter => {
+    if (!FILTERS.includes(filter)) {
+      throw new Error('invalid filter')
+    }
+
     this._setState({ ...this.state, filter })
   }
 
