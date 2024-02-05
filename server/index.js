@@ -2,7 +2,7 @@ import http from 'http'
 import mongoose from 'mongoose'
 
 import { CONTENT_TYPE } from './constants.js'
-import { parseUrl, parseBody } from './utils/utils.js'
+import { parseUrl } from './utils/utils.js'
 
 import create from './controllers/create.js'
 import update from './controllers/update.js'
@@ -38,10 +38,12 @@ async function main() {
         return res.end(JSON.stringify({ message: "endpoint doesn't exist" }))
       }
 
+      req.params = params
+
       if ('GET' == req.method) {
         return getAll(req, res)
       } else if ('PUT' === req.method) {
-        if (params.id) {
+        if (req.params.id) {
           res.statusCode = 400
 
           return res.end(
@@ -53,56 +55,15 @@ async function main() {
 
         return create(req, res)
       } else if ('PATCH' === req.method) {
-        if (!params.id) {
+        if (!req.params.id) {
           res.statusCode = 400
 
           return res.end(JSON.stringify({ message: 'no item specified' }))
         }
 
-        return parseBody(req, async body => {
-          if (!body) {
-            res.statusCode = 400
-
-            return res.end(JSON.stringify({ message: 'no item data specified' }))
-          }
-
-          if (CONTENT_TYPE !== req.headers['content-type']) {
-            res.statusCode = 400
-
-            return res.end(
-              JSON.stringify({ message: `server only supports ${CONTENT_TYPE} content-type` })
-            )
-          }
-
-          let _res = null
-
-          try {
-            _res = await update(params.id, JSON.parse(body))
-          } catch (e) {
-            console.log(`Server, 'PATCH' ${req.url}, controller errored - error:`, e)
-
-            res.statusCode = 500
-
-            return res.end(JSON.stringify(e))
-          }
-
-          res.statusCode = _res.status
-
-          try {
-            res.end(JSON.stringify(_res.data))
-          } catch (e) {
-            console.log(
-              `Server, 'PATCH' ${req.url}, trying to send response from controller, res.end errored - error:`,
-              e
-            )
-
-            res.statusCode = 500
-
-            res.end(JSON.stringify(e))
-          }
-        })
+        return update(req, res)
       } else if ('DELETE' === req.method) {
-        if (!params.id) {
+        if (!req.params.id) {
           let _res = null
 
           try {
