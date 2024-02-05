@@ -10,3 +10,27 @@ export class ResponseData {
     }
   }
 }
+
+export function parseUrl(url) {
+  const sections = url.split('/')
+
+  if ('' === sections[0]) {
+    sections.shift()
+  }
+
+  if ('' === sections[sections.length - 1]) {
+    sections.pop()
+  }
+
+  if (!sections.length || sections.length > 2 || 'todos' !== sections[0]) {
+    return null
+  }
+
+  const res = {}
+
+  if (sections[1]) {
+    res.id = sections[1]
+  }
+
+  return res
+}
