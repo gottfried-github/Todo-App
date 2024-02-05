@@ -11,6 +11,9 @@ export class ResponseData {
   }
 }
 
+/**
+ * @description match /todos/:id pattern. If not matched, return null
+ */
 export function parseUrl(url) {
   const sections = url.split('/')
 
