@@ -29,7 +29,7 @@ async function main() {
       })
 
       res.setHeader('Access-Control-Allow-Origin', '*')
-      res.setHeader('Access-Control-Allow-Methods', 'GET, PATCH, DELETE')
+      res.setHeader('Access-Control-Allow-Methods', 'GET, PUT, PATCH, DELETE')
       res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
 
       res.setHeader('Content-Type', CONTENT_TYPE)
@@ -69,6 +69,78 @@ async function main() {
 
           return res.end(JSON.stringify(e))
         }
+      } else if ('PUT' === req.method) {
+        if (params.id) {
+          res.statusCode = 400
+
+          return res.end(
+            JSON.stringify({
+              message: 'PUT with an existing item is not supported. Use PATCH instead',
+            })
+          )
+        }
+
+        const dataRawChunks = []
+
+        return req
+          .on('error', error => {
+            console.log(`Server, req error event occured - error:`, error)
+
+            res.statusCode = 500
+
+            res.end(JSON.stringify(error))
+          })
+          .on('data', chunk => {
+            dataRawChunks.push(chunk)
+          })
+          .on('end', async () => {
+            let body = null
+
+            if (dataRawChunks.length) {
+              body = Buffer.concat(dataRawChunks).toString()
+
+              if (CONTENT_TYPE !== req.headers['content-type']) {
+                res.statusCode = 400
+
+                return res.end(
+                  JSON.stringify({ message: `server only supports ${CONTENT_TYPE} content-type` })
+                )
+              }
+            }
+
+            if (!body) {
+              res.statusCode = 400
+
+              return res.end(JSON.stringify({ message: 'no item data specified' }))
+            }
+
+            let _res = null
+
+            try {
+              _res = await create(JSON.parse(body))
+            } catch (e) {
+              console.log(`Server, 'PATCH' ${req.url}, controller errored - error:`, e)
+
+              res.statusCode = 500
+
+              return res.end(JSON.stringify(e))
+            }
+
+            res.statusCode = _res.status
+
+            try {
+              res.end(JSON.stringify(_res.data))
+            } catch (e) {
+              console.log(
+                `Server, 'PATCH' ${req.url}, trying to send response from controller, res.end errored - error:`,
+                e
+              )
+
+              res.statusCode = 500
+
+              res.end(JSON.stringify(e))
+            }
+          })
       } else if ('PATCH' === req.method) {
         if (!params.id) {
           res.statusCode = 400
