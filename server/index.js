@@ -80,7 +80,9 @@ async function main() {
           )
         }
 
-        const dataRawChunks = []
+        let body = ''
+
+        req.setEncoding('utf8')
 
         return req
           .on('error', error => {
@@ -91,33 +93,29 @@ async function main() {
             res.end(JSON.stringify(error))
           })
           .on('data', chunk => {
-            dataRawChunks.push(chunk)
+            console.log("Server, req.on('data'), chunk:", chunk)
+
+            body += chunk
           })
           .on('end', async () => {
-            let body = null
-
-            if (dataRawChunks.length) {
-              body = Buffer.concat(dataRawChunks).toString()
-
-              if (CONTENT_TYPE !== req.headers['content-type']) {
-                res.statusCode = 400
-
-                return res.end(
-                  JSON.stringify({ message: `server only supports ${CONTENT_TYPE} content-type` })
-                )
-              }
-            }
-
             if (!body) {
               res.statusCode = 400
 
               return res.end(JSON.stringify({ message: 'no item data specified' }))
             }
 
+            if (CONTENT_TYPE !== req.headers['content-type']) {
+              res.statusCode = 400
+
+              return res.end(
+                JSON.stringify({ message: `server only supports ${CONTENT_TYPE} content-type` })
+              )
+            }
+
             let _res = null
 
             try {
-              _res = await create(JSON.parse(body))
+              _res = await update(params.id, JSON.parse(body))
             } catch (e) {
               console.log(`Server, 'PATCH' ${req.url}, controller errored - error:`, e)
 
@@ -148,7 +146,9 @@ async function main() {
           return res.end(JSON.stringify({ message: 'no item specified' }))
         }
 
-        const dataRawChunks = []
+        let body = ''
+
+        req.setEncoding('utf8')
 
         return req
           .on('error', error => {
@@ -159,27 +159,23 @@ async function main() {
             res.end(JSON.stringify(error))
           })
           .on('data', chunk => {
-            dataRawChunks.push(chunk)
+            console.log("Server, req.on('data'), chunk:", chunk)
+
+            body += chunk
           })
           .on('end', async () => {
-            let body = null
-
-            if (dataRawChunks.length) {
-              body = Buffer.concat(dataRawChunks).toString()
-
-              if (CONTENT_TYPE !== req.headers['content-type']) {
-                res.statusCode = 400
-
-                return res.end(
-                  JSON.stringify({ message: `server only supports ${CONTENT_TYPE} content-type` })
-                )
-              }
-            }
-
             if (!body) {
               res.statusCode = 400
 
               return res.end(JSON.stringify({ message: 'no item data specified' }))
+            }
+
+            if (CONTENT_TYPE !== req.headers['content-type']) {
+              res.statusCode = 400
+
+              return res.end(
+                JSON.stringify({ message: `server only supports ${CONTENT_TYPE} content-type` })
+              )
             }
 
             let _res = null
