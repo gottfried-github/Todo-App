@@ -15,6 +15,7 @@ const schema = new mongoose.Schema(
   },
   {
     timestamps: true,
+    versionKey: false,
     toJSON: { virtuals: true },
     virtuals: {
       id: {
