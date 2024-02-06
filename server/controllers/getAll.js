@@ -4,7 +4,7 @@ export default async function getAll(req, res) {
   let items = null
 
   try {
-    items = await Todo.find().sort({ timeCreated: 1 })
+    items = await Todo.find().sort({ createdAt: 1 })
   } catch (e) {
     console.log(`Server, 'GET' ${req.url}, controller errored - error:`, e)
 

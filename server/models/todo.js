@@ -2,11 +2,6 @@ import mongoose from 'mongoose'
 
 const schema = new mongoose.Schema(
   {
-    timeCreated: {
-      type: Date,
-      index: 1,
-      required: true,
-    },
     name: {
       type: String,
       required: true,
@@ -19,6 +14,7 @@ const schema = new mongoose.Schema(
     },
   },
   {
+    timestamps: true,
     toJSON: { virtuals: true },
     virtuals: {
       id: {

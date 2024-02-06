@@ -14,7 +14,6 @@ axios.defaults.transformResponse = [data => (data ? JSON.parse(data) : null)]
 class Item {
   constructor(name) {
     this.name = name
-    this.timeCreated = new Date()
   }
 }
 
