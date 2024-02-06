@@ -1,5 +1,5 @@
 import axios from 'axios'
-import './axios'
+import './http'
 
 import EventEmitter from '../utils/event-emitter'
 import Events from '../events'
