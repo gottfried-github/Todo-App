@@ -26,7 +26,9 @@ async function main() {
 
       router(req, res)
     })
-    .listen(process.env.HTTP_PORT)
+    .listen(process.env.HTTP_PORT, () => {
+      console.log(`server listening on port ${process.env.HTTP_PORT}`)
+    })
 }
 
 main()
