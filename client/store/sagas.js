@@ -1,20 +1,12 @@
 import axios from 'axios'
+import './http'
 
 import EventEmitter from '../utils/event-emitter'
 import Events from '../events'
 
-axios.defaults.baseURL = 'http://localhost:3000'
-axios.defaults.headers = {
-  'Content-Type': 'application/json',
-  Accept: 'application/json',
-}
-axios.defaults.transformRequest = [data => JSON.stringify(data)]
-axios.defaults.transformResponse = [data => JSON.parse(data)]
-
 class Item {
   constructor(name) {
     this.name = name
-    this.timeCreated = new Date()
   }
 }
 
@@ -24,8 +16,6 @@ class Saga {
   }
 
   init = () => {
-    //
-
     EventEmitter.subscribe(Events.ITEM_CREATE, this._create)
     EventEmitter.subscribe(Events.ITEM_UPDATE_STATUS_ONE, this._updateStatus)
     EventEmitter.subscribe(Events.ITEM_UPDATE_NAME, this._updateName)
@@ -44,53 +34,77 @@ class Saga {
   _create = async name => {
     const item = new Item(name)
 
-    const response = await axios.post('todos/create', item)
+    try {
+      const response = await axios.put('/todos', item)
 
-    EventEmitter.emit({
-      type: Events.SAGA_ITEM_CREATED,
-      payload: response.data,
-    })
+      EventEmitter.emit({
+        type: Events.SAGA_ITEM_CREATED,
+        payload: response.data,
+      })
+    } catch (e) {
+      console.log('Saga._create, axios errored - error:', e)
+    }
   }
 
-  _updateStatus = async ({ id }) => {
-    const response = await axios.post('/todos/updateStatus', id)
+  _updateStatus = async ({ id, status }) => {
+    try {
+      await axios.patch(`/todos/${id}`, { status })
 
-    EventEmitter.emit({
-      type: Events.SAGA_ITEM_UPDATED,
-      payload: response.data,
-    })
+      EventEmitter.emit({
+        type: Events.SAGA_ITEM_UPDATED,
+        payload: { id, fields: { status } },
+      })
+    } catch (e) {
+      console.log('Saga._updateStatus, axios errored - error:', e)
+    }
   }
 
   _updateName = async ({ id, name }) => {
-    const response = await axios.post('/todos/updateName', { id, name })
+    try {
+      await axios.patch(`/todos/${id}`, { name })
 
-    EventEmitter.emit({
-      type: Events.SAGA_ITEM_UPDATED,
-      payload: response.data,
-    })
+      EventEmitter.emit({
+        type: Events.SAGA_ITEM_UPDATED,
+        payload: { id, fields: { name } },
+      })
+    } catch (e) {
+      console.log('Saga._updateName, axios errored - error:', e)
+    }
   }
 
   _delete = async id => {
-    await axios.post('/todos/deleteById', id)
+    try {
+      await axios.delete(`/todos/${id}`)
 
-    EventEmitter.emit({
-      type: Events.SAGA_ITEM_DELETED,
-      payload: id,
-    })
+      EventEmitter.emit({
+        type: Events.SAGA_ITEM_DELETED,
+        payload: id,
+      })
+    } catch (e) {
+      console.log('Saga._delete, axios errored - error:', e)
+    }
   }
 
   _deleteDone = async () => {
-    await axios.post('/todos/deleteDone')
+    try {
+      await axios.delete('/todos')
 
-    EventEmitter.emit({
-      type: Events.SAGA_DONE_DELETED,
-    })
+      EventEmitter.emit({
+        type: Events.SAGA_DONE_DELETED,
+      })
+    } catch (e) {
+      console.log('Saga._deleteDone, axios errored - error:', e)
+    }
   }
 
   async getItems() {
-    const response = await axios.get('/todos/getAll')
+    try {
+      const response = await axios.get('/todos')
 
-    return response.data
+      return response.data
+    } catch (e) {
+      console.log('Saga.getItems, axios errored - error:', e)
+    }
   }
 }
 

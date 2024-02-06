@@ -2,10 +2,9 @@ import mongoose from 'mongoose'
 
 import { CONTENT_TYPE } from '../constants.js'
 import { parseBody } from '../utils/utils.js'
-
 import Todo from '../models/todo.js'
 
-export default async function create(req, res) {
+export default async function update(req, res) {
   return parseBody(req, async body => {
     if (!body) {
       res.statusCode = 400
@@ -22,23 +21,29 @@ export default async function create(req, res) {
     }
 
     try {
-      const item = await Todo.create(body)
+      const _res = await Todo.updateOne({ _id: req.params.id }, body, {
+        runValidators: true,
+      })
 
-      res.statusCode = 201
+      if (_res.matchedCount === 0) {
+        res.statusCode = 404
 
-      res.end(JSON.stringify(item))
+        return res.end()
+      }
+
+      res.statusCode = 200
+
+      return res.end()
     } catch (e) {
-      if (e instanceof mongoose.Error.ValidationError) {
+      if (e instanceof mongoose.Error.CastError || e instanceof mongoose.Error.ValidationError) {
         res.statusCode = 400
 
         return res.end(JSON.stringify(e))
       }
 
-      console.log(`Server, create, database errored - error:`, e)
-
       res.statusCode = 500
 
-      return res.end(JSON.stringify(e))
+      res.end(JSON.stringify(e))
     }
   })
 }

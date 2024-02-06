@@ -1,14 +1,19 @@
 import Todo from '../models/todo.js'
-import { ResponseData } from '../utils/utils.js'
 
-export default async function deleteDone() {
-  let res = null
+export default async function deleteDone(req, res) {
+  let _res = null
 
   try {
-    res = await Todo.deleteDone()
-  } catch (e) {
-    return new ResponseData(500, e)
-  }
+    _res = await Todo.deleteDone()
 
-  return new ResponseData(200, { deletedCount: res.deletedCount })
+    res.statusCode = 200
+
+    return res.end(JSON.stringify({ deletedCount: _res.deletedCount }))
+  } catch (e) {
+    console.log(`Server, deleteDone ${req.url}, database errored - error:`, e)
+
+    res.statusCode = 500
+
+    res.end(JSON.stringify(e))
+  }
 }

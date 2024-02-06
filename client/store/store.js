@@ -84,12 +84,15 @@ export class Store {
     })
   }
 
-  _updateItem = item => {
+  _updateItem = ({ id, fields }) => {
     this._setState({
       ...this.state,
       items: this.state.items.map(_item => {
-        if (item.id === _item.id) {
-          return item
+        if (id === _item.id) {
+          return {
+            ..._item,
+            ...fields,
+          }
         }
 
         return _item
