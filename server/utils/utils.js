@@ -59,6 +59,6 @@ export function parseBody(req, cb) {
       }
     })
     .on('end', () => {
-      cb(body)
+      cb(JSON.parse(body))
     })
 }

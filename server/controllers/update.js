@@ -21,7 +21,7 @@ export default async function update(req, res) {
     }
 
     try {
-      const _res = await Todo.updateOne({ _id: req.params.id }, JSON.parse(body), {
+      const _res = await Todo.updateOne({ _id: req.params.id }, body, {
         runValidators: true,
       })
 
