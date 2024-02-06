@@ -21,10 +21,12 @@ export default async function create(req, res) {
       )
     }
 
-    let item = null
-
     try {
-      item = await Todo.create(body)
+      const item = await Todo.create(body)
+
+      res.statusCode = 201
+
+      res.end(JSON.stringify(item))
     } catch (e) {
       if (e instanceof mongoose.Error.ValidationError) {
         res.statusCode = 400
@@ -38,9 +40,5 @@ export default async function create(req, res) {
 
       return res.end(JSON.stringify(e))
     }
-
-    res.statusCode = 201
-
-    res.end(JSON.stringify(item))
   })
 }
