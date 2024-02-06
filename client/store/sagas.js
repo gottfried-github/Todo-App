@@ -1,15 +1,8 @@
 import axios from 'axios'
+import './axios'
 
 import EventEmitter from '../utils/event-emitter'
 import Events from '../events'
-
-axios.defaults.baseURL = 'http://localhost:3000'
-axios.defaults.headers = {
-  'Content-Type': 'application/json',
-  Accept: 'application/json',
-}
-axios.defaults.transformRequest = [data => JSON.stringify(data)]
-axios.defaults.transformResponse = [data => (data ? JSON.parse(data) : null)]
 
 class Item {
   constructor(name) {
@@ -23,8 +16,6 @@ class Saga {
   }
 
   init = () => {
-    //
-
     EventEmitter.subscribe(Events.ITEM_CREATE, this._create)
     EventEmitter.subscribe(Events.ITEM_UPDATE_STATUS_ONE, this._updateStatus)
     EventEmitter.subscribe(Events.ITEM_UPDATE_NAME, this._updateName)
