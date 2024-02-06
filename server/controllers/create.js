@@ -21,10 +21,10 @@ export default async function create(req, res) {
       )
     }
 
-    let item = new Todo(JSON.parse(body))
+    let item = null
 
     try {
-      item = await item.save()
+      item = await Todo.create(JSON.parse(body))
     } catch (e) {
       if (e instanceof mongoose.Error.ValidationError) {
         res.statusCode = 400
