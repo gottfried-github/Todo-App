@@ -2,7 +2,7 @@ import { parseUrl } from './utils/utils.js'
 
 import create from './controllers/create.js'
 import update from './controllers/update.js'
-import deleteById from './controllers/deleteById.js'
+import deleteById from './controllers/delete.js'
 import deleteDone from './controllers/deleteDone.js'
 import getAll from './controllers/getAll.js'
 
