@@ -59,12 +59,14 @@ router.delete('/:id', async ctx => {
   // }
 })
 
-router.delete('/', ctx => {
+router.delete('/', async ctx => {
   console.log('router.delete')
 
-  ctx.body = {
-    message: 'DELETE / request received',
-  }
+  await deleteDone(ctx)
+
+  // ctx.body = {
+  //   message: 'DELETE / request received',
+  // }
 })
 
 export default router
