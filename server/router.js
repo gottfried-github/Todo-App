@@ -1,7 +1,5 @@
 import Router from '@koa/router'
-import bodyParser from 'koa-bodyparser'
-
-import { CONTENT_TYPE } from './constants.js'
+import { parseBody, validateContentType } from './middleware/index.js'
 
 import create from './controllers/create.js'
 import update from './controllers/update.js'
@@ -9,29 +7,15 @@ import deleteById from './controllers/delete.js'
 import deleteDone from './controllers/deleteDone.js'
 import getAll from './controllers/getAll.js'
 
-const parseBody = bodyParser({
-  enableTypes: 'json',
-})
-
-const validateContentType = async (ctx, next) => {
-  if (
-    !('content-type' in ctx.request.headers) ||
-    ctx.request.headers['content-type'] !== CONTENT_TYPE
-  ) {
-    ctx.status = 415
-
-    ctx.body = {
-      message: `only ${CONTENT_TYPE} content-type is supported`,
-    }
-
-    return
-  }
-
-  await next()
-}
-
 const router = new Router({
   prefix: '/todos',
+})
+
+router.all(['/', '/:id'], async (ctx, next) => {
+  ctx.set('Access-Control-Allow-Origin', '*')
+  ctx.set('Access-Control-Allow-Headers', 'Content-Type')
+
+  await next()
 })
 
 router.get('/', ctx => {
