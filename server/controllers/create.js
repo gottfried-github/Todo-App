@@ -1,44 +1,27 @@
 import mongoose from 'mongoose'
 
-import { CONTENT_TYPE } from '../constants.js'
-import { parseBody } from '../utils/utils.js'
-
 import Todo from '../models/todo.js'
 
-export default async function create(req, res) {
-  return parseBody(req, async body => {
-    if (!body) {
-      res.statusCode = 400
+export default async function create(ctx) {
+  try {
+    const item = await Todo.create(ctx.request.body)
 
-      return res.end(JSON.stringify({ message: 'no item data specified' }))
+    ctx.status = 201
+
+    ctx.body = item
+  } catch (e) {
+    if (e instanceof mongoose.Error.ValidationError) {
+      ctx.status = 400
+
+      ctx.body = e
+
+      return
     }
 
-    if (CONTENT_TYPE !== req.headers['content-type']) {
-      res.statusCode = 400
+    console.log(`Server, create, database errored - error:`, e)
 
-      return res.end(
-        JSON.stringify({ message: `server only supports ${CONTENT_TYPE} content-type` })
-      )
-    }
+    ctx.status = 500
 
-    try {
-      const item = await Todo.create(body)
-
-      res.statusCode = 201
-
-      res.end(JSON.stringify(item))
-    } catch (e) {
-      if (e instanceof mongoose.Error.ValidationError) {
-        res.statusCode = 400
-
-        return res.end(JSON.stringify(e))
-      }
-
-      console.log(`Server, create, database errored - error:`, e)
-
-      res.statusCode = 500
-
-      return res.end(JSON.stringify(e))
-    }
-  })
+    ctx.body = e
+  }
 }

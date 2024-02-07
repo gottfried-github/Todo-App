@@ -1,5 +1,5 @@
 import Router from '@koa/router'
-import { parseBody, validateContentType } from './middleware/index.js'
+import { parseBody, validateContentType, validateBody } from './middleware/index.js'
 
 import create from './controllers/create.js'
 import update from './controllers/update.js'
@@ -18,23 +18,27 @@ router.all(['/', '/:id'], async (ctx, next) => {
   await next()
 })
 
-router.get('/', ctx => {
+router.get('/', async ctx => {
   console.log('router.get')
+
+  // await create(ctx)
 
   ctx.body = {
     message: 'GET / request received',
   }
 })
 
-router.post('/', validateContentType, parseBody, ctx => {
+router.post('/', validateContentType, parseBody, validateBody, async ctx => {
   console.log('router.post, request body', ctx.request.body)
 
-  ctx.body = {
-    message: 'POST / request received',
-  }
+  await create(ctx)
+
+  // ctx.body = {
+  //   message: 'POST / request received',
+  // }
 })
 
-router.patch('/:id', validateContentType, parseBody, ctx => {
+router.patch('/:id', validateContentType, parseBody, validateBody, ctx => {
   console.log('router.patch, ctx.params, request.body', ctx.params, ctx.request.body)
 
   ctx.body = {
