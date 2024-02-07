@@ -14,6 +14,7 @@ const router = new Router({
 router.all(['/', '/:id'], async (ctx, next) => {
   ctx.set('Access-Control-Allow-Origin', '*')
   ctx.set('Access-Control-Allow-Headers', 'Content-Type')
+  ctx.set('Access-Control-Allow-Methods', 'PATCH')
 
   await next()
 })
@@ -21,11 +22,11 @@ router.all(['/', '/:id'], async (ctx, next) => {
 router.get('/', async ctx => {
   console.log('router.get')
 
-  // await create(ctx)
+  await getAll(ctx)
 
-  ctx.body = {
-    message: 'GET / request received',
-  }
+  // ctx.body = {
+  //   message: 'GET / request received',
+  // }
 })
 
 router.post('/', validateContentType, parseBody, validateBody, async ctx => {
@@ -38,12 +39,14 @@ router.post('/', validateContentType, parseBody, validateBody, async ctx => {
   // }
 })
 
-router.patch('/:id', validateContentType, parseBody, validateBody, ctx => {
+router.patch('/:id', validateContentType, parseBody, validateBody, async ctx => {
   console.log('router.patch, ctx.params, request.body', ctx.params, ctx.request.body)
 
-  ctx.body = {
-    message: 'PATCH /:id request received',
-  }
+  await update(ctx)
+
+  // ctx.body = {
+  //   message: 'PATCH /:id request received',
+  // }
 })
 
 router.delete('/:id', ctx => {
