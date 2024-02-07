@@ -1,10 +1,8 @@
 import mongoose from 'mongoose'
 
 import Koa from 'koa'
-import bodyParser from 'koa-bodyparser'
 
-import { CONTENT_TYPE } from './constants.js'
-// import router from './router.js'
+import router from './router.js'
 
 async function main() {
   await mongoose.connect(process.env.DB_CONNECTION)
@@ -12,32 +10,8 @@ async function main() {
   const app = new Koa()
 
   app
-    .use(async (ctx, next) => {
-      if (
-        !('content-type' in ctx.request.headers) ||
-        ctx.request.headers['content-type'] !== CONTENT_TYPE
-      ) {
-        ctx.status = 415
-
-        ctx.body = {
-          message: `only ${CONTENT_TYPE} content-type is supported`,
-        }
-
-        return
-      }
-
-      await next()
-    })
-    .use(
-      bodyParser({
-        enableTypes: 'json',
-      })
-    )
-    .use(ctx => {
-      ctx.body = {
-        message: 'some response',
-      }
-    })
+    .use(router.routes())
+    .use(router.allowedMethods())
     .listen(process.env.HTTP_PORT, () => {
       console.log(`server is running at port ${process.env.HTTP_PORT}`)
     })
