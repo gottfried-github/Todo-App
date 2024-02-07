@@ -19,54 +19,10 @@ router.all(['/', '/:id'], async (ctx, next) => {
   await next()
 })
 
-router.get('/', async ctx => {
-  console.log('router.get')
-
-  await getAll(ctx)
-
-  // ctx.body = {
-  //   message: 'GET / request received',
-  // }
-})
-
-router.post('/', validateContentType, parseBody, validateBody, async ctx => {
-  console.log('router.post, request body', ctx.request.body)
-
-  await create(ctx)
-
-  // ctx.body = {
-  //   message: 'POST / request received',
-  // }
-})
-
-router.patch('/:id', validateContentType, parseBody, validateBody, async ctx => {
-  console.log('router.patch, ctx.params, request.body', ctx.params, ctx.request.body)
-
-  await update(ctx)
-
-  // ctx.body = {
-  //   message: 'PATCH /:id request received',
-  // }
-})
-
-router.delete('/:id', async ctx => {
-  console.log('router.delete, ctx.params', ctx.params)
-
-  await deleteById(ctx)
-
-  // ctx.body = {
-  //   message: 'DELETE /:id request received',
-  // }
-})
-
-router.delete('/', async ctx => {
-  console.log('router.delete')
-
-  await deleteDone(ctx)
-
-  // ctx.body = {
-  //   message: 'DELETE / request received',
-  // }
-})
+router.get('/', getAll)
+router.post('/', validateContentType, parseBody, validateBody, create)
+router.patch('/:id', validateContentType, parseBody, validateBody, update)
+router.delete('/:id', deleteById)
+router.delete('/', deleteDone)
 
 export default router
