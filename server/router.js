@@ -14,7 +14,7 @@ const router = new Router({
 router.all(['/', '/:id'], async (ctx, next) => {
   ctx.set('Access-Control-Allow-Origin', '*')
   ctx.set('Access-Control-Allow-Headers', 'Content-Type')
-  ctx.set('Access-Control-Allow-Methods', 'PATCH')
+  ctx.set('Access-Control-Allow-Methods', 'PATCH, DELETE')
 
   await next()
 })
@@ -49,12 +49,14 @@ router.patch('/:id', validateContentType, parseBody, validateBody, async ctx => 
   // }
 })
 
-router.delete('/:id', ctx => {
+router.delete('/:id', async ctx => {
   console.log('router.delete, ctx.params', ctx.params)
 
-  ctx.body = {
-    message: 'DELETE /:id request received',
-  }
+  await deleteById(ctx)
+
+  // ctx.body = {
+  //   message: 'DELETE /:id request received',
+  // }
 })
 
 router.delete('/', ctx => {
