@@ -1,6 +1,6 @@
 {
   "name": "todo-server",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "description": "server for todos",
   "main": "index.js",
   "type": "module",
@@ -22,6 +22,9 @@
     "prettier": "^3.2.4"
   },
   "dependencies": {
+    "@koa/router": "^12.0.1",
+    "koa": "^2.15.0",
+    "koa-bodyparser": "^4.4.1",
     "mongoose": "^8.1.1"
   }
 }

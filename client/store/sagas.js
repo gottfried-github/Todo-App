@@ -1,5 +1,4 @@
-import axios from 'axios'
-import './http'
+import axios from './http'
 
 import EventEmitter from '../utils/event-emitter'
 import Events from '../events'
@@ -35,7 +34,7 @@ class Saga {
     const item = new Item(name)
 
     try {
-      const response = await axios.put('/todos', item)
+      const response = await axios.post('/todos', item)
 
       EventEmitter.emit({
         type: Events.SAGA_ITEM_CREATED,

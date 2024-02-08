@@ -1,17 +1,13 @@
 import Todo from '../models/todo.js'
 
-export default async function getAll(req, res) {
+export default async function getAll(ctx) {
   try {
     const items = await Todo.find().sort({ createdAt: 1 })
 
-    res.statusCode = 200
+    ctx.status = 200
 
-    return res.end(JSON.stringify(items))
+    ctx.body = items
   } catch (e) {
-    console.log(`Server, 'GET' ${req.url}, controller errored - error:`, e)
-
-    res.statusCode = 500
-
-    return res.end(JSON.stringify(e))
+    ctx.throw(500, 'database errored', e)
   }
 }
