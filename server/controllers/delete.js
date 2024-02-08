@@ -7,11 +7,7 @@ export default async function deleteById(ctx) {
     const _res = await Todo.deleteOne({ _id: ctx.params.id })
 
     if (_res.deletedCount === 0) {
-      ctx.status = 404
-
-      ctx.body = {}
-
-      return
+      ctx.throw(404, 'no documents have been deleted')
     }
 
     ctx.status = 200
