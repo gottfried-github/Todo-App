@@ -17,11 +17,15 @@ async function main() {
         if (!e.expose) {
           console.log(e)
 
+          ctx.status = e.status
+          ctx.body = {}
+
           return
         }
 
         console.log(e)
 
+        ctx.status = e.status
         ctx.body = e
       }
     })
