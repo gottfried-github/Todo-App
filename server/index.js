@@ -12,6 +12,13 @@ async function main() {
 
   app
     .use(handleErrors)
+    .use(async (ctx, next) => {
+      ctx.set('Access-Control-Allow-Origin', '*')
+      ctx.set('Access-Control-Allow-Headers', 'Content-Type')
+      ctx.set('Access-Control-Allow-Methods', 'PATCH, DELETE')
+
+      await next()
+    })
     .use(router.routes())
     .use(router.allowedMethods())
     .listen(process.env.HTTP_PORT, () => {

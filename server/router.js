@@ -11,14 +11,6 @@ const router = new Router({
   prefix: '/todos',
 })
 
-router.all(['/', '/:id'], async (ctx, next) => {
-  ctx.set('Access-Control-Allow-Origin', '*')
-  ctx.set('Access-Control-Allow-Headers', 'Content-Type')
-  ctx.set('Access-Control-Allow-Methods', 'PATCH, DELETE')
-
-  await next()
-})
-
 router.get('/', getAll)
 router.post('/', validateContentType, parseBody, validateBody, create)
 router.patch('/:id', validateContentType, parseBody, validateBody, update)
