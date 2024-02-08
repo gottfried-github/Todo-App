@@ -34,3 +34,23 @@ export const validateBody = async (ctx, next) => {
 
   await next()
 }
+
+export const handleErrors = async (ctx, next) => {
+  try {
+    await next()
+  } catch (e) {
+    if (!e.expose) {
+      console.log(e)
+
+      ctx.status = e.status
+      ctx.body = {}
+
+      return
+    }
+
+    console.log(e)
+
+    ctx.status = e.status
+    ctx.body = e
+  }
+}

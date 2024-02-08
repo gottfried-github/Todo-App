@@ -2,6 +2,7 @@ import mongoose from 'mongoose'
 
 import Koa from 'koa'
 
+import { handleErrors } from './middleware/index.js'
 import router from './router.js'
 
 async function main() {
@@ -10,25 +11,7 @@ async function main() {
   const app = new Koa()
 
   app
-    .use(async (ctx, next) => {
-      try {
-        await next()
-      } catch (e) {
-        if (!e.expose) {
-          console.log(e)
-
-          ctx.status = e.status
-          ctx.body = {}
-
-          return
-        }
-
-        console.log(e)
-
-        ctx.status = e.status
-        ctx.body = e
-      }
-    })
+    .use(handleErrors)
     .use(router.routes())
     .use(router.allowedMethods())
     .listen(process.env.HTTP_PORT, () => {
