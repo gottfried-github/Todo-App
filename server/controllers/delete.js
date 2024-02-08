@@ -10,9 +10,7 @@ export default async function deleteById(ctx) {
       ctx.throw(404, 'no documents have been deleted')
     }
 
-    ctx.status = 200
-
-    ctx.body = { deletedCount: _res.deletedCount }
+    ctx.send(200, { deletedCount: _res.deletedCount })
   } catch (e) {
     if (e instanceof mongoose.Error.CastError) {
       ctx.throw(400, 'validation error', e)

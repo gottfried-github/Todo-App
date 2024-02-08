@@ -52,3 +52,13 @@ export const handleErrors = async (ctx, next) => {
     ctx.body = e
   }
 }
+
+export const utils = async (ctx, next) => {
+  ctx.send = async (status, data, message) => {
+    ctx.status = status || 200
+
+    ctx.body = data || (message && { message }) || {}
+  }
+
+  await next()
+}

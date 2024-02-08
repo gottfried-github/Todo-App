@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 
 import Koa from 'koa'
 
-import { handleErrors } from './middleware/index.js'
+import { handleErrors, utils } from './middleware/index.js'
 import router from './router.js'
 
 async function main() {
@@ -11,7 +11,6 @@ async function main() {
   const app = new Koa()
 
   app
-    .use(handleErrors)
     .use(async (ctx, next) => {
       ctx.set('Access-Control-Allow-Origin', '*')
       ctx.set('Access-Control-Allow-Headers', 'Content-Type')
@@ -19,6 +18,8 @@ async function main() {
 
       await next()
     })
+    .use(utils)
+    .use(handleErrors)
     .use(router.routes())
     .use(router.allowedMethods())
     .listen(process.env.HTTP_PORT, () => {
