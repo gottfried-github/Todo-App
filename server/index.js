@@ -10,6 +10,21 @@ async function main() {
   const app = new Koa()
 
   app
+    .use(async (ctx, next) => {
+      try {
+        await next()
+      } catch (e) {
+        if (!e.expose) {
+          console.log(e)
+
+          return
+        }
+
+        console.log(e)
+
+        ctx.body = e
+      }
+    })
     .use(router.routes())
     .use(router.allowedMethods())
     .listen(process.env.HTTP_PORT, () => {
