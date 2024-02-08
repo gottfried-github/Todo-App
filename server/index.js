@@ -22,6 +22,9 @@ async function main() {
     .use(handleErrors)
     .use(router.routes())
     .use(router.allowedMethods())
+    .on('error', e => {
+      console.log(e)
+    })
     .listen(process.env.HTTP_PORT, () => {
       console.log(`server is running at port ${process.env.HTTP_PORT}`)
     })

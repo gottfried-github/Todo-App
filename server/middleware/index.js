@@ -38,15 +38,13 @@ export const handleErrors = async (ctx, next) => {
     await next()
   } catch (e) {
     if (!e.expose) {
-      console.log(e)
+      ctx.status = e.status || 500
+      ctx.body = { message: 'internal server error' }
 
-      ctx.status = e.status
-      ctx.body = {}
+      ctx.app.emit('error', e)
 
       return
     }
-
-    console.log(e)
 
     ctx.status = e.status
     ctx.body = e
