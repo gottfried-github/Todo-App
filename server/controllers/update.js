@@ -9,11 +9,7 @@ export default async function update(ctx) {
     })
 
     if (_res.matchedCount === 0) {
-      ctx.status = 404
-
-      ctx.body = {}
-
-      return
+      ctx.throw(404, 'no item matched given id')
     }
 
     ctx.status = 200
