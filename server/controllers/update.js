@@ -21,15 +21,9 @@ export default async function update(ctx) {
     ctx.body = {}
   } catch (e) {
     if (e instanceof mongoose.Error.CastError || e instanceof mongoose.Error.ValidationError) {
-      ctx.status = 400
-
-      ctx.body = e
-
-      return
+      ctx.throw(400, 'validation failed', e)
     }
 
-    ctx.status = 500
-
-    ctx.body = e
+    ctx.throw(500, 'database errored', e)
   }
 }

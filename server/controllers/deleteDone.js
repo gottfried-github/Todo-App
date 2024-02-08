@@ -8,10 +8,6 @@ export default async function deleteDone(ctx) {
 
     ctx.body = { deletedCount: _res.deletedCount }
   } catch (e) {
-    console.log(`Server, deleteDone ${req.url}, database errored - error:`, e)
-
-    ctx.status = 500
-
-    ctx.body = e
+    ctx.throw(500, 'database errored', e)
   }
 }

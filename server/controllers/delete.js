@@ -19,14 +19,9 @@ export default async function deleteById(ctx) {
     ctx.body = { deletedCount: _res.deletedCount }
   } catch (e) {
     if (e instanceof mongoose.Error.CastError) {
-      ctx.status = 400
-
-      ctx.body = e
-
-      return
+      ctx.throw(400, 'validation error', e)
     }
 
-    ctx.status = 500
-    ctx.body = e
+    ctx.throw(500, 'database errored', e)
   }
 }

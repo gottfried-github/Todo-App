@@ -11,17 +11,9 @@ export default async function create(ctx) {
     ctx.body = item
   } catch (e) {
     if (e instanceof mongoose.Error.ValidationError) {
-      ctx.status = 400
-
-      ctx.body = e
-
-      return
+      ctx.throw(400, 'validation error', e)
     }
 
-    console.log(`Server, create, database errored - error:`, e)
-
-    ctx.status = 500
-
-    ctx.body = e
+    ctx.throw(500, 'database errored', e)
   }
 }

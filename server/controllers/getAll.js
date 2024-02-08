@@ -8,10 +8,6 @@ export default async function getAll(ctx) {
 
     ctx.body = items
   } catch (e) {
-    console.log(`Server, 'GET' ${req.url}, controller errored - error:`, e)
-
-    ctx.status = 500
-
-    ctx.body = e
+    ctx.throw(500, 'database errored', e)
   }
 }
