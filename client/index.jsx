@@ -2,7 +2,7 @@ import { createRoot } from 'react-dom/client'
 import { Provider } from 'react-redux'
 import store from './store/store'
 
-import App from './src/App'
+import App from './App'
 
 document.addEventListener('DOMContentLoaded', () => {
   const container = document.querySelector('main')

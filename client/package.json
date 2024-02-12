@@ -10,8 +10,10 @@
   "scripts": {
     "format": "npx prettier --write .",
     "lint": "npx eslint .",
-    "start": "webpack serve",
-    "build": "npx eslint . && webpack build",
+    "dev": "vite",
+    "build": "vite build",
+    "watch": "vite build -w",
+    "preview": "vite preview",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
