@@ -7,6 +7,7 @@ const slice = createSlice({
   initialState: {
     items: [],
     filter: 'all',
+    error: null,
   },
   reducers: {
     append: (state, action) => {
@@ -32,7 +33,11 @@ const slice = createSlice({
     },
     setFilter: (state, action) => {
       if (!FILTERS.includes(action.payload)) {
-        throw new Error('invalid filter')
+        state.error = {
+          message: 'todos/setFilter: invalid filter',
+        }
+
+        return
       }
 
       state.filter = action.payload
@@ -53,7 +58,9 @@ const slice = createSlice({
           return state.items.filter(item => item.status === 2)
 
         default:
-          throw new Error('invalid filter value')
+          state.error = {
+            message: 'todos/selectItems: invalid filter value',
+          }
       }
     },
     selectCount: (state, filter) => {
@@ -70,7 +77,9 @@ const slice = createSlice({
           return state.items.filter(item => item.status === 2).length
 
         default:
-          throw new Error('invalid filter value')
+          state.error = {
+            message: 'todos/selectCount: invalid filter value',
+          }
       }
     },
     selectFilter: state => state.filter,
