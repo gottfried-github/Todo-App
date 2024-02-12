@@ -1,11 +1,36 @@
+import { createAction } from '@reduxjs/toolkit'
+import { call, put, takeEvery, takeLatest } from 'redux-saga/effects'
 import axios from './http'
 
-import EventEmitter from '../utils/event-emitter'
-import Events from '../events'
+import slice from './slice'
 
 class Item {
   constructor(name) {
     this.name = name
+  }
+}
+
+export const create = createAction('saga/create')
+export const updateStatus = createAction('saga/updateStatus')
+export const updateName = createAction('saga/updateName')
+export const deleteOne = createAction('saga/deleteOne')
+export const deleteDone = createAction('saga/deleteDone')
+
+function* create(action) {
+  const item = new Item(action.payload)
+
+  try {
+    const res = yield call(axios.post, '/todos', item)
+
+    yield put({
+      type: slice.actions.append.type,
+      payload: res,
+    })
+  } catch (e) {
+    yield put({
+      type: slice.actions.setError.type,
+      payload: e,
+    })
   }
 }
 
