@@ -31,6 +31,9 @@ const slice = createSlice({
     deleteDone: state => {
       state.items = state.items.filter(item => item.status === 2)
     },
+    setItems: (state, action) => {
+      state.items = action.payload
+    },
     setFilter: (state, action) => {
       if (!FILTERS.includes(action.payload)) {
         state.error = {

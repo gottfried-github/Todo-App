@@ -15,6 +15,7 @@ export const updateStatus = createAction('saga/updateStatus')
 export const updateName = createAction('saga/updateName')
 export const deleteOne = createAction('saga/deleteOne')
 export const deleteDone = createAction('saga/deleteDone')
+export const getItems = createAction('saga/getItems')
 
 function* create(action) {
   const item = new Item(action.payload)
@@ -25,6 +26,89 @@ function* create(action) {
     yield put({
       type: slice.actions.append.type,
       payload: res,
+    })
+  } catch (e) {
+    yield put({
+      type: slice.actions.setError.type,
+      payload: e,
+    })
+  }
+}
+
+function* updateStatus(action) {
+  try {
+    yield call(axios.patch, `/todos/${action.payload.id}`, {
+      status: action.payload.status,
+    })
+
+    yield put({
+      type: slice.actions.updateItem.type,
+      payload: { id: action.payload.id, fields: { status: action.payload.status } },
+    })
+  } catch (e) {
+    yield put({
+      type: slice.actions.setError.type,
+      payload: e,
+    })
+  }
+}
+
+function* updateName(action) {
+  try {
+    yield call(axios.patch, `/todos/${action.payload.id}`, {
+      name: action.payload.name,
+    })
+
+    yield put({
+      type: slice.actions.updateItem.type,
+      payload: { id: action.payload.id, fields: { name: action.payload.name } },
+    })
+  } catch (e) {
+    yield put({
+      type: slice.actions.setError.type,
+      payload: e,
+    })
+  }
+}
+
+function* deleteOne(action) {
+  try {
+    yield call(axios.delete, `/todos/${action.payload}`)
+
+    yield put({
+      type: slice.actions.deleteItem.type,
+      payload: action.payload,
+    })
+  } catch (e) {
+    yield put({
+      type: slice.actions.setError.type,
+      payload: e,
+    })
+  }
+}
+
+function* deleteDone(action) {
+  try {
+    yield call(axios.delete, '/todos')
+
+    yield put({
+      type: slice.actions.deleteDone.type,
+    })
+  } catch (e) {
+    yield put({
+      type: slice.actions.setError.type,
+      payload: e,
+    })
+  }
+}
+
+function* getItems(action) {
+  try {
+    const res = yield call(axios.get, '/todos')
+
+    yield put({
+      type: slice.actions.setItems.type,
+      payload: res.data,
     })
   } catch (e) {
     yield put({
