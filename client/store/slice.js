@@ -42,6 +42,9 @@ const slice = createSlice({
 
       state.filter = action.payload
     },
+    setError: (state, action) => {
+      state.error = action.payload
+    },
   },
   selectors: {
     selectItems: (state, filter) => {
