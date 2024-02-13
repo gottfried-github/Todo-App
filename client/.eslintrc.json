@@ -1,10 +1,20 @@
 {
-  "extends": ["eslint:recommended", "plugin:prettier/recommended"],
+  "extends": [
+    "eslint:recommended", 
+    "plugin:prettier/recommended", 
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "plugin:react/jsx-runtime"
+  ],
   "rules": {
-    "no-undef": 0
+    "no-undef": 0,
+    "react/prop-types": 0
   },
   "parserOptions": {
     "sourceType": "module",
-    "ecmaVersion": 13
+    "ecmaVersion": 13,
+    "ecmaFeatures": {
+      "jsx": true
+    }
   }
 }

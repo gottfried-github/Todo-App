@@ -1,7 +1,8 @@
+import { createAction } from '@reduxjs/toolkit'
+import { call, put, takeEvery, takeLatest } from 'redux-saga/effects'
 import axios from './http'
 
-import EventEmitter from '../utils/event-emitter'
-import Events from '../events'
+import slice from './slice'
 
 class Item {
   constructor(name) {
@@ -9,102 +10,123 @@ class Item {
   }
 }
 
-class Saga {
-  constructor() {
-    this.init()
-  }
+export const actions = {
+  create: createAction('saga/create'),
+  updateStatus: createAction('saga/updateStatus'),
+  updateName: createAction('saga/updateName'),
+  deleteOne: createAction('saga/deleteOne'),
+  deleteDone: createAction('saga/deleteDone'),
+  getItems: createAction('saga/getItems'),
+}
 
-  init = () => {
-    EventEmitter.subscribe(Events.ITEM_CREATE, this._create)
-    EventEmitter.subscribe(Events.ITEM_UPDATE_STATUS_ONE, this._updateStatus)
-    EventEmitter.subscribe(Events.ITEM_UPDATE_NAME, this._updateName)
-    EventEmitter.subscribe(Events.ITEM_DELETE_ONE, this._delete)
-    EventEmitter.subscribe(Events.ITEM_DELETE_DONE, this._deleteDone)
-  }
+function* create(action) {
+  const item = new Item(action.payload)
 
-  unsubscribe = () => {
-    EventEmitter.subscribe(Events.ITEM_CREATE, this._create)
-    EventEmitter.subscribe(Events.ITEM_UPDATE_STATUS_ONE, this._updateStatus)
-    EventEmitter.subscribe(Events.ITEM_UPDATE_NAME, this._updateName)
-    EventEmitter.subscribe(Events.ITEM_DELETE_ONE, this._delete)
-    EventEmitter.subscribe(Events.ITEM_DELETE_DONE, this._deleteDone)
-  }
+  try {
+    const res = yield call(axios.post, '/todos', item)
 
-  _create = async name => {
-    const item = new Item(name)
-
-    try {
-      const response = await axios.post('/todos', item)
-
-      EventEmitter.emit({
-        type: Events.SAGA_ITEM_CREATED,
-        payload: response.data,
-      })
-    } catch (e) {
-      console.log('Saga._create, axios errored - error:', e)
-    }
-  }
-
-  _updateStatus = async ({ id, status }) => {
-    try {
-      await axios.patch(`/todos/${id}`, { status })
-
-      EventEmitter.emit({
-        type: Events.SAGA_ITEM_UPDATED,
-        payload: { id, fields: { status } },
-      })
-    } catch (e) {
-      console.log('Saga._updateStatus, axios errored - error:', e)
-    }
-  }
-
-  _updateName = async ({ id, name }) => {
-    try {
-      await axios.patch(`/todos/${id}`, { name })
-
-      EventEmitter.emit({
-        type: Events.SAGA_ITEM_UPDATED,
-        payload: { id, fields: { name } },
-      })
-    } catch (e) {
-      console.log('Saga._updateName, axios errored - error:', e)
-    }
-  }
-
-  _delete = async id => {
-    try {
-      await axios.delete(`/todos/${id}`)
-
-      EventEmitter.emit({
-        type: Events.SAGA_ITEM_DELETED,
-        payload: id,
-      })
-    } catch (e) {
-      console.log('Saga._delete, axios errored - error:', e)
-    }
-  }
-
-  _deleteDone = async () => {
-    try {
-      await axios.delete('/todos')
-
-      EventEmitter.emit({
-        type: Events.SAGA_DONE_DELETED,
-      })
-    } catch (e) {
-      console.log('Saga._deleteDone, axios errored - error:', e)
-    }
-  }
-
-  async getItems() {
-    try {
-      const response = await axios.get('/todos')
-
-      return response.data
-    } catch (e) {
-      console.log('Saga.getItems, axios errored - error:', e)
-    }
+    yield put({
+      type: slice.actions.append.type,
+      payload: res.data,
+    })
+  } catch (e) {
+    yield put({
+      type: slice.actions.setError.type,
+      payload: e,
+    })
   }
 }
 
-export default new Saga()
+function* updateStatus(action) {
+  try {
+    yield call(axios.patch, `/todos/${action.payload.id}`, {
+      status: action.payload.status,
+    })
+
+    yield put({
+      type: slice.actions.updateItem.type,
+      payload: { id: action.payload.id, fields: { status: action.payload.status } },
+    })
+  } catch (e) {
+    yield put({
+      type: slice.actions.setError.type,
+      payload: e,
+    })
+  }
+}
+
+function* updateName(action) {
+  try {
+    yield call(axios.patch, `/todos/${action.payload.id}`, {
+      name: action.payload.name,
+    })
+
+    yield put({
+      type: slice.actions.updateItem.type,
+      payload: { id: action.payload.id, fields: { name: action.payload.name } },
+    })
+  } catch (e) {
+    yield put({
+      type: slice.actions.setError.type,
+      payload: e,
+    })
+  }
+}
+
+function* deleteOne(action) {
+  try {
+    yield call(axios.delete, `/todos/${action.payload}`)
+
+    yield put({
+      type: slice.actions.deleteItem.type,
+      payload: action.payload,
+    })
+  } catch (e) {
+    yield put({
+      type: slice.actions.setError.type,
+      payload: e,
+    })
+  }
+}
+
+function* deleteDone() {
+  try {
+    yield call(axios.delete, '/todos')
+
+    yield put({
+      type: slice.actions.deleteDone.type,
+    })
+  } catch (e) {
+    yield put({
+      type: slice.actions.setError.type,
+      payload: e,
+    })
+  }
+}
+
+function* getItems() {
+  try {
+    const res = yield call(axios.get, '/todos')
+
+    yield put({
+      type: slice.actions.setItems.type,
+      payload: res.data,
+    })
+  } catch (e) {
+    yield put({
+      type: slice.actions.setError.type,
+      payload: e,
+    })
+  }
+}
+
+function* todos() {
+  yield takeEvery(actions.create.type, create)
+  yield takeLatest(actions.updateStatus.type, updateStatus)
+  yield takeLatest(actions.updateName.type, updateName)
+  yield takeLatest(actions.deleteOne.type, deleteOne)
+  yield takeLatest(actions.deleteDone.type, deleteDone)
+  yield takeLatest(actions.getItems.type, getItems)
+}
+
+export default todos
