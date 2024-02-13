@@ -18,7 +18,7 @@ class Controls extends Component {
   }
 
   render() {
-    if (!this.props.count(this.props.filter)) return null
+    if (!this.props.count('all')) return null
 
     return (
       <div className="controls">
