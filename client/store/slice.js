@@ -89,6 +89,7 @@ const slice = createSlice({
       }
     },
     selectFilter: state => state.filter,
+    selectError: state => state.error,
   },
 })
 
