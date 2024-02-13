@@ -31,6 +31,14 @@ class Item extends Component {
     })
   }
 
+  handleDelete = () => {
+    this.props.deleteOne(this.props.item.id)
+  }
+
+  handleEdit = () => {
+    this.props.handleEdit(this.props.item.id)
+  }
+
   render() {
     let labelClassName = null
 
@@ -54,7 +62,7 @@ class Item extends Component {
             <input
               className="input-edit"
               type="text"
-              value={this.props.item.name}
+              defaultValue={this.props.item.name}
               onKeyUp={this.handleNameChange}
             />
           ) : (
@@ -63,6 +71,12 @@ class Item extends Component {
             </label>
           )}
         </div>
+        <button className="edit" onClick={this.handleEdit}>
+          edit
+        </button>
+        <button className="delete" onClick={this.handleDelete}>
+          delete
+        </button>
       </li>
     )
   }

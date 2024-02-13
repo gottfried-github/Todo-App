@@ -5,7 +5,8 @@ import Items from './components/Items'
 class App extends Component {
   render() {
     return (
-      <div>
+      <div className="container">
+        <h1 className="heading">todo list</h1>
         <Items />
       </div>
     )
