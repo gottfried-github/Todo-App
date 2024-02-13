@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 
 import { actions } from '../store/sagas'
 
-class Input extends Component {
+class Form extends Component {
   state = {
     name: '',
   }
@@ -40,4 +40,4 @@ class Input extends Component {
 
 export default connect(null, {
   create: actions.create,
-})(Input)
+})(Form)

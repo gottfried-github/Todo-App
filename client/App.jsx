@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 
 import slice from './store/slice'
 
-import Input from './components/Input'
+import Form from './components/Form'
 import Controls from './components/Controls'
 import Items from './components/Items'
 
@@ -16,7 +16,7 @@ class App extends Component {
     return (
       <div className="container">
         <h1 className="heading">todo list</h1>
-        <Input />
+        <Form />
         <Controls />
         <Items />
       </div>
