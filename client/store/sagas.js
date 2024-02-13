@@ -27,7 +27,7 @@ function* create(action) {
 
     yield put({
       type: slice.actions.append.type,
-      payload: res,
+      payload: res.data,
     })
   } catch (e) {
     yield put({
