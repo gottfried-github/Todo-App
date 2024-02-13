@@ -1,7 +1,7 @@
 import { Component } from 'react'
 import { connect } from 'react-redux'
 
-import { actions } from '../store/sagas'
+import { getItems } from '../actions'
 import slice from '../store/slice'
 
 import Item from './Item'
@@ -52,4 +52,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, { fetchItems: actions.getItems })(Items)
+export default connect(mapStateToProps, { fetchItems: getItems })(Items)

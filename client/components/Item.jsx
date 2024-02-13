@@ -1,7 +1,7 @@
 import { Component } from 'react'
 import { connect } from 'react-redux'
 
-import { actions } from '../store/sagas'
+import { updateStatus, updateName, deleteOne } from '../actions'
 
 class Item extends Component {
   handleNameChange = ev => {
@@ -83,7 +83,7 @@ class Item extends Component {
 }
 
 export default connect(null, {
-  updateStatus: actions.updateStatus,
-  updateName: actions.updateName,
-  deleteOne: actions.deleteOne,
+  updateStatus,
+  updateName,
+  deleteOne,
 })(Item)

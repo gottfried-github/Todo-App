@@ -1,7 +1,7 @@
 import { Component } from 'react'
 import { connect } from 'react-redux'
 
-import { actions } from '../store/sagas'
+import { deleteDone } from '../actions'
 import slice from '../store/slice'
 
 class Controls extends Component {
@@ -72,5 +72,5 @@ const mapStateToProps = state => {
 
 export default connect(mapStateToProps, {
   setFilter: slice.actions.setFilter,
-  deleteDone: actions.deleteDone,
+  deleteDone,
 })(Controls)

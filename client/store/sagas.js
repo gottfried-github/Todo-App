@@ -1,22 +1,21 @@
-import { createAction } from '@reduxjs/toolkit'
 import { call, put, takeEvery, takeLatest } from 'redux-saga/effects'
 import axios from './http'
 
 import slice from './slice'
 
+import {
+  create as actionCreate,
+  updateStatus as actionUpdateStatus,
+  updateName as actionUpdateName,
+  deleteOne as actionDeleteOne,
+  deleteDone as actionDeleteDone,
+  getItems as actionGetItems,
+} from '../actions'
+
 class Item {
   constructor(name) {
     this.name = name
   }
-}
-
-export const actions = {
-  create: createAction('saga/create'),
-  updateStatus: createAction('saga/updateStatus'),
-  updateName: createAction('saga/updateName'),
-  deleteOne: createAction('saga/deleteOne'),
-  deleteDone: createAction('saga/deleteDone'),
-  getItems: createAction('saga/getItems'),
 }
 
 function* create(action) {
@@ -121,12 +120,12 @@ function* getItems() {
 }
 
 function* todos() {
-  yield takeEvery(actions.create.type, create)
-  yield takeLatest(actions.updateStatus.type, updateStatus)
-  yield takeLatest(actions.updateName.type, updateName)
-  yield takeLatest(actions.deleteOne.type, deleteOne)
-  yield takeLatest(actions.deleteDone.type, deleteDone)
-  yield takeLatest(actions.getItems.type, getItems)
+  yield takeEvery(actionCreate.type, create)
+  yield takeLatest(actionUpdateStatus.type, updateStatus)
+  yield takeLatest(actionUpdateName.type, updateName)
+  yield takeLatest(actionDeleteOne.type, deleteOne)
+  yield takeLatest(actionDeleteDone.type, deleteDone)
+  yield takeLatest(actionGetItems.type, getItems)
 }
 
 export default todos

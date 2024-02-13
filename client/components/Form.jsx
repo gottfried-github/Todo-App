@@ -1,7 +1,7 @@
 import { Component } from 'react'
 import { connect } from 'react-redux'
 
-import { actions } from '../store/sagas'
+import { create } from '../actions'
 
 class Form extends Component {
   state = {
@@ -38,6 +38,4 @@ class Form extends Component {
   }
 }
 
-export default connect(null, {
-  create: actions.create,
-})(Form)
+export default connect(null, { create })(Form)
