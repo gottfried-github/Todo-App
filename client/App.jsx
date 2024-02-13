@@ -1,8 +1,14 @@
 import { Component } from 'react'
 
+import Items from './components/Items'
+
 class App extends Component {
   render() {
-    return <div>App</div>
+    return (
+      <div>
+        <Items />
+      </div>
+    )
   }
 }
 
