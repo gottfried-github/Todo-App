@@ -17,13 +17,7 @@ class Item extends Component {
   }
 
   handleStatusChange = () => {
-    let status = null
-
-    if (this.props.item.status === 1) {
-      status = 2
-    } else {
-      status = 1
-    }
+    const status = this.props.item.status === 1 ? 2 : 1
 
     this.props.updateStatus({
       id: this.props.item.id,
@@ -40,13 +34,7 @@ class Item extends Component {
   }
 
   render() {
-    let labelClassName = null
-
-    if (this.props.item.status === 1) {
-      labelClassName = 'checked'
-    } else {
-      labelClassName = ''
-    }
+    const labelClassName = this.props.item.status === 1 ? 'checked' : ''
 
     return (
       <li className="item">
