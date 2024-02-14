@@ -103,9 +103,24 @@ function* deleteDone() {
   }
 }
 
-function* getItems() {
+function* getItems(action) {
+  let url = '/todos'
+
+  if (action.payload.status) {
+    const params = new URLSearchParams([['status', action.payload.status]])
+
+    url = `${url}?${params.toString()}`
+  }
+
   try {
-    const res = yield call(axios.get, '/todos')
+    const res = yield call(axios.get, url)
+
+    if ('status' in action.payload) {
+      yield put({
+        type: slice.actions.setFilter.type,
+        payload: action.payload.status,
+      })
+    }
 
     yield put({
       type: slice.actions.setItems.type,

@@ -1,12 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-const FILTERS = ['all', 'done', 'notDone']
+const FILTERS = [1, 2]
 
 const slice = createSlice({
   name: 'todos',
   initialState: {
     items: [],
-    filter: 'all',
+    filter: null,
     error: null,
   },
   reducers: {
@@ -35,6 +35,12 @@ const slice = createSlice({
       state.items = action.payload
     },
     setFilter: (state, action) => {
+      if (!action.payload) {
+        state.filter = null
+
+        return
+      }
+
       if (!FILTERS.includes(action.payload)) {
         state.error = {
           message: 'todos/setFilter: invalid filter',
@@ -50,7 +56,10 @@ const slice = createSlice({
     },
   },
   selectors: {
-    selectItems: (state, filter) => {
+    selectItems: state => {
+      return state.items
+
+      /*
       const _filter = filter || state.filter
 
       switch (_filter) {
@@ -64,12 +73,13 @@ const slice = createSlice({
           return state.items.filter(item => item.status === 2)
 
         default:
-          state.error = {
-            message: 'todos/selectItems: invalid filter value',
-          }
+          return new Error('todos/selectItems: invalid filter value')
       }
+      */
     },
     selectCount: (state, filter) => {
+      return 2
+      /*
       const _filter = filter || state.filter
 
       switch (_filter) {
@@ -83,10 +93,9 @@ const slice = createSlice({
           return state.items.filter(item => item.status === 2).length
 
         default:
-          state.error = {
-            message: 'todos/selectCount: invalid filter value',
-          }
+          return new Error('todos/selectCount: invalid filter value')
       }
+      */
     },
     selectFilter: state => state.filter,
     selectError: state => state.error,

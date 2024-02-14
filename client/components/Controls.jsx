@@ -1,11 +1,15 @@
 import { Component } from 'react'
 import { connect } from 'react-redux'
 
-import { deleteDone } from '../actions'
+import { getItems, deleteDone } from '../actions'
 import slice from '../store/slice'
 
 class Controls extends Component {
   filterActiveClass = 'active'
+
+  componentDidMount() {
+    this.props.getItems({ status: this.props.filter })
+  }
 
   handleDeleteDone = () => {
     this.props.deleteDone()
@@ -14,7 +18,7 @@ class Controls extends Component {
   handleSetFilter = (ev, filter) => {
     if (ev.target.classList.contains(this.filterActiveClass)) return
 
-    this.props.setFilter(filter)
+    this.props.getItems({ status: filter })
   }
 
   render() {
@@ -29,25 +33,25 @@ class Controls extends Component {
         </div>
         <div className="filters">
           <button
-            className={`filter${this.props.filter === 'all' ? ` ${this.filterActiveClass}` : ''}`}
+            className={`filter${this.props.filter === null ? ` ${this.filterActiveClass}` : ''}`}
             onClick={ev => {
-              this.handleSetFilter(ev, 'all')
+              this.handleSetFilter(ev, null)
             }}
           >
             all
           </button>
           <button
-            className={`filter${this.props.filter === 'done' ? ` ${this.filterActiveClass}` : ''}`}
+            className={`filter${this.props.filter === 1 ? ` ${this.filterActiveClass}` : ''}`}
             onClick={ev => {
-              this.handleSetFilter(ev, 'done')
+              this.handleSetFilter(ev, 1)
             }}
           >
             completed
           </button>
           <button
-            className={`filter${this.props.filter === 'notDone' ? ` ${this.filterActiveClass}` : ''}`}
+            className={`filter${this.props.filter === 2 ? ` ${this.filterActiveClass}` : ''}`}
             onClick={ev => {
-              this.handleSetFilter(ev, 'notDone')
+              this.handleSetFilter(ev, 2)
             }}
           >
             active
@@ -70,7 +74,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, {
-  setFilter: slice.actions.setFilter,
-  deleteDone,
-})(Controls)
+export default connect(mapStateToProps, { getItems, deleteDone })(Controls)
