@@ -36,7 +36,7 @@ export default function Item({ item, isEditing, handleEdit }) {
   }
 
   const handleEditListener = () => {
-    dispatch(handleEdit(item.id))
+    handleEdit(item.id)
   }
 
   const labelClassName = item.status === ITEM_STATUS.DONE ? 'checked' : ''
