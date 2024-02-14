@@ -43,9 +43,11 @@ const slice = createSlice({
     },
     deleteItem: (state, action) => {
       state.items = state.items.filter(item => item.id !== action.payload)
+      state.itemsAll = state.itemsAll.filter(item => item.id !== action.payload)
     },
     deleteDone: state => {
       state.items = state.items.filter(item => item.status === 2)
+      state.itemsAll = state.itemsAll.filter(item => item.status === 2)
     },
     setItems: (state, action) => {
       state.items = action.payload
