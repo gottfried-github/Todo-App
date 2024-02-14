@@ -30,6 +30,10 @@ const slice = createSlice({
         return item
       })
 
+      if (state.filter) {
+        state.items = state.items.filter(item => item.status === state.filter)
+      }
+
       state.itemsAll = state.itemsAll.map(item => {
         if (item.id === action.payload.id) {
           return {
