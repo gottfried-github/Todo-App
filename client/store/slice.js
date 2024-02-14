@@ -6,6 +6,7 @@ const slice = createSlice({
   name: 'todos',
   initialState: {
     items: [],
+    itemsAll: [],
     filter: null,
     error: null,
   },
@@ -34,6 +35,10 @@ const slice = createSlice({
     setItems: (state, action) => {
       state.items = action.payload
     },
+    setItemsAll: (state, action) => {
+      console.log('slice, setItemsAll, action.payload:')
+      state.itemsAll = action.payload
+    },
     setFilter: (state, action) => {
       if (!action.payload) {
         state.filter = null
@@ -58,44 +63,21 @@ const slice = createSlice({
   selectors: {
     selectItems: state => {
       return state.items
-
-      /*
-      const _filter = filter || state.filter
-
-      switch (_filter) {
-        case 'all':
-          return state.items
-
-        case 'done':
-          return state.items.filter(item => item.status === 1)
-
-        case 'notDone':
-          return state.items.filter(item => item.status === 2)
-
-        default:
-          return new Error('todos/selectItems: invalid filter value')
-      }
-      */
     },
     selectCount: (state, filter) => {
-      return 2
-      /*
-      const _filter = filter || state.filter
-
-      switch (_filter) {
-        case 'all':
-          return state.items.length
-
-        case 'done':
-          return state.items.filter(item => item.status === 1).length
-
-        case 'notDone':
-          return state.items.filter(item => item.status === 2).length
-
-        default:
-          return new Error('todos/selectCount: invalid filter value')
+      if (filter === undefined || filter === state.filter) {
+        return state.items.length
       }
-      */
+
+      if (filter === null) {
+        return state.itemsAll.length
+      }
+
+      if (!FILTERS.includes(filter)) {
+        return new Error('todos/selectCount: invalid filter value')
+      }
+
+      return state.itemsAll.filter(item => item.status === filter).length
     },
     selectFilter: state => state.filter,
     selectError: state => state.error,

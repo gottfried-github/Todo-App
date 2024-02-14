@@ -8,6 +8,7 @@ class Controls extends Component {
   filterActiveClass = 'active'
 
   componentDidMount() {
+    this.props.getItems()
     this.props.getItems({ status: this.props.filter })
   }
 
@@ -22,14 +23,14 @@ class Controls extends Component {
   }
 
   render() {
-    if (!this.props.count('all')) return null
+    if (!this.props.count(null)) return null
 
     return (
       <div className="controls">
         <div>
-          <span className="counter">{`${this.props.count('done')} completed`}</span>
+          <span className="counter">{`${this.props.count(1)} completed`}</span>
           {', '}
-          <span className="counter">{`${this.props.count('notDone')} left`}</span>
+          <span className="counter">{`${this.props.count(2)} left`}</span>
         </div>
         <div className="filters">
           <button

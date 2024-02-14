@@ -106,7 +106,7 @@ function* deleteDone() {
 function* getItems(action) {
   let url = '/todos'
 
-  if (action.payload.status) {
+  if (action.payload?.status) {
     const params = new URLSearchParams([['status', action.payload.status]])
 
     url = `${url}?${params.toString()}`
@@ -115,12 +115,19 @@ function* getItems(action) {
   try {
     const res = yield call(axios.get, url)
 
-    if ('status' in action.payload) {
+    if (!('status' in (action.payload || {}))) {
       yield put({
-        type: slice.actions.setFilter.type,
-        payload: action.payload.status,
+        type: slice.actions.setItemsAll.type,
+        payload: res.data,
       })
+
+      return
     }
+
+    yield put({
+      type: slice.actions.setFilter.type,
+      payload: action.payload.status,
+    })
 
     yield put({
       type: slice.actions.setItems.type,
@@ -140,7 +147,7 @@ function* todos() {
   yield takeLatest(actionUpdateName.type, updateName)
   yield takeLatest(actionDeleteOne.type, deleteOne)
   yield takeLatest(actionDeleteDone.type, deleteDone)
-  yield takeLatest(actionGetItems.type, getItems)
+  yield takeEvery(actionGetItems.type, getItems)
 }
 
 export default todos
