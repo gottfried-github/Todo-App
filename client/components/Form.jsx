@@ -1,41 +1,37 @@
-import { Component } from 'react'
-import { connect } from 'react-redux'
+import { useState } from 'react'
+import { useDispatch } from 'react-redux'
 
 import { create } from '../actions'
 
-class Form extends Component {
-  state = {
-    name: '',
+export default function Form() {
+  const dispatch = useDispatch()
+
+  const [name, setName] = useState('')
+
+  const handleInputChange = ev => {
+    setName(ev.target.value)
   }
 
-  handleInputChange = ev => {
-    this.setState({ name: ev.target.value })
-  }
-
-  handleSubmit = ev => {
+  const handleSubmit = ev => {
     ev.preventDefault()
 
-    this.props.create(this.state.name)
+    dispatch(create(name))
 
-    this.setState({ name: '' })
+    setName('')
   }
 
-  render() {
-    return (
-      <form className="add-form">
-        <input
-          className="add"
-          type="text"
-          placeholder="What needs to be done?"
-          value={this.state.name}
-          onChange={this.handleInputChange}
-        />
-        <button className="add-btn" onClick={this.handleSubmit}>
-          submit
-        </button>
-      </form>
-    )
-  }
+  return (
+    <form className="add-form">
+      <input
+        className="add"
+        type="text"
+        placeholder="What needs to be done?"
+        value={name}
+        onChange={handleInputChange}
+      />
+      <button className="add-btn" onClick={handleSubmit}>
+        submit
+      </button>
+    </form>
+  )
 }
-
-export default connect(null, { create })(Form)
