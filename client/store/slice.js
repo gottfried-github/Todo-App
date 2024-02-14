@@ -1,6 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-const FILTERS = [1, 2]
+import { ITEM_STATUS } from '../constants'
+
+const FILTERS = [ITEM_STATUS.DONE, ITEM_STATUS.NOT_DONE]
 
 const slice = createSlice({
   name: 'todos',

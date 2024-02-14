@@ -4,6 +4,8 @@ import { connect } from 'react-redux'
 import { getItems, deleteDone } from '../actions'
 import slice from '../store/slice'
 
+import { ITEM_STATUS } from '../constants'
+
 class Controls extends Component {
   filterActiveClass = 'active'
 
@@ -28,9 +30,9 @@ class Controls extends Component {
     return (
       <div className="controls">
         <div>
-          <span className="counter">{`${this.props.count(1)} completed`}</span>
+          <span className="counter">{`${this.props.count(ITEM_STATUS.DONE)} completed`}</span>
           {', '}
-          <span className="counter">{`${this.props.count(2)} left`}</span>
+          <span className="counter">{`${this.props.count(ITEM_STATUS.NOT_DONE)} left`}</span>
         </div>
         <div className="filters">
           <button
@@ -42,17 +44,17 @@ class Controls extends Component {
             all
           </button>
           <button
-            className={`filter${this.props.filter === 1 ? ` ${this.filterActiveClass}` : ''}`}
+            className={`filter${this.props.filter === ITEM_STATUS.DONE ? ` ${this.filterActiveClass}` : ''}`}
             onClick={ev => {
-              this.handleSetFilter(ev, 1)
+              this.handleSetFilter(ev, ITEM_STATUS.DONE)
             }}
           >
             completed
           </button>
           <button
-            className={`filter${this.props.filter === 2 ? ` ${this.filterActiveClass}` : ''}`}
+            className={`filter${this.props.filter === ITEM_STATUS.NOT_DONE ? ` ${this.filterActiveClass}` : ''}`}
             onClick={ev => {
-              this.handleSetFilter(ev, 2)
+              this.handleSetFilter(ev, ITEM_STATUS.NOT_DONE)
             }}
           >
             active

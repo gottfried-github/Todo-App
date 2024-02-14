@@ -3,6 +3,8 @@ import { connect } from 'react-redux'
 
 import { updateStatus, updateName, deleteOne } from '../actions'
 
+import { ITEM_STATUS } from '../constants'
+
 class Item extends Component {
   handleNameChange = ev => {
     // for .isComposing see https://developer.mozilla.org/en-US/docs/Web/API/Element/keyup_event
@@ -17,7 +19,8 @@ class Item extends Component {
   }
 
   handleStatusChange = () => {
-    const status = this.props.item.status === 1 ? 2 : 1
+    const status =
+      this.props.item.status === ITEM_STATUS.DONE ? ITEM_STATUS.NOT_DONE : ITEM_STATUS.DONE
 
     this.props.updateStatus({
       id: this.props.item.id,
@@ -34,7 +37,7 @@ class Item extends Component {
   }
 
   render() {
-    const labelClassName = this.props.item.status === 1 ? 'checked' : ''
+    const labelClassName = this.props.item.status === ITEM_STATUS.DONE ? 'checked' : ''
 
     return (
       <li className="item">
@@ -43,7 +46,7 @@ class Item extends Component {
             id={this.props.item.id}
             className="input-checkbox"
             type="checkbox"
-            checked={this.props.item.status === 1}
+            checked={this.props.item.status === ITEM_STATUS.DONE}
             onChange={this.handleStatusChange}
           />
           {this.props.isEditing ? (
