@@ -1,80 +1,85 @@
-import { Component } from 'react'
-import { connect } from 'react-redux'
+import { useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 
 import { getItems, deleteDone } from '../actions'
 import slice from '../store/slice'
 
 import { ITEM_STATUS } from '../constants'
 
-class Controls extends Component {
-  filterActiveClass = 'active'
+export default function Controls() {
+  const dispatch = useDispatch()
 
-  componentDidMount() {
-    this.props.getItems()
-    this.props.getItems({ status: this.props.filter })
+  const countAll = useSelector(state =>
+    slice.selectors.selectCount({ [slice.reducerPath]: state }, null)
+  )
+
+  const countDone = useSelector(state =>
+    slice.selectors.selectCount({ [slice.reducerPath]: state }, ITEM_STATUS.DONE)
+  )
+
+  const countNotDone = useSelector(state =>
+    slice.selectors.selectCount({ [slice.reducerPath]: state }, ITEM_STATUS.NOT_DONE)
+  )
+
+  const filter = useSelector(state => slice.selectors.selectFilter({ [slice.reducerPath]: state }))
+
+  const filterActiveClass = 'active'
+
+  const handleDeleteDone = () => {
+    dispatch(deleteDone())
   }
 
-  handleDeleteDone = () => {
-    this.props.deleteDone()
+  const handleSetFilter = (ev, filter) => {
+    if (ev.target.classList.contains(filterActiveClass)) return
+
+    dispatch(getItems({ status: filter }))
   }
 
-  handleSetFilter = (ev, filter) => {
-    if (ev.target.classList.contains(this.filterActiveClass)) return
+  console.log('Controls, countAll:', countAll)
 
-    this.props.getItems({ status: filter })
-  }
+  useEffect(() => {
+    dispatch(getItems())
+    dispatch(getItems({ status: filter }))
+  }, [dispatch, filter])
 
-  render() {
-    if (!this.props.count(null)) return null
+  if (!countAll) return null
 
-    return (
-      <div className="controls">
-        <div>
-          <span className="counter">{`${this.props.count(ITEM_STATUS.DONE)} completed`}</span>
-          {', '}
-          <span className="counter">{`${this.props.count(ITEM_STATUS.NOT_DONE)} left`}</span>
-        </div>
-        <div className="filters">
-          <button
-            className={`filter${this.props.filter === null ? ` ${this.filterActiveClass}` : ''}`}
-            onClick={ev => {
-              this.handleSetFilter(ev, null)
-            }}
-          >
-            all
-          </button>
-          <button
-            className={`filter${this.props.filter === ITEM_STATUS.DONE ? ` ${this.filterActiveClass}` : ''}`}
-            onClick={ev => {
-              this.handleSetFilter(ev, ITEM_STATUS.DONE)
-            }}
-          >
-            completed
-          </button>
-          <button
-            className={`filter${this.props.filter === ITEM_STATUS.NOT_DONE ? ` ${this.filterActiveClass}` : ''}`}
-            onClick={ev => {
-              this.handleSetFilter(ev, ITEM_STATUS.NOT_DONE)
-            }}
-          >
-            active
-          </button>
-        </div>
-        <button className="delete-done" onClick={this.handleDeleteDone}>
-          clear completed
+  return (
+    <div className="controls">
+      <div>
+        <span className="counter">{`${countDone} completed`}</span>
+        {', '}
+        <span className="counter">{`${countNotDone} left`}</span>
+      </div>
+      <div className="filters">
+        <button
+          className={`filter${filter === null ? ` ${filterActiveClass}` : ''}`}
+          onClick={ev => {
+            handleSetFilter(ev, null)
+          }}
+        >
+          all
+        </button>
+        <button
+          className={`filter${filter === ITEM_STATUS.DONE ? ` ${filterActiveClass}` : ''}`}
+          onClick={ev => {
+            handleSetFilter(ev, ITEM_STATUS.DONE)
+          }}
+        >
+          completed
+        </button>
+        <button
+          className={`filter${filter === ITEM_STATUS.NOT_DONE ? ` ${filterActiveClass}` : ''}`}
+          onClick={ev => {
+            handleSetFilter(ev, ITEM_STATUS.NOT_DONE)
+          }}
+        >
+          active
         </button>
       </div>
-    )
-  }
+      <button className="delete-done" onClick={handleDeleteDone}>
+        clear completed
+      </button>
+    </div>
+  )
 }
-
-const mapStateToProps = state => {
-  const store = { [slice.reducerPath]: state }
-
-  return {
-    count: filter => slice.selectors.selectCount(store, filter),
-    filter: slice.selectors.selectFilter(store),
-  }
-}
-
-export default connect(mapStateToProps, { getItems, deleteDone })(Controls)
