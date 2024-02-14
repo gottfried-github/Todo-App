@@ -12,10 +12,25 @@ const slice = createSlice({
   },
   reducers: {
     append: (state, action) => {
-      state.items.push(action.payload)
+      state.itemsAll.push(action.payload)
+
+      if (state.filter === null || action.payload.status === state.filter) {
+        state.items.push(action.payload)
+      }
     },
     updateItem: (state, action) => {
       state.items = state.items.map(item => {
+        if (item.id === action.payload.id) {
+          return {
+            ...item,
+            ...action.payload.fields,
+          }
+        }
+
+        return item
+      })
+
+      state.itemsAll = state.itemsAll.map(item => {
         if (item.id === action.payload.id) {
           return {
             ...item,
