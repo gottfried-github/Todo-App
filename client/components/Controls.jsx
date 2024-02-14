@@ -35,8 +35,6 @@ export default function Controls() {
     dispatch(getItems({ status: filter }))
   }
 
-  console.log('Controls, countAll:', countAll)
-
   useEffect(() => {
     dispatch(getItems())
     dispatch(getItems({ status: filter }))
