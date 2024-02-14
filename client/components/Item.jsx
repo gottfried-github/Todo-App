@@ -1,80 +1,75 @@
-import { Component } from 'react'
-import { connect } from 'react-redux'
-
+import { useDispatch } from 'react-redux'
 import { updateStatus, updateName, deleteOne } from '../actions'
 
 import { ITEM_STATUS } from '../constants'
 
-class Item extends Component {
-  handleNameChange = ev => {
+export default function Item({ item, isEditing, handleEdit }) {
+  const dispatch = useDispatch()
+
+  const handleNameChange = ev => {
     // for .isComposing see https://developer.mozilla.org/en-US/docs/Web/API/Element/keyup_event
     if (ev.isComposing || ev.code !== 'Enter') return
 
-    this.props.updateName({
-      id: this.props.item.id,
-      name: ev.target.value,
-    })
+    dispatch(
+      updateName({
+        id: item.id,
+        name: ev.target.value,
+      })
+    )
 
-    this.props.handleEdit(this.props.item.id)
+    handleEdit(item.id)
   }
 
-  handleStatusChange = () => {
-    const status =
-      this.props.item.status === ITEM_STATUS.DONE ? ITEM_STATUS.NOT_DONE : ITEM_STATUS.DONE
+  const handleStatusChange = () => {
+    const status = item.status === ITEM_STATUS.DONE ? ITEM_STATUS.NOT_DONE : ITEM_STATUS.DONE
 
-    this.props.updateStatus({
-      id: this.props.item.id,
-      status,
-    })
-  }
-
-  handleDelete = () => {
-    this.props.deleteOne(this.props.item.id)
-  }
-
-  handleEdit = () => {
-    this.props.handleEdit(this.props.item.id)
-  }
-
-  render() {
-    const labelClassName = this.props.item.status === ITEM_STATUS.DONE ? 'checked' : ''
-
-    return (
-      <li className="item">
-        <div className="input-container">
-          <input
-            id={this.props.item.id}
-            className="input-checkbox"
-            type="checkbox"
-            checked={this.props.item.status === ITEM_STATUS.DONE}
-            onChange={this.handleStatusChange}
-          />
-          {this.props.isEditing ? (
-            <input
-              className="input-edit"
-              type="text"
-              defaultValue={this.props.item.name}
-              onKeyUp={this.handleNameChange}
-            />
-          ) : (
-            <label className={labelClassName} htmlFor={this.props.item.id}>
-              {this.props.item.name}
-            </label>
-          )}
-        </div>
-        <button className="edit" onClick={this.handleEdit}>
-          edit
-        </button>
-        <button className="delete" onClick={this.handleDelete}>
-          delete
-        </button>
-      </li>
+    dispatch(
+      updateStatus({
+        id: item.id,
+        status,
+      })
     )
   }
-}
 
-export default connect(null, {
-  updateStatus,
-  updateName,
-  deleteOne,
-})(Item)
+  const handleDelete = () => {
+    dispatch(deleteOne(item.id))
+  }
+
+  const handleEditListener = () => {
+    dispatch(handleEdit(item.id))
+  }
+
+  const labelClassName = item.status === ITEM_STATUS.DONE ? 'checked' : ''
+
+  return (
+    <li className="item">
+      <div className="input-container">
+        <input
+          id={item.id}
+          className="input-checkbox"
+          type="checkbox"
+          checked={item.status === ITEM_STATUS.DONE}
+          onChange={handleStatusChange}
+        />
+        {isEditing ? (
+          <input
+            className="input-edit"
+            type="text"
+            defaultValue={item.name}
+            onKeyUp={handleNameChange}
+          />
+        ) : (
+          <label className={labelClassName} htmlFor={item.id}>
+            {item.name}
+          </label>
+        )}
+      </div>
+      <button className="edit" onClick={handleEditListener}>
+        edit
+      </button>
+      <button className="delete" onClick={handleDelete}>
+        delete
+      </button>
+    </li>
+  )
+}
