@@ -1,4 +1,7 @@
 import { useDispatch } from 'react-redux'
+import styled from '@emotion/styled'
+import TextField from '@mui/material/TextField'
+
 import { updateStatus, updateName, deleteOne } from '../actions'
 
 import { ITEM_STATUS } from '../constants'
@@ -52,9 +55,10 @@ export default function Item({ item, isEditing, handleEdit }) {
           onChange={handleStatusChange}
         />
         {isEditing ? (
-          <input
-            className="input-edit"
+          <TextFieldStyled
             type="text"
+            variant="filled"
+            fullWidth
             defaultValue={item.name}
             onKeyUp={handleNameChange}
           />
@@ -73,3 +77,17 @@ export default function Item({ item, isEditing, handleEdit }) {
     </li>
   )
 }
+
+const TextFieldStyled = styled(TextField)`
+  & .MuiFilledInput-root {
+    background-color: ${props => props.theme.palette.backgrounds.main};
+
+    & .MuiFilledInput-input {
+      padding: 0;
+    }
+  }
+
+  & .MuiFilledInput-root.Mui-focused {
+    background-color: rgba(0, 0, 0, 0.06);
+  }
+`

@@ -37,10 +37,10 @@ export default createTheme({
           '&::after, &.Mui-focused::after': {
             border: 'none',
           },
-          input: {
-            padding: 8,
-            fontSize: '0.875rem',
-          },
+        },
+        input: {
+          padding: 8,
+          fontSize: '0.875rem',
         },
       },
     },
