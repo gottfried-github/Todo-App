@@ -1,6 +1,9 @@
 import { createRoot } from 'react-dom/client'
 import { Provider } from 'react-redux'
+import { ThemeProvider } from '@mui/material/styles'
+
 import store from './store/store'
+import theme from './components/theme'
 
 import App from './App'
 
@@ -10,7 +13,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   root.render(
     <Provider store={store}>
-      <App />
+      <ThemeProvider theme={theme}>
+        <App />
+      </ThemeProvider>
     </Provider>
   )
 })
