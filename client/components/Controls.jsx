@@ -1,5 +1,9 @@
 import { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import styled from '@emotion/styled'
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
+import ToggleButton from '@mui/material/ToggleButton'
+import Button from '@mui/material/Button'
 
 import { getItems, deleteDone } from '../actions'
 import slice from '../store/slice'
@@ -23,16 +27,14 @@ export default function Controls() {
 
   const filter = useSelector(state => slice.selectors.selectFilter({ [slice.reducerPath]: state }))
 
-  const filterActiveClass = 'active'
-
   const handleDeleteDone = () => {
     dispatch(deleteDone())
   }
 
   const handleSetFilter = (ev, filter) => {
-    if (ev.target.classList.contains(filterActiveClass)) return
+    if (filter === null) return
 
-    dispatch(getItems({ status: filter }))
+    dispatch(getItems({ status: filter === false ? null : filter }))
   }
 
   useEffect(() => {
@@ -49,35 +51,25 @@ export default function Controls() {
         {', '}
         <span className="counter">{`${countNotDone} left`}</span>
       </div>
-      <div className="filters">
-        <button
-          className={`filter${filter === null ? ` ${filterActiveClass}` : ''}`}
-          onClick={ev => {
-            handleSetFilter(ev, null)
-          }}
-        >
-          all
-        </button>
-        <button
-          className={`filter${filter === ITEM_STATUS.DONE ? ` ${filterActiveClass}` : ''}`}
-          onClick={ev => {
-            handleSetFilter(ev, ITEM_STATUS.DONE)
-          }}
-        >
-          completed
-        </button>
-        <button
-          className={`filter${filter === ITEM_STATUS.NOT_DONE ? ` ${filterActiveClass}` : ''}`}
-          onClick={ev => {
-            handleSetFilter(ev, ITEM_STATUS.NOT_DONE)
-          }}
-        >
-          active
-        </button>
-      </div>
-      <button className="delete-done" onClick={handleDeleteDone}>
-        clear completed
-      </button>
+      <ToggleButtonGroupStyled
+        exclusive
+        value={filter === null ? false : filter}
+        onChange={handleSetFilter}
+      >
+        <ToggleButton value={false}>all</ToggleButton>
+        <ToggleButton value={ITEM_STATUS.DONE}>completed</ToggleButton>
+        <ToggleButton value={ITEM_STATUS.NOT_DONE}>active</ToggleButton>
+      </ToggleButtonGroupStyled>
+      <ClearAllButton onClick={handleDeleteDone}>clear completed</ClearAllButton>
     </div>
   )
 }
+
+const ToggleButtonGroupStyled = styled(ToggleButtonGroup)`
+  column-gap: 2px;
+`
+
+const ClearAllButton = styled(Button)`
+  font-weight: 800;
+  color: ${props => props.theme.palette.danger.main} !important;
+`
