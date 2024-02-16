@@ -31,13 +31,13 @@ const typography = {
 }
 
 const stylesButton = {
-  padding: '2px 4px !important',
-  color: `${palette.util.dark} !important`,
+  padding: '2px 4px',
+  color: `${palette.util.dark}`,
   backgroundColor: 'transparent',
-  border: 'none !important',
-  textTransform: 'none !important',
+  border: 'none',
+  textTransform: 'none',
   '&:hover': {
-    backgroundColor: `${palette.backgrounds.light} !important`,
+    backgroundColor: `${palette.backgrounds.light}`,
   },
 }
 
@@ -67,7 +67,7 @@ export default createTheme({
         root: {
           ...stylesButton,
           '&.Mui-selected, &.Mui-selected:hover': {
-            backgroundColor: `${palette.backgrounds.light} !important`,
+            backgroundColor: `${palette.backgrounds.light}`,
           },
         },
       },
@@ -78,6 +78,8 @@ export default createTheme({
           props: { variant: 'base' },
           style: {
             ...stylesButton,
+            lineHeight: 'normal',
+            minWidth: 'auto',
           },
         },
         {
@@ -86,11 +88,11 @@ export default createTheme({
             padding: '2px 22px',
             fontSize: '1.125rem',
             fontWeight: 800,
-            color: `${palette.util.darker} !important`,
-            backgroundColor: `${palette.backgrounds.light} !important`,
-            border: 'none !important',
+            color: `${palette.util.darker}`,
+            backgroundColor: `${palette.backgrounds.light}`,
+            border: 'none',
             '&:hover': {
-              backgroundColor: `${palette.backgrounds.dark} !important`,
+              backgroundColor: `${palette.backgrounds.dark}`,
             },
           },
         },

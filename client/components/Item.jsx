@@ -1,6 +1,7 @@
 import { useDispatch } from 'react-redux'
 import styled from '@emotion/styled'
 import TextField from '@mui/material/TextField'
+import Button from '@mui/material/Button'
 
 import { updateStatus, updateName, deleteOne } from '../actions'
 
@@ -68,12 +69,12 @@ export default function Item({ item, isEditing, handleEdit }) {
           </label>
         )}
       </div>
-      <button className="edit" onClick={handleEditListener}>
+      <Button variant="base" onClick={handleEditListener}>
         edit
-      </button>
-      <button className="delete" onClick={handleDelete}>
+      </Button>
+      <Button variant="base" onClick={handleDelete}>
         delete
-      </button>
+      </Button>
     </li>
   )
 }
