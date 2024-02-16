@@ -46,29 +46,18 @@ export default createTheme({
   components: {
     MuiTextField: {
       styleOverrides: {
+        // for variant='filled'
         root: {
-          // for variant='outlined'
-          '& .MuiOutlinedInput-notchedOutline': {
-            border: 'none',
-          },
-          // for variant='filled'
-          '& .MuiInputBase-root::before, & .MuiInputBase-root:hover::before': {
+          '& .MuiFilledInput-root::before, & .MuiFilledInput-root:hover::before': {
             border: 'none !important',
           },
-        },
-      },
-    },
-    // TextField variant='filled' uses this
-    MuiFilledInput: {
-      styleOverrides: {
-        root: {
-          '&::after, &.Mui-focused::after': {
+          '& .MuiFilledInput-root::after, & .MuiFilledInput-root.Mui-focused::after': {
             border: 'none',
           },
-        },
-        input: {
-          padding: 8,
-          fontSize: '0.875rem',
+          '& .MuiFilledInput-input': {
+            padding: 8,
+            fontSize: '0.875rem',
+          },
         },
       },
     },
