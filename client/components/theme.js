@@ -10,6 +10,7 @@ const palette = {
     main: 'rgb(255, 255, 255)',
     light: 'rgb(255, 255, 255)',
     dark: 'rgba(0, 0, 0, 0.5)',
+    darker: 'rgb(0, 0, 0)',
   },
   danger: {
     main: '#d34463',
@@ -77,6 +78,20 @@ export default createTheme({
           props: { variant: 'base' },
           style: {
             ...stylesButton,
+          },
+        },
+        {
+          props: { variant: 'main' },
+          style: {
+            padding: '2px 22px',
+            fontSize: '1.125rem',
+            fontWeight: 800,
+            color: `${palette.util.darker} !important`,
+            backgroundColor: `${palette.backgrounds.light} !important`,
+            border: 'none !important',
+            '&:hover': {
+              backgroundColor: `${palette.backgrounds.dark} !important`,
+            },
           },
         },
       ],

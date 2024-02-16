@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux'
 import styled from '@emotion/styled'
 
 import TextField from '@mui/material/TextField'
+import Button from '@mui/material/Button'
 
 import { create } from '../actions'
 
@@ -33,9 +34,9 @@ export default function Form() {
         value={name}
         onChange={handleInputChange}
       />
-      <button className="add-btn" onClick={handleSubmit}>
+      <Button variant="main" onClick={handleSubmit}>
         submit
-      </button>
+      </Button>
     </form>
   )
 }
