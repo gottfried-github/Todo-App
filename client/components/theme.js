@@ -21,6 +21,24 @@ const palette = {
 
 const typography = {
   color: palette.util.dark,
+  h1: {
+    color: palette.util.darker,
+  },
+  h2: {
+    color: palette.util.darker,
+  },
+  h3: {
+    color: palette.util.darker,
+  },
+  h4: {
+    color: palette.util.darker,
+  },
+  h5: {
+    color: palette.util.darker,
+  },
+  h6: {
+    color: palette.util.darker,
+  },
   body2: {
     fontSize: '0.875rem',
   },
