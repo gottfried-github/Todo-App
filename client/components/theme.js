@@ -116,5 +116,16 @@ export default createTheme({
         },
       ],
     },
+    MuiFormControlLabel: {
+      styleOverrides: {
+        root: {
+          margin: 0,
+          columnGap: 8,
+          '& .MuiCheckbox-root': {
+            padding: 0,
+          },
+        },
+      },
+    },
   },
 })

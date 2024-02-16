@@ -2,6 +2,8 @@ import { useDispatch } from 'react-redux'
 import styled from '@emotion/styled'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
+import Checkbox from '@mui/material/Checkbox'
+import FormControlLabel from '@mui/material/FormControlLabel'
 
 import { updateStatus, updateName, deleteOne } from '../actions'
 
@@ -45,30 +47,31 @@ export default function Item({ item, isEditing, handleEdit }) {
     handleEdit(item.id)
   }
 
-  const labelClassName = item.status === ITEM_STATUS.DONE ? classes.checked : ''
-
   return (
     <li className={classes.root}>
       <div className={classes.inputContainer}>
-        <input
-          id={item.id}
-          className={classes.inputCheckbox}
-          type="checkbox"
-          checked={item.status === ITEM_STATUS.DONE}
-          onChange={handleStatusChange}
-        />
         {isEditing ? (
-          <TextFieldStyled
-            type="text"
-            variant="filled"
-            fullWidth
-            defaultValue={item.name}
-            onKeyUp={handleNameChange}
-          />
+          <>
+            <FormControlLabelStyled
+              control={<Checkbox />}
+              checked={item.status === ITEM_STATUS.DONE}
+              onChange={handleStatusChange}
+            />
+            <TextFieldStyled
+              type="text"
+              variant="filled"
+              fullWidth
+              defaultValue={item.name}
+              onKeyUp={handleNameChange}
+            />
+          </>
         ) : (
-          <label className={labelClassName} htmlFor={item.id}>
-            {item.name}
-          </label>
+          <FormControlLabelStyled
+            control={<Checkbox />}
+            checked={item.status === ITEM_STATUS.DONE}
+            label={item.name}
+            onChange={handleStatusChange}
+          />
         )}
       </div>
       <Button variant="base" onClick={handleEditListener}>
@@ -94,3 +97,24 @@ const TextFieldStyled = styled(TextField)`
     background-color: rgba(0, 0, 0, 0.06);
   }
 `
+
+const FormControlLabelStyled = styled(FormControlLabel)(props => {
+  const styles = {
+    flexGrow: 2,
+    '& .MuiFormControlLabel-label': {
+      flexGrow: 2,
+    },
+  }
+
+  if (props.checked) {
+    return {
+      ...styles,
+      '& .MuiFormControlLabel-label': {
+        color: 'rgba(0, 0, 0, 0.5)',
+        textDecoration: 'line-through',
+      },
+    }
+  }
+
+  return styles
+})
