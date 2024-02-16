@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import styled from '@emotion/styled'
+import Typography from '@mui/material/Typography'
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
 import ToggleButton from '@mui/material/ToggleButton'
 import Button from '@mui/material/Button'
@@ -46,11 +47,11 @@ export default function Controls() {
 
   return (
     <div className="controls">
-      <div>
-        <span className="counter">{`${countDone} completed`}</span>
+      <Counters variant="body2">
+        <span>{`${countDone} completed`}</span>
         {', '}
-        <span className="counter">{`${countNotDone} left`}</span>
-      </div>
+        <span>{`${countNotDone} left`}</span>
+      </Counters>
       <ToggleButtonGroupStyled
         exclusive
         value={filter === null ? false : filter}
@@ -74,4 +75,8 @@ const ToggleButtonGroupStyled = styled(ToggleButtonGroup)`
 const ClearAllButton = styled(Button)`
   font-weight: 800;
   color: ${props => props.theme.palette.danger.main} !important;
+`
+
+const Counters = styled(Typography)`
+  color: #589054;
 `
