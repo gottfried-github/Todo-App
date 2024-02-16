@@ -1,76 +1,84 @@
-import { Component } from 'react'
-import { connect } from 'react-redux'
+import { useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import styled from '@emotion/styled'
+import Typography from '@mui/material/Typography'
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
+import ToggleButton from '@mui/material/ToggleButton'
+import Button from '@mui/material/Button'
 
-import { actions } from '../store/sagas'
+import { getItems, deleteDone } from '../actions'
 import slice from '../store/slice'
 
-class Controls extends Component {
-  filterActiveClass = 'active'
+import { ITEM_STATUS } from '../constants'
 
-  handleDeleteDone = () => {
-    this.props.deleteDone()
+import classes from './Controls.module.css'
+
+export default function Controls() {
+  const dispatch = useDispatch()
+
+  const countAll = useSelector(state =>
+    slice.selectors.selectCount({ [slice.reducerPath]: state }, null)
+  )
+
+  const countDone = useSelector(state =>
+    slice.selectors.selectCount({ [slice.reducerPath]: state }, ITEM_STATUS.DONE)
+  )
+
+  const countNotDone = useSelector(state =>
+    slice.selectors.selectCount({ [slice.reducerPath]: state }, ITEM_STATUS.NOT_DONE)
+  )
+
+  const filter = useSelector(state => slice.selectors.selectFilter({ [slice.reducerPath]: state }))
+
+  const handleDeleteDone = () => {
+    dispatch(deleteDone())
   }
 
-  handleSetFilter = (ev, filter) => {
-    if (ev.target.classList.contains(this.filterActiveClass)) return
+  const handleSetFilter = (ev, filter) => {
+    if (filter === null) return
 
-    this.props.setFilter(filter)
+    dispatch(getItems({ status: filter === false ? null : filter }))
   }
 
-  render() {
-    if (!this.props.count('all')) return null
+  useEffect(() => {
+    dispatch(getItems())
+    dispatch(getItems({ status: filter }))
+  }, [dispatch, filter])
 
-    return (
-      <div className="controls">
-        <div>
-          <span className="counter">{`${this.props.count('done')} completed`}</span>
-          {', '}
-          <span className="counter">{`${this.props.count('notDone')} left`}</span>
-        </div>
-        <div className="filters">
-          <button
-            className={`filter${this.props.filter === 'all' ? ` ${this.filterActiveClass}` : ''}`}
-            onClick={ev => {
-              this.handleSetFilter(ev, 'all')
-            }}
-          >
-            all
-          </button>
-          <button
-            className={`filter${this.props.filter === 'done' ? ` ${this.filterActiveClass}` : ''}`}
-            onClick={ev => {
-              this.handleSetFilter(ev, 'done')
-            }}
-          >
-            completed
-          </button>
-          <button
-            className={`filter${this.props.filter === 'notDone' ? ` ${this.filterActiveClass}` : ''}`}
-            onClick={ev => {
-              this.handleSetFilter(ev, 'notDone')
-            }}
-          >
-            active
-          </button>
-        </div>
-        <button className="delete-done" onClick={this.handleDeleteDone}>
-          clear completed
-        </button>
-      </div>
-    )
-  }
+  if (!countAll) return null
+
+  return (
+    <div className={classes.root}>
+      <Counters variant="body2">
+        <span>{`${countDone} completed`}</span>
+        {', '}
+        <span>{`${countNotDone} left`}</span>
+      </Counters>
+      <ToggleButtonGroupStyled
+        exclusive
+        value={filter === null ? false : filter}
+        onChange={handleSetFilter}
+      >
+        <ToggleButton value={false}>all</ToggleButton>
+        <ToggleButton value={ITEM_STATUS.DONE}>completed</ToggleButton>
+        <ToggleButton value={ITEM_STATUS.NOT_DONE}>active</ToggleButton>
+      </ToggleButtonGroupStyled>
+      <ClearAllButton variant="base" onClick={handleDeleteDone}>
+        clear completed
+      </ClearAllButton>
+    </div>
+  )
 }
 
-const mapStateToProps = state => {
-  const store = { [slice.reducerPath]: state }
+const ToggleButtonGroupStyled = styled(ToggleButtonGroup)`
+  column-gap: 2px;
+`
 
-  return {
-    count: filter => slice.selectors.selectCount(store, filter),
-    filter: slice.selectors.selectFilter(store),
-  }
-}
+const ClearAllButton = styled(Button)`
+  font-weight: 800;
+  color: ${props => props.theme.palette.danger.main} !important;
+`
 
-export default connect(mapStateToProps, {
-  setFilter: slice.actions.setFilter,
-  deleteDone: actions.deleteDone,
-})(Controls)
+const Counters = styled(Typography)`
+  color: #589054;
+`

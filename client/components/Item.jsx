@@ -1,89 +1,120 @@
-import { Component } from 'react'
-import { connect } from 'react-redux'
+import { useDispatch } from 'react-redux'
+import styled from '@emotion/styled'
+import TextField from '@mui/material/TextField'
+import Button from '@mui/material/Button'
+import Checkbox from '@mui/material/Checkbox'
+import FormControlLabel from '@mui/material/FormControlLabel'
 
-import { actions } from '../store/sagas'
+import { updateStatus, updateName, deleteOne } from '../actions'
 
-class Item extends Component {
-  handleNameChange = ev => {
+import { ITEM_STATUS } from '../constants'
+
+import classes from './Item.module.css'
+
+export default function Item({ item, isEditing, handleEdit }) {
+  const dispatch = useDispatch()
+
+  const handleNameChange = ev => {
     // for .isComposing see https://developer.mozilla.org/en-US/docs/Web/API/Element/keyup_event
     if (ev.isComposing || ev.code !== 'Enter') return
 
-    this.props.updateName({
-      id: this.props.item.id,
-      name: ev.target.value,
-    })
+    dispatch(
+      updateName({
+        id: item.id,
+        name: ev.target.value,
+      })
+    )
 
-    this.props.handleEdit(this.props.item.id)
+    handleEdit(item.id)
   }
 
-  handleStatusChange = () => {
-    let status = null
+  const handleStatusChange = () => {
+    const status = item.status === ITEM_STATUS.DONE ? ITEM_STATUS.NOT_DONE : ITEM_STATUS.DONE
 
-    if (this.props.item.status === 1) {
-      status = 2
-    } else {
-      status = 1
-    }
-
-    this.props.updateStatus({
-      id: this.props.item.id,
-      status,
-    })
-  }
-
-  handleDelete = () => {
-    this.props.deleteOne(this.props.item.id)
-  }
-
-  handleEdit = () => {
-    this.props.handleEdit(this.props.item.id)
-  }
-
-  render() {
-    let labelClassName = null
-
-    if (this.props.item.status === 1) {
-      labelClassName = 'checked'
-    } else {
-      labelClassName = ''
-    }
-
-    return (
-      <li className="item">
-        <div className="input-container">
-          <input
-            id={this.props.item.id}
-            className="input-checkbox"
-            type="checkbox"
-            checked={this.props.item.status === 1}
-            onChange={this.handleStatusChange}
-          />
-          {this.props.isEditing ? (
-            <input
-              className="input-edit"
-              type="text"
-              defaultValue={this.props.item.name}
-              onKeyUp={this.handleNameChange}
-            />
-          ) : (
-            <label className={labelClassName} htmlFor={this.props.item.id}>
-              {this.props.item.name}
-            </label>
-          )}
-        </div>
-        <button className="edit" onClick={this.handleEdit}>
-          edit
-        </button>
-        <button className="delete" onClick={this.handleDelete}>
-          delete
-        </button>
-      </li>
+    dispatch(
+      updateStatus({
+        id: item.id,
+        status,
+      })
     )
   }
+
+  const handleDelete = () => {
+    dispatch(deleteOne(item.id))
+  }
+
+  const handleEditListener = () => {
+    handleEdit(item.id)
+  }
+
+  return (
+    <li className={classes.root}>
+      <div className={classes.inputContainer}>
+        {isEditing ? (
+          <>
+            <FormControlLabelStyled
+              control={<Checkbox />}
+              checked={item.status === ITEM_STATUS.DONE}
+              onChange={handleStatusChange}
+            />
+            <TextFieldStyled
+              type="text"
+              variant="filled"
+              fullWidth
+              defaultValue={item.name}
+              onKeyUp={handleNameChange}
+            />
+          </>
+        ) : (
+          <FormControlLabelStyled
+            control={<Checkbox />}
+            checked={item.status === ITEM_STATUS.DONE}
+            label={item.name}
+            onChange={handleStatusChange}
+          />
+        )}
+      </div>
+      <Button variant="base" onClick={handleEditListener}>
+        edit
+      </Button>
+      <Button variant="base" onClick={handleDelete}>
+        delete
+      </Button>
+    </li>
+  )
 }
 
-export default connect(null, {
-  updateStatus: actions.updateStatus,
-  updateName: actions.updateName,
-  deleteOne: actions.deleteOne,
-})(Item)
+const TextFieldStyled = styled(TextField)`
+  & .MuiFilledInput-root {
+    background-color: ${props => props.theme.palette.backgrounds.main};
+
+    & .MuiFilledInput-input {
+      padding: 0;
+    }
+  }
+
+  & .MuiFilledInput-root.Mui-focused {
+    background-color: rgba(0, 0, 0, 0.06);
+  }
+`
+
+const FormControlLabelStyled = styled(FormControlLabel)(props => {
+  const styles = {
+    flexGrow: 2,
+    '& .MuiFormControlLabel-label': {
+      flexGrow: 2,
+    },
+  }
+
+  if (props.checked) {
+    return {
+      ...styles,
+      '& .MuiFormControlLabel-label': {
+        color: 'rgba(0, 0, 0, 0.5)',
+        textDecoration: 'line-through',
+      },
+    }
+  }
+
+  return styles
+})

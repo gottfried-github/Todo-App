@@ -1,55 +1,30 @@
-import { Component } from 'react'
-import { connect } from 'react-redux'
+import { useState } from 'react'
+import { useSelector } from 'react-redux'
 
-import { actions } from '../store/sagas'
 import slice from '../store/slice'
 
 import Item from './Item'
 
-class Items extends Component {
-  state = {
-    editingId: null,
-  }
+import classes from './Items.module.css'
 
-  handleEdit = itemId => {
-    if (!this.state.editingId || this.state.editingId !== itemId) {
-      this.setState({
-        editingId: itemId,
-      })
+export default function Items() {
+  const [editingId, setEditingId] = useState(null)
+
+  const items = useSelector(state => slice.selectors.selectItems({ [slice.reducerPath]: state }))
+
+  const handleEdit = itemId => {
+    if (!editingId || editingId !== itemId) {
+      setEditingId(itemId)
     } else {
-      this.setState({
-        editingId: null,
-      })
+      setEditingId(null)
     }
   }
 
-  componentDidMount() {
-    this.props.fetchItems()
-  }
-
-  render() {
-    return (
-      <ul className="items">
-        {this.props.items.map(item => (
-          <Item
-            key={item.id}
-            item={item}
-            isEditing={this.state.editingId === item.id}
-            handleEdit={this.handleEdit}
-          />
-        ))}
-      </ul>
-    )
-  }
+  return (
+    <ul className={classes.root}>
+      {items.map(item => (
+        <Item key={item.id} item={item} isEditing={editingId === item.id} handleEdit={handleEdit} />
+      ))}
+    </ul>
+  )
 }
-
-const mapStateToProps = state => {
-  const store = { [slice.reducerPath]: state }
-
-  return {
-    items: slice.selectors.selectItems(store),
-    filter: slice.selectors.selectFilter(store),
-  }
-}
-
-export default connect(mapStateToProps, { fetchItems: actions.getItems })(Items)
