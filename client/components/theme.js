@@ -29,6 +29,17 @@ const typography = {
   },
 }
 
+const stylesButton = {
+  padding: '2px 4px !important',
+  color: `${palette.util.dark} !important`,
+  backgroundColor: 'transparent',
+  border: 'none !important',
+  textTransform: 'none !important',
+  '&:hover': {
+    backgroundColor: `${palette.backgrounds.light} !important`,
+  },
+}
+
 export default createTheme({
   palette,
   typography,
@@ -61,20 +72,25 @@ export default createTheme({
         },
       },
     },
-    // used by ToggleButton and Button
-    MuiButtonBase: {
+    MuiToggleButton: {
       styleOverrides: {
         root: {
-          padding: '2px 4px !important',
-          color: `${palette.util.dark} !important`,
-          backgroundColor: 'transparent',
-          border: 'none !important',
-          textTransform: 'none !important',
-          '&:hover, &.Mui-selected, &.Mui-selected:hover': {
+          ...stylesButton,
+          '&.Mui-selected, &.Mui-selected:hover': {
             backgroundColor: `${palette.backgrounds.light} !important`,
           },
         },
       },
+    },
+    MuiButton: {
+      variants: [
+        {
+          props: { variant: 'base' },
+          style: {
+            ...stylesButton,
+          },
+        },
+      ],
     },
   },
 })

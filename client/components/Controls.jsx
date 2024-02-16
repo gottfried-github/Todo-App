@@ -60,7 +60,9 @@ export default function Controls() {
         <ToggleButton value={ITEM_STATUS.DONE}>completed</ToggleButton>
         <ToggleButton value={ITEM_STATUS.NOT_DONE}>active</ToggleButton>
       </ToggleButtonGroupStyled>
-      <ClearAllButton onClick={handleDeleteDone}>clear completed</ClearAllButton>
+      <ClearAllButton variant="base" onClick={handleDeleteDone}>
+        clear completed
+      </ClearAllButton>
     </div>
   )
 }
