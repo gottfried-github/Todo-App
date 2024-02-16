@@ -8,6 +8,8 @@ import Form from './components/Form'
 import Controls from './components/Controls'
 import Items from './components/Items'
 
+import classes from './App.module.css'
+
 export default function App() {
   const error = useSelector(state => slice.selectors.selectError({ [slice.reducerPath]: state }))
 
@@ -16,7 +18,7 @@ export default function App() {
   }
 
   return (
-    <div className="container">
+    <div className={classes.root}>
       <Heading variant="h1">todo list</Heading>
       <Form />
       <Controls />

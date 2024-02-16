@@ -11,6 +11,8 @@ import slice from '../store/slice'
 
 import { ITEM_STATUS } from '../constants'
 
+import classes from './Controls.module.css'
+
 export default function Controls() {
   const dispatch = useDispatch()
 
@@ -46,7 +48,7 @@ export default function Controls() {
   if (!countAll) return null
 
   return (
-    <div className="controls">
+    <div className={classes.root}>
       <Counters variant="body2">
         <span>{`${countDone} completed`}</span>
         {', '}

@@ -7,6 +7,8 @@ import { updateStatus, updateName, deleteOne } from '../actions'
 
 import { ITEM_STATUS } from '../constants'
 
+import classes from './Item.module.css'
+
 export default function Item({ item, isEditing, handleEdit }) {
   const dispatch = useDispatch()
 
@@ -43,14 +45,14 @@ export default function Item({ item, isEditing, handleEdit }) {
     handleEdit(item.id)
   }
 
-  const labelClassName = item.status === ITEM_STATUS.DONE ? 'checked' : ''
+  const labelClassName = item.status === ITEM_STATUS.DONE ? classes.checked : ''
 
   return (
-    <li className="item">
-      <div className="input-container">
+    <li className={classes.root}>
+      <div className={classes.inputContainer}>
         <input
           id={item.id}
-          className="input-checkbox"
+          className={classes.inputCheckbox}
           type="checkbox"
           checked={item.status === ITEM_STATUS.DONE}
           onChange={handleStatusChange}

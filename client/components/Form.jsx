@@ -7,6 +7,8 @@ import Button from '@mui/material/Button'
 
 import { create } from '../actions'
 
+import classes from './Form.module.css'
+
 export default function Form() {
   const dispatch = useDispatch()
 
@@ -25,7 +27,7 @@ export default function Form() {
   }
 
   return (
-    <form className="add-form">
+    <form className={classes.root}>
       <TextFieldStyled
         type="text"
         variant="filled"

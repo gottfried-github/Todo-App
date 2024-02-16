@@ -5,6 +5,8 @@ import slice from '../store/slice'
 
 import Item from './Item'
 
+import classes from './Items.module.css'
+
 export default function Items() {
   const [editingId, setEditingId] = useState(null)
 
@@ -19,7 +21,7 @@ export default function Items() {
   }
 
   return (
-    <ul className="items">
+    <ul className={classes.root}>
       {items.map(item => (
         <Item key={item.id} item={item} isEditing={editingId === item.id} handleEdit={handleEdit} />
       ))}
