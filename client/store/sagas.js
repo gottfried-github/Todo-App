@@ -152,11 +152,6 @@ function* getItems(action) {
   try {
     const res = yield call(axios.get, url)
 
-    // yield put({
-    //   type: slice.actions.setFilter.type,
-    //   payload: action.payload.status,
-    // })
-
     yield put({
       type: slice.actions.setItems.type,
       payload: res.data,
