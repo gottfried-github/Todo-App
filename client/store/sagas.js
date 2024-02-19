@@ -141,16 +141,10 @@ function* deleteDone() {
 }
 
 function* getItems(action) {
-  let url = '/todos'
-
-  if (action.payload?.status) {
-    const params = new URLSearchParams([['status', action.payload.status]])
-
-    url = `${url}?${params.toString()}`
-  }
-
   try {
-    const res = yield call(axios.get, url)
+    const res = yield call(axios.get, '/todos', {
+      params: { status: action.payload?.status || null },
+    })
 
     yield put({
       type: slice.actions.setItems.type,
