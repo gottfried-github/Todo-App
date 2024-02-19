@@ -11,8 +11,6 @@ import slice from '../store/slice'
 
 import { ITEM_STATUS } from '../constants'
 
-import classes from './Controls.module.css'
-
 export default function Controls() {
   const dispatch = useDispatch()
 
@@ -39,7 +37,7 @@ export default function Controls() {
   if (!counters.all) return null
 
   return (
-    <div className={classes.root}>
+    <Container>
       <Counters variant="body2">
         <span>{`${counters.done} completed`}</span>
         {', '}
@@ -59,9 +57,19 @@ export default function Controls() {
       <ClearAllButton variant="base" onClick={handleDeleteDone}>
         clear completed
       </ClearAllButton>
-    </div>
+    </Container>
   )
 }
+
+const Container = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 8px 8px;
+
+  color: rgba(0, 0, 0, 0.5);
+`
 
 const ToggleButtonGroupStyled = styled(ToggleButtonGroup)`
   column-gap: 2px;

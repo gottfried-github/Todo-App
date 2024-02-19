@@ -9,8 +9,6 @@ import { updateStatus, updateName, deleteOne } from '../store/actions'
 
 import { ITEM_STATUS } from '../constants'
 
-import classes from './Item.module.css'
-
 export default function Item({ item, isEditing, handleEdit }) {
   const dispatch = useDispatch()
 
@@ -48,8 +46,8 @@ export default function Item({ item, isEditing, handleEdit }) {
   }
 
   return (
-    <li className={classes.root}>
-      <div className={classes.inputContainer}>
+    <Container>
+      <InputContainer>
         {isEditing ? (
           <>
             <FormControlLabelStyled
@@ -73,14 +71,14 @@ export default function Item({ item, isEditing, handleEdit }) {
             onChange={handleStatusChange}
           />
         )}
-      </div>
+      </InputContainer>
       <Button variant="base" onClick={handleEditListener}>
         edit
       </Button>
       <Button variant="base" onClick={handleDelete}>
         delete
       </Button>
-    </li>
+    </Container>
   )
 }
 
@@ -110,3 +108,26 @@ const FormControlLabelStyled = styled(FormControlLabel)(props => {
 
   return styles
 })
+
+const Container = styled.li`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  column-gap: 4px;
+
+  padding: 8px 8px;
+  margin-bottom: 8px;
+
+  background-color: #c1e3ef;
+  border-radius: 5px;
+`
+
+const InputContainer = styled.div`
+  display: flex;
+  flex-grow: 2;
+
+  align-items: center;
+
+  column-gap: 8px;
+`

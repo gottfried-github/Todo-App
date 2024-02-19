@@ -1,12 +1,11 @@
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
+import styled from '@emotion/styled'
 
 import TextField from './lib/TextField'
 import Button from '@mui/material/Button'
 
 import { create } from '../store/actions'
-
-import classes from './Form.module.css'
 
 export default function Form() {
   const dispatch = useDispatch()
@@ -26,7 +25,7 @@ export default function Form() {
   }
 
   return (
-    <form className={classes.root} onSubmit={handleSubmit}>
+    <FormEl onSubmit={handleSubmit}>
       <TextField
         type="text"
         variant="filled"
@@ -38,6 +37,16 @@ export default function Form() {
       <Button variant="main" onClick={handleSubmit}>
         submit
       </Button>
-    </form>
+    </FormEl>
   )
 }
+
+const FormEl = styled.form`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  row-gap: 16px;
+
+  margin-bottom: 8px;
+`
