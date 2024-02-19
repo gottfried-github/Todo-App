@@ -5,7 +5,7 @@ import Button from '@mui/material/Button'
 import Checkbox from '@mui/material/Checkbox'
 import FormControlLabel from '@mui/material/FormControlLabel'
 
-import { updateStatus, updateName, deleteOne } from '../actions'
+import { updateStatus, updateName, deleteOne } from '../store/actions'
 
 import { ITEM_STATUS } from '../constants'
 

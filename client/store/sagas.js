@@ -10,7 +10,7 @@ import {
   deleteOne as actionDeleteOne,
   deleteDone as actionDeleteDone,
   getItems as actionGetItems,
-} from '../actions'
+} from './actions'
 
 class Item {
   constructor(name) {
