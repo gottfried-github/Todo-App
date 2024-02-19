@@ -27,7 +27,7 @@ export default function Form() {
   }
 
   return (
-    <form className={classes.root}>
+    <form className={classes.root} onSubmit={handleSubmit}>
       <TextFieldStyled
         type="text"
         variant="filled"
