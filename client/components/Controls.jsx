@@ -30,11 +30,9 @@ export default function Controls() {
     if (filter === null) return
 
     dispatch(slice.actions.setFilter(filter === false ? null : filter))
-    // dispatch(getItems({ status: filter === false ? null : filter }))
   }
 
   useEffect(() => {
-    // dispatch(getItems())
     dispatch(getItems({ status: filter }))
   }, [dispatch, filter])
 
