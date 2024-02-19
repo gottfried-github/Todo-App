@@ -1,8 +1,7 @@
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import styled from '@emotion/styled'
 
-import TextField from '@mui/material/TextField'
+import TextField from './lib/TextField'
 import Button from '@mui/material/Button'
 
 import { create } from '../store/actions'
@@ -28,7 +27,7 @@ export default function Form() {
 
   return (
     <form className={classes.root} onSubmit={handleSubmit}>
-      <TextFieldStyled
+      <TextField
         type="text"
         variant="filled"
         fullWidth
@@ -42,13 +41,3 @@ export default function Form() {
     </form>
   )
 }
-
-const TextFieldStyled = styled(TextField)`
-  & .MuiFilledInput-root {
-    background-color: ${props => props.theme.palette.util.main};
-  }
-
-  & .MuiFilledInput-root.Mui-focused {
-    background-color: rgba(0, 0, 0, 0.06);
-  }
-`

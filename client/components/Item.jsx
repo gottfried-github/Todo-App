@@ -1,6 +1,6 @@
 import { useDispatch } from 'react-redux'
 import styled from '@emotion/styled'
-import TextField from '@mui/material/TextField'
+import TextField from './lib/TextField'
 import Button from '@mui/material/Button'
 import Checkbox from '@mui/material/Checkbox'
 import FormControlLabel from '@mui/material/FormControlLabel'
@@ -85,16 +85,8 @@ export default function Item({ item, isEditing, handleEdit }) {
 }
 
 const TextFieldStyled = styled(TextField)`
-  & .MuiFilledInput-root {
-    background-color: ${props => props.theme.palette.backgrounds.main};
-
-    & .MuiFilledInput-input {
-      padding: 0;
-    }
-  }
-
-  & .MuiFilledInput-root.Mui-focused {
-    background-color: rgba(0, 0, 0, 0.06);
+  & .MuiFilledInput-root .MuiFilledInput-input {
+    padding: 0;
   }
 `
 
