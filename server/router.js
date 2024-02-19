@@ -11,10 +11,10 @@ const router = new Router({
   prefix: '/todos',
 })
 
-router.get('/', getAll)
+router.get('/', validateContentType, getAll)
 router.post('/', validateContentType, parseBody, validateBody, create)
 router.patch('/:id', validateContentType, parseBody, validateBody, update)
-router.delete('/:id', deleteById)
-router.delete('/', deleteDone)
+router.delete('/:id', validateContentType, parseBody, deleteById)
+router.delete('/', validateContentType, parseBody, deleteDone)
 
 export default router

@@ -6,8 +6,10 @@ export const parseBody = bodyParser({
 
 export const validateContentType = async (ctx, next) => {
   if (
-    !('content-type' in ctx.request.headers) ||
-    ctx.request.headers['content-type'] !== 'application/json'
+    'content-length' in ctx.request.headers &&
+    parseInt(ctx.request.headers['content-length']) > 0 &&
+    (!('content-type' in ctx.request.headers) ||
+      ctx.request.headers['content-type'] !== 'application/json')
   ) {
     ctx.status = 415
 
@@ -55,7 +57,12 @@ export const utils = async (ctx, next) => {
   ctx.send = async (status, data, message) => {
     ctx.status = status || 200
 
-    ctx.body = data || (message && { message }) || {}
+    const body = data || (message && { message }) || {}
+    if (message && !body.message) {
+      body.message = message
+    }
+
+    ctx.body = body
   }
 
   await next()
