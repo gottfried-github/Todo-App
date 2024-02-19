@@ -1,4 +1,4 @@
-import { call, put, takeEvery, takeLatest } from 'redux-saga/effects'
+import { call, put, takeEvery, takeLatest, select } from 'redux-saga/effects'
 import axios from './http'
 
 import slice from './slice'
@@ -21,11 +21,19 @@ class Item {
 function* create(action) {
   const item = new Item(action.payload)
 
+  const filter = yield select(state => slice.selectors.selectFilter({ [slice.reducerPath]: state }))
+
+  const body = { item }
+
+  if (filter) {
+    body.status = filter
+  }
+
   try {
-    const res = yield call(axios.post, '/todos', item)
+    const res = yield call(axios.post, '/todos', body)
 
     yield put({
-      type: slice.actions.append.type,
+      type: slice.actions.setItems.type,
       payload: res.data,
     })
   } catch (e) {
@@ -37,14 +45,24 @@ function* create(action) {
 }
 
 function* updateStatus(action) {
-  try {
-    yield call(axios.patch, `/todos/${action.payload.id}`, {
+  const filter = yield select(state => slice.selectors.selectFilter({ [slice.reducerPath]: state }))
+
+  const body = {
+    item: {
       status: action.payload.status,
-    })
+    },
+  }
+
+  if (filter) {
+    body.status = filter
+  }
+
+  try {
+    const res = yield call(axios.patch, `/todos/${action.payload.id}`, body)
 
     yield put({
-      type: slice.actions.updateItem.type,
-      payload: { id: action.payload.id, fields: { status: action.payload.status } },
+      type: slice.actions.setItems.type,
+      payload: res.data,
     })
   } catch (e) {
     yield put({
@@ -55,14 +73,24 @@ function* updateStatus(action) {
 }
 
 function* updateName(action) {
-  try {
-    yield call(axios.patch, `/todos/${action.payload.id}`, {
+  const filter = yield select(state => slice.selectors.selectFilter({ [slice.reducerPath]: state }))
+
+  const body = {
+    item: {
       name: action.payload.name,
-    })
+    },
+  }
+
+  if (filter) {
+    body.status = filter
+  }
+
+  try {
+    const res = yield call(axios.patch, `/todos/${action.payload.id}`, body)
 
     yield put({
-      type: slice.actions.updateItem.type,
-      payload: { id: action.payload.id, fields: { name: action.payload.name } },
+      type: slice.actions.setItems.type,
+      payload: res.data,
     })
   } catch (e) {
     yield put({
@@ -73,12 +101,16 @@ function* updateName(action) {
 }
 
 function* deleteOne(action) {
+  const filter = yield select(state => slice.selectors.selectFilter({ [slice.reducerPath]: state }))
+
+  const body = filter ? { status: filter } : null
+
   try {
-    yield call(axios.delete, `/todos/${action.payload}`)
+    const res = yield call(axios.delete, `/todos/${action.payload}`, body)
 
     yield put({
-      type: slice.actions.deleteItem.type,
-      payload: action.payload,
+      type: slice.actions.setItems.type,
+      payload: res.data,
     })
   } catch (e) {
     yield put({
@@ -89,11 +121,16 @@ function* deleteOne(action) {
 }
 
 function* deleteDone() {
+  const filter = yield select(state => slice.selectors.selectFilter({ [slice.reducerPath]: state }))
+
+  const body = filter ? { status: filter } : null
+
   try {
-    yield call(axios.delete, '/todos')
+    const res = yield call(axios.delete, '/todos', body)
 
     yield put({
-      type: slice.actions.deleteDone.type,
+      type: slice.actions.setItems.type,
+      payload: res.data,
     })
   } catch (e) {
     yield put({
