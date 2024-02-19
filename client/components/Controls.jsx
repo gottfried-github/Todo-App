@@ -16,16 +16,8 @@ import classes from './Controls.module.css'
 export default function Controls() {
   const dispatch = useDispatch()
 
-  const countAll = useSelector(state =>
-    slice.selectors.selectCount({ [slice.reducerPath]: state }, null)
-  )
-
-  const countDone = useSelector(state =>
-    slice.selectors.selectCount({ [slice.reducerPath]: state }, ITEM_STATUS.DONE)
-  )
-
-  const countNotDone = useSelector(state =>
-    slice.selectors.selectCount({ [slice.reducerPath]: state }, ITEM_STATUS.NOT_DONE)
+  const counters = useSelector(state =>
+    slice.selectors.selectCounters({ [slice.reducerPath]: state })
   )
 
   const filter = useSelector(state => slice.selectors.selectFilter({ [slice.reducerPath]: state }))
@@ -46,14 +38,14 @@ export default function Controls() {
     dispatch(getItems({ status: filter }))
   }, [dispatch, filter])
 
-  if (!countAll) return null
+  if (!counters.all) return null
 
   return (
     <div className={classes.root}>
       <Counters variant="body2">
-        <span>{`${countDone} completed`}</span>
+        <span>{`${counters.done} completed`}</span>
         {', '}
-        <span>{`${countNotDone} left`}</span>
+        <span>{`${counters.notDone} left`}</span>
       </Counters>
       <ToggleButtonGroupStyled
         exclusive

@@ -46,26 +46,8 @@ const slice = createSlice({
     selectItems: state => {
       return state.items
     },
-    selectCount: (state, filter) => {
-      if (filter && !FILTERS.includes(filter)) {
-        return new Error('todos/selectCount: invalid filter value')
-      }
-
-      const _filter = filter === undefined ? state.filter : filter
-
-      switch (_filter) {
-        case null:
-          return state.counters.all
-
-        case ITEM_STATUS.DONE:
-          return state.counters.done
-
-        case ITEM_STATUS.NOT_DONE:
-          return state.counters.notDone
-
-        default:
-          return new Error('todos/selectCount: invalid _filter')
-      }
+    selectCounters: state => {
+      return state.counters
     },
     selectFilter: state => state.filter,
     selectError: state => state.error,
