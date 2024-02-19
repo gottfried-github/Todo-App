@@ -1,7 +1,9 @@
-import { useSelector } from 'react-redux'
+import { useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import styled from '@emotion/styled'
 import Typography from '@mui/material/Typography'
 
+import { getItems } from './store/actions'
 import slice from './store/slice'
 
 import Form from './components/Form'
@@ -9,6 +11,14 @@ import Controls from './components/Controls'
 import Items from './components/Items'
 
 export default function App() {
+  const dispatch = useDispatch()
+
+  const filter = useSelector(state => slice.selectors.selectFilter({ [slice.reducerPath]: state }))
+
+  useEffect(() => {
+    dispatch(getItems({ status: filter }))
+  }, [dispatch, filter])
+
   const error = useSelector(state => slice.selectors.selectError({ [slice.reducerPath]: state }))
 
   if (error) {

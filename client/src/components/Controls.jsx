@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import styled from '@emotion/styled'
 import Typography from '@mui/material/Typography'
@@ -6,7 +5,7 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
 import ToggleButton from '@mui/material/ToggleButton'
 import Button from '@mui/material/Button'
 
-import { getItems, deleteDone } from '../store/actions'
+import { deleteDone } from '../store/actions'
 import slice from '../store/slice'
 
 import { ITEM_STATUS } from '../constants'
@@ -14,11 +13,10 @@ import { ITEM_STATUS } from '../constants'
 export default function Controls() {
   const dispatch = useDispatch()
 
+  const filter = useSelector(state => slice.selectors.selectFilter({ [slice.reducerPath]: state }))
   const counters = useSelector(state =>
     slice.selectors.selectCounters({ [slice.reducerPath]: state })
   )
-
-  const filter = useSelector(state => slice.selectors.selectFilter({ [slice.reducerPath]: state }))
 
   const handleDeleteDone = () => {
     dispatch(deleteDone())
@@ -29,10 +27,6 @@ export default function Controls() {
 
     dispatch(slice.actions.setFilter(filter === false ? null : filter))
   }
-
-  useEffect(() => {
-    dispatch(getItems({ status: filter }))
-  }, [dispatch, filter])
 
   if (!counters.all) return null
 
