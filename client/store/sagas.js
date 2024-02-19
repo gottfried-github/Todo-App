@@ -115,19 +115,10 @@ function* getItems(action) {
   try {
     const res = yield call(axios.get, url)
 
-    if (!('status' in (action.payload || {}))) {
-      yield put({
-        type: slice.actions.setItemsAll.type,
-        payload: res.data,
-      })
-
-      return
-    }
-
-    yield put({
-      type: slice.actions.setFilter.type,
-      payload: action.payload.status,
-    })
+    // yield put({
+    //   type: slice.actions.setFilter.type,
+    //   payload: action.payload.status,
+    // })
 
     yield put({
       type: slice.actions.setItems.type,
