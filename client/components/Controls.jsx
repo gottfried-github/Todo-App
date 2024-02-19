@@ -44,6 +44,8 @@ export default function Controls() {
         <span>{`${counters.done} completed`}</span>
         {', '}
         <span>{`${counters.notDone} left`}</span>
+        {', '}
+        <span>{`${counters.all} total`}</span>
       </Counters>
       <ToggleButtonGroupStyled
         exclusive
