@@ -68,7 +68,7 @@ const Container = styled.div`
 
   padding: 8px 8px;
 
-  color: rgba(0, 0, 0, 0.5);
+  color: ${props => props.theme.palette.util.dark};
 `
 
 const ToggleButtonGroupStyled = styled(ToggleButtonGroup)`
@@ -81,5 +81,5 @@ const ClearAllButton = styled(Button)`
 `
 
 const Counters = styled(Typography)`
-  color: #589054;
+  color: ${props => props.theme.palette.util.green};
 `

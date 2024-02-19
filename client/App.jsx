@@ -45,7 +45,7 @@ const Container = styled.div`
 
   font-size: 0.875rem;
 
-  background-color: #d3f1f3;
+  background-color: ${props => props.theme.palette.backgrounds.main};
   border-radius: 12px;
-  box-shadow: 2px 4px 8px 0px rgba(86, 100, 104, 0.16);
+  box-shadow: 2px 4px 8px 0px ${props => props.theme.palette.util.shadow};
 `

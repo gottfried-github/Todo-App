@@ -100,7 +100,7 @@ const FormControlLabelStyled = styled(FormControlLabel)(props => {
     return {
       ...styles,
       '& .MuiFormControlLabel-label': {
-        color: 'rgba(0, 0, 0, 0.5)',
+        color: props.theme.palette.util.dark,
         textDecoration: 'line-through',
       },
     }
@@ -119,7 +119,7 @@ const Container = styled.li`
   padding: 8px 8px;
   margin-bottom: 8px;
 
-  background-color: #c1e3ef;
+  background-color: ${props => props.theme.palette.backgrounds.dark};
   border-radius: 5px;
 `
 
