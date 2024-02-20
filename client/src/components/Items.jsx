@@ -1,16 +1,19 @@
 import { useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import styled from '@emotion/styled'
 
 import TextField from '@mui/material/TextField'
+import Checkbox from '@mui/material/Checkbox'
 import { DataGrid, useGridApiRef } from '@mui/x-data-grid'
 import { ITEM_STATUS } from '../constants'
 
+import { updateStatus, updateName, deleteOne } from '../store/actions'
 import slice from '../store/slice'
 
 import Item from './Item'
 
 export default function Items() {
+  const dispatch = useDispatch()
   const gridApiRef = useGridApiRef()
 
   const [editingId, setEditingId] = useState(null)
@@ -75,29 +78,28 @@ export default function Items() {
     setEditingId(_editingId)
   }
 
+  const handleStatusChange = () => {
+    const status = item.status === ITEM_STATUS.DONE ? ITEM_STATUS.NOT_DONE : ITEM_STATUS.DONE
+
+    dispatch(
+      updateStatus({
+        id: item.id,
+        status,
+      })
+    )
+  }
+
   const handleNameChange = (ev, itemId) => {
     // for .isComposing see https://developer.mozilla.org/en-US/docs/Web/API/Element/keyup_event
-    // if (ev.isComposing || ev.code !== 'Enter') return
-    // dispatch(
-    //   updateName({
-    //     id: itemId,
-    //     name: ev.target.value,
-    //   })
-    // )
+    if (ev.isComposing || ev.code !== 'Enter') return
+    dispatch(
+      updateName({
+        id: itemId,
+        name: ev.target.value,
+      })
+    )
 
-    gridApiRef.current.updateRows([
-      {
-        id: editingId,
-        name: {
-          ...gridApiRef.current.getCellValue(itemId, 'name'),
-          isEditing: false,
-        },
-      },
-    ])
-
-    setEditingId(null)
-
-    // handleEdit(item.id)
+    handleEdit(itemId)
   }
 
   return (
@@ -105,10 +107,13 @@ export default function Items() {
       <DataGrid
         apiRef={gridApiRef}
         columns={[
-          // {
-          //   field: 'status',
-          //   type: 'number',
-          // },
+          {
+            field: 'status',
+            type: 'number',
+            renderCell: params => {
+              return <Checkbox checked={params.value === ITEM_STATUS.DONE} />
+            },
+          },
           {
             field: 'name',
             renderCell: params => {
@@ -149,6 +154,7 @@ export default function Items() {
         ]}
         rows={items.map(item => ({
           id: item.id,
+          status: item.status,
           name: {
             isEditing: item.id === editingId,
             name: item.name,
