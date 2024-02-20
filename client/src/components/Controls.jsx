@@ -41,7 +41,7 @@ export default function Controls() {
       </Counters>
       <ToggleButtonGroupStyled
         exclusive
-        value={filter === null ? false : filter}
+        value={filter.status === null ? false : filter.status}
         onChange={handleSetFilter}
       >
         <ToggleButton value={false}>all</ToggleButton>
