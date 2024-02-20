@@ -105,14 +105,22 @@ export default function Items() {
     dispatch(deleteOne(itemId))
   }
 
+  const handleSortModelChange = sortModel => {
+    console.log('handleSortModelChange, sortModel:', sortModel)
+  }
+
   return (
     <DataGridStyled
       apiRef={gridApiRef}
       disableRowSelectionOnClick
+      sortingMode="server"
+      onSortModelChange={handleSortModelChange}
+      sortingOrder={['desc', 'asc']}
       columns={[
         {
           field: 'status',
           type: 'number',
+          sortable: false,
           renderCell: params => {
             return (
               <Checkbox
@@ -155,6 +163,7 @@ export default function Items() {
         },
         {
           field: 'edit',
+          sortable: false,
           renderCell: params => {
             return (
               <Button
@@ -170,6 +179,7 @@ export default function Items() {
         },
         {
           field: 'delete',
+          sortable: false,
           renderCell: params => {
             return (
               <Button

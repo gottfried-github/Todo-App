@@ -28,14 +28,22 @@ const schema = new mongoose.Schema(
   }
 )
 
-schema.statics.getAll = async function (status) {
+schema.statics.getAll = async function (status, sort) {
   const filter = {}
 
   if (status) {
     filter.status = status
   }
 
-  const items = await this.find(filter).sort({ createdAt: 1 })
+  let _sort = null
+
+  if (!sort || (_sort?.field && !_sort?.order) || (_sort?.order && !_sort?.field)) {
+    _sort = { createdAt: 1 }
+  } else {
+    _sort = { [sort.field]: sort.order }
+  }
+
+  const items = await this.find(filter).sort(_sort)
 
   const counters = {
     all: await this.countDocuments(),

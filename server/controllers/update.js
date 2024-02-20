@@ -12,7 +12,10 @@ export default async function update(ctx) {
       ctx.throw(404, 'no item matched given id')
     }
 
-    const { items, counters } = await Todo.getAll(ctx.request.body.status || null)
+    const { items, counters } = await Todo.getAll(
+      ctx.request.body.status || null,
+      ctx.request.body.sort || null
+    )
 
     ctx.send(200, { items, counters }, 'successfully updated')
   } catch (e) {

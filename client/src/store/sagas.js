@@ -23,10 +23,10 @@ function* create(action) {
 
   const filter = yield select(state => slice.selectors.selectFilter({ [slice.reducerPath]: state }))
 
-  const body = { item }
+  const body = { item, sort: filter.sort }
 
-  if (filter) {
-    body.status = filter
+  if (filter.status) {
+    body.status = filter.status
   }
 
   try {
@@ -51,10 +51,11 @@ function* updateStatus(action) {
     item: {
       status: action.payload.status,
     },
+    sort: filter.sort,
   }
 
-  if (filter) {
-    body.status = filter
+  if (filter.status) {
+    body.status = filter.status
   }
 
   try {
@@ -79,10 +80,11 @@ function* updateName(action) {
     item: {
       name: action.payload.name,
     },
+    sort: filter.sort,
   }
 
-  if (filter) {
-    body.status = filter
+  if (filter.status) {
+    body.status = filter.status
   }
 
   try {
@@ -103,7 +105,11 @@ function* updateName(action) {
 function* deleteOne(action) {
   const filter = yield select(state => slice.selectors.selectFilter({ [slice.reducerPath]: state }))
 
-  const body = filter ? { status: filter } : null
+  const body = { sort: filter.sort }
+
+  if (filter.status) {
+    body.status = filter.status
+  }
 
   try {
     const res = yield call(axios.delete, `/todos/${action.payload}`, body)
@@ -123,7 +129,11 @@ function* deleteOne(action) {
 function* deleteDone() {
   const filter = yield select(state => slice.selectors.selectFilter({ [slice.reducerPath]: state }))
 
-  const body = filter ? { status: filter } : null
+  const body = { sort: filter.sort }
+
+  if (filter.status) {
+    body.status = filter.status
+  }
 
   try {
     const res = yield call(axios.delete, '/todos', body)
@@ -140,11 +150,17 @@ function* deleteDone() {
   }
 }
 
-function* getItems(action) {
+function* getItems() {
+  const filter = yield select(state => slice.selectors.selectFilter({ [slice.reducerPath]: state }))
+
+  const params = { sortField: filter.sort.field, sortOrder: filter.sort.order }
+
+  if (filter.status) {
+    params.status = filter.status
+  }
+
   try {
-    const res = yield call(axios.get, '/todos', {
-      params: { status: action.payload?.status || null },
-    })
+    const res = yield call(axios.get, '/todos', { params })
 
     yield put({
       type: slice.actions.setItems.type,

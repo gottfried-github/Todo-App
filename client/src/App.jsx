@@ -16,7 +16,7 @@ export default function App() {
   const filter = useSelector(state => slice.selectors.selectFilter({ [slice.reducerPath]: state }))
 
   useEffect(() => {
-    dispatch(getItems({ status: filter }))
+    dispatch(getItems())
   }, [dispatch, filter])
 
   const error = useSelector(state => slice.selectors.selectError({ [slice.reducerPath]: state }))

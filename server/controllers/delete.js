@@ -10,7 +10,10 @@ export default async function deleteById(ctx) {
       ctx.throw(404, 'no documents have been deleted')
     }
 
-    const { items, counters } = await Todo.getAll(ctx.request.body.status || null)
+    const { items, counters } = await Todo.getAll(
+      ctx.request.body.status || null,
+      ctx.request.body.sort || null
+    )
 
     ctx.send(200, { deletedCount: _res.deletedCount, items, counters })
   } catch (e) {

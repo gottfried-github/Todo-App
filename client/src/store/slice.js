@@ -1,9 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-import { ITEM_STATUS } from '../constants'
-
-const FILTERS = [ITEM_STATUS.DONE, ITEM_STATUS.NOT_DONE]
-
 const slice = createSlice({
   name: 'todos',
   initialState: {
@@ -13,7 +9,13 @@ const slice = createSlice({
       done: 0,
       notDone: 0,
     },
-    filter: null,
+    filter: {
+      status: null,
+      sort: {
+        field: 'createdAt',
+        order: 1,
+      },
+    },
     error: null,
   },
   reducers: {
@@ -22,21 +24,10 @@ const slice = createSlice({
       state.counters = action.payload.counters
     },
     setFilter: (state, action) => {
-      if (!action.payload) {
-        state.filter = null
-
-        return
+      state.filter = {
+        ...state.filter,
+        ...action.payload,
       }
-
-      if (!FILTERS.includes(action.payload)) {
-        state.error = {
-          message: 'todos/setFilter: invalid filter',
-        }
-
-        return
-      }
-
-      state.filter = action.payload
     },
     setError: (state, action) => {
       state.error = action.payload

@@ -4,7 +4,10 @@ export default async function deleteDone(ctx) {
   try {
     const _res = await Todo.deleteDone()
 
-    const { items, counters } = await Todo.getAll(ctx.request.body.status || null)
+    const { items, counters } = await Todo.getAll(
+      ctx.request.body.status || null,
+      ctx.request.body.sort || null
+    )
 
     ctx.send(200, { deletedCount: _res.deletedCount, items, counters })
   } catch (e) {
