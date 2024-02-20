@@ -106,7 +106,12 @@ export default function Items() {
   }
 
   const handleSortModelChange = sortModel => {
-    console.log('handleSortModelChange, sortModel:', sortModel)
+    const sort = {
+      field: sortModel[0].field,
+      order: sortModel[0].sort === 'desc' ? -1 : 1,
+    }
+
+    dispatch(slice.actions.setFilter({ sort }))
   }
 
   return (
