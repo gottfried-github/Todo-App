@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import styled from '@emotion/styled'
 
+import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import Checkbox from '@mui/material/Checkbox'
 import { DataGrid, useGridApiRef } from '@mui/x-data-grid'
@@ -108,6 +109,7 @@ export default function Items() {
     <Container>
       <DataGrid
         apiRef={gridApiRef}
+        disableRowSelectionOnClick
         columns={[
           {
             field: 'status',
@@ -129,6 +131,7 @@ export default function Items() {
           },
           {
             field: 'name',
+            flex: 1,
             renderCell: params => {
               if (params.value.isEditing) {
                 return (
@@ -144,20 +147,25 @@ export default function Items() {
                 )
               }
 
-              return <label htmlFor={params.row.id}>{params.value.name}</label>
+              return (
+                <Label checked={params.row.status === ITEM_STATUS.DONE} htmlFor={params.row.id}>
+                  {params.value.name}
+                </Label>
+              )
             },
           },
           {
             field: 'edit',
             renderCell: params => {
               return (
-                <button
+                <Button
+                  variant="base"
                   onClick={() => {
                     handleEdit(params.row.id)
                   }}
                 >
                   edit
-                </button>
+                </Button>
               )
             },
           },
@@ -165,13 +173,14 @@ export default function Items() {
             field: 'delete',
             renderCell: params => {
               return (
-                <button
+                <Button
+                  variant="base"
                   onClick={() => {
                     handleDelete(params.row.id)
                   }}
                 >
                   delete
-                </button>
+                </Button>
               )
             },
           },
@@ -204,3 +213,19 @@ const TextFieldStyled = styled(TextField)`
     padding: 0;
   }
 `
+
+const Label = styled.label(props => {
+  const styles = {
+    flexGrow: 1,
+  }
+
+  if (props.checked) {
+    return {
+      ...styles,
+      color: props.theme.palette.util.dark,
+      textDecoration: 'line-through',
+    }
+  }
+
+  return styles
+})
