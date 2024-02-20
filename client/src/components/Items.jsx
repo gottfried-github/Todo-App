@@ -10,8 +10,6 @@ import { ITEM_STATUS } from '../constants'
 import { updateStatus, updateName, deleteOne } from '../store/actions'
 import slice from '../store/slice'
 
-import Item from './Item'
-
 export default function Items() {
   const dispatch = useDispatch()
   const gridApiRef = useGridApiRef()
@@ -102,6 +100,10 @@ export default function Items() {
     handleEdit(itemId)
   }
 
+  const handleDelete = itemId => {
+    dispatch(deleteOne(itemId))
+  }
+
   return (
     <Container>
       <DataGrid
@@ -159,9 +161,20 @@ export default function Items() {
               )
             },
           },
-          // {
-          //   field: 'delete',
-          // },
+          {
+            field: 'delete',
+            renderCell: params => {
+              return (
+                <button
+                  onClick={() => {
+                    handleDelete(params.row.id)
+                  }}
+                >
+                  delete
+                </button>
+              )
+            },
+          },
         ]}
         rows={items.map(item => ({
           id: item.id,
@@ -172,9 +185,6 @@ export default function Items() {
           },
         }))}
       ></DataGrid>
-      {/* {items.map(item => (
-        <Item key={item.id} item={item} isEditing={editingId === item.id} handleEdit={handleEdit} />
-      ))} */}
     </Container>
   )
 }
