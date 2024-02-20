@@ -78,12 +78,12 @@ export default function Items() {
     setEditingId(_editingId)
   }
 
-  const handleStatusChange = () => {
-    const status = item.status === ITEM_STATUS.DONE ? ITEM_STATUS.NOT_DONE : ITEM_STATUS.DONE
+  const handleStatusChange = (ev, data) => {
+    const status = data.status === ITEM_STATUS.DONE ? ITEM_STATUS.NOT_DONE : ITEM_STATUS.DONE
 
     dispatch(
       updateStatus({
-        id: item.id,
+        id: data.id,
         status,
       })
     )
@@ -111,7 +111,17 @@ export default function Items() {
             field: 'status',
             type: 'number',
             renderCell: params => {
-              return <Checkbox checked={params.value === ITEM_STATUS.DONE} />
+              return (
+                <Checkbox
+                  checked={params.value === ITEM_STATUS.DONE}
+                  onClick={ev => {
+                    handleStatusChange(ev, {
+                      id: params.row.id,
+                      status: params.value,
+                    })
+                  }}
+                />
+              )
             },
           },
           {
