@@ -125,6 +125,7 @@ export default function Items() {
       columns={[
         {
           field: 'status',
+          headerName: 'Status',
           type: 'number',
           width: 30,
           sortable: false,
@@ -145,7 +146,7 @@ export default function Items() {
         },
         {
           field: 'createdAt',
-          headerName: 'created at',
+          headerName: 'Created At',
           width: 110,
           valueFormatter: params => {
             return format(params.value, 'MMM d, y')
@@ -153,6 +154,7 @@ export default function Items() {
         },
         {
           field: 'name',
+          headerName: 'Name',
           flex: 1,
           renderCell: params => {
             if (params.value.isEditing) {
@@ -178,6 +180,7 @@ export default function Items() {
         },
         {
           field: 'edit',
+          headerName: 'Edit',
           sortable: false,
           renderCell: params => {
             return (
@@ -194,6 +197,7 @@ export default function Items() {
         },
         {
           field: 'delete',
+          headerName: 'Delete',
           sortable: false,
           renderCell: params => {
             return (
