@@ -113,6 +113,7 @@ export default function Items() {
             renderCell: params => {
               return (
                 <Checkbox
+                  id={params.row.id}
                   checked={params.value === ITEM_STATUS.DONE}
                   onClick={ev => {
                     handleStatusChange(ev, {
@@ -141,7 +142,7 @@ export default function Items() {
                 )
               }
 
-              return <label>{params.value.name}</label>
+              return <label htmlFor={params.row.id}>{params.value.name}</label>
             },
           },
           {
