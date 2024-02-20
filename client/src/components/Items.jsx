@@ -142,6 +142,13 @@ export default function Items() {
           },
         },
         {
+          field: 'createdAt',
+          headerName: 'created at',
+          valueFormatter: params => {
+            return params.value.toString()
+          },
+        },
+        {
           field: 'name',
           flex: 1,
           renderCell: params => {
@@ -206,6 +213,7 @@ export default function Items() {
           isEditing: item.id === editingId,
           name: item.name,
         },
+        createdAt: item.createdAt,
       }))}
     />
   )
