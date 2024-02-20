@@ -6,8 +6,8 @@ import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import Checkbox from '@mui/material/Checkbox'
 import { DataGrid, useGridApiRef } from '@mui/x-data-grid'
-import { ITEM_STATUS } from '../constants'
 
+import { ITEM_STATUS } from '../constants'
 import { updateStatus, updateName, deleteOne } from '../store/actions'
 import slice from '../store/slice'
 
@@ -106,95 +106,93 @@ export default function Items() {
   }
 
   return (
-    <Container>
-      <DataGrid
-        apiRef={gridApiRef}
-        disableRowSelectionOnClick
-        columns={[
-          {
-            field: 'status',
-            type: 'number',
-            renderCell: params => {
+    <DataGridStyled
+      apiRef={gridApiRef}
+      disableRowSelectionOnClick
+      columns={[
+        {
+          field: 'status',
+          type: 'number',
+          renderCell: params => {
+            return (
+              <Checkbox
+                id={params.row.id}
+                checked={params.value === ITEM_STATUS.DONE}
+                onClick={ev => {
+                  handleStatusChange(ev, {
+                    id: params.row.id,
+                    status: params.value,
+                  })
+                }}
+              />
+            )
+          },
+        },
+        {
+          field: 'name',
+          flex: 1,
+          renderCell: params => {
+            if (params.value.isEditing) {
               return (
-                <Checkbox
-                  id={params.row.id}
-                  checked={params.value === ITEM_STATUS.DONE}
-                  onClick={ev => {
-                    handleStatusChange(ev, {
-                      id: params.row.id,
-                      status: params.value,
-                    })
+                <TextFieldStyled
+                  type="text"
+                  variant="filled"
+                  fullWidth
+                  defaultValue={params.value.name}
+                  onKeyUp={ev => {
+                    handleNameChange(ev, params.row.id)
                   }}
                 />
               )
-            },
-          },
-          {
-            field: 'name',
-            flex: 1,
-            renderCell: params => {
-              if (params.value.isEditing) {
-                return (
-                  <TextFieldStyled
-                    type="text"
-                    variant="filled"
-                    fullWidth
-                    defaultValue={params.value.name}
-                    onKeyUp={ev => {
-                      handleNameChange(ev, params.row.id)
-                    }}
-                  />
-                )
-              }
+            }
 
-              return (
-                <Label checked={params.row.status === ITEM_STATUS.DONE} htmlFor={params.row.id}>
-                  {params.value.name}
-                </Label>
-              )
-            },
+            return (
+              <Label checked={params.row.status === ITEM_STATUS.DONE} htmlFor={params.row.id}>
+                {params.value.name}
+              </Label>
+            )
           },
-          {
-            field: 'edit',
-            renderCell: params => {
-              return (
-                <Button
-                  variant="base"
-                  onClick={() => {
-                    handleEdit(params.row.id)
-                  }}
-                >
-                  edit
-                </Button>
-              )
-            },
+        },
+        {
+          field: 'edit',
+          renderCell: params => {
+            return (
+              <Button
+                variant="base"
+                onClick={() => {
+                  handleEdit(params.row.id)
+                }}
+              >
+                edit
+              </Button>
+            )
           },
-          {
-            field: 'delete',
-            renderCell: params => {
-              return (
-                <Button
-                  variant="base"
-                  onClick={() => {
-                    handleDelete(params.row.id)
-                  }}
-                >
-                  delete
-                </Button>
-              )
-            },
+        },
+        {
+          field: 'delete',
+          renderCell: params => {
+            return (
+              <Button
+                variant="base"
+                onClick={() => {
+                  handleDelete(params.row.id)
+                }}
+              >
+                delete
+              </Button>
+            )
           },
-        ]}
-        rows={items.map(item => ({
-          id: item.id,
-          status: item.status,
-          name: {
-            isEditing: item.id === editingId,
-            name: item.name,
-          },
-        }))}
-      ></DataGrid>
-    </Container>
+        },
+      ]}
+      rows={items.map(item => ({
+        id: item.id,
+        status: item.status,
+        name: {
+          isEditing: item.id === editingId,
+          name: item.name,
+        },
+      }))}
+    />
   )
 }
 
@@ -211,6 +209,14 @@ const Container = styled.ul`
 const TextFieldStyled = styled(TextField)`
   & .MuiFilledInput-root .MuiFilledInput-input {
     padding: 0;
+  }
+`
+
+const DataGridStyled = styled(DataGrid)`
+  border: none;
+
+  & .MuiDataGrid-withBorderColor {
+    border-color: transparent;
   }
 `
 
