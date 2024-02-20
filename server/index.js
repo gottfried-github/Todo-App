@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 
 import Koa from 'koa'
 
-import { handleErrors, utils } from './middleware/index.js'
+import { handleErrors, utils, parseBody, validateContentType } from './middleware/index.js'
 import router from './router.js'
 
 async function main() {
@@ -20,6 +20,8 @@ async function main() {
     })
     .use(utils)
     .use(handleErrors)
+    .use(validateContentType)
+    .use(parseBody)
     .use(router.routes())
     .use(router.allowedMethods())
     .on('error', e => {
