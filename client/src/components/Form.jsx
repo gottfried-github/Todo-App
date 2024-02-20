@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from '@emotion/styled'
 
-import TextField from './lib/TextField'
+import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 
 import { create } from '../store/actions'

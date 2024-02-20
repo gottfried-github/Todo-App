@@ -11,6 +11,7 @@ const palette = {
     light: 'rgb(255, 255, 255)',
     dark: 'rgba(0, 0, 0, 0.5)',
     darker: 'rgb(0, 0, 0)',
+    darkTransparent: 'rgba(0, 0, 0, 0.06)',
     shadow: 'rgba(86, 100, 104, 0.16)',
     green: '#589054',
   },
@@ -69,6 +70,12 @@ export default createTheme({
       styleOverrides: {
         // for variant='filled'
         root: {
+          '& .MuiFilledInput-root': {
+            backgroundColor: palette.util.main,
+          },
+          '& .MuiFilledInput-root.Mui-focused': {
+            backgroundColor: palette.util.darkTransparent,
+          },
           '& .MuiFilledInput-root::before, & .MuiFilledInput-root:hover::before': {
             border: 'none !important',
           },
