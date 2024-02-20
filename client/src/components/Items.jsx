@@ -196,16 +196,6 @@ export default function Items() {
   )
 }
 
-const Container = styled.ul`
-  height: 100%;
-  overflow-y: auto;
-
-  margin: 0;
-  padding: 0;
-
-  list-style-type: none;
-`
-
 const TextFieldStyled = styled(TextField)`
   & .MuiFilledInput-root .MuiFilledInput-input {
     padding: 0;
