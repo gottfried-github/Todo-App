@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import styled from '@emotion/styled'
 import Typography from '@mui/material/Typography'
@@ -6,29 +5,18 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
 import ToggleButton from '@mui/material/ToggleButton'
 import Button from '@mui/material/Button'
 
-import { getItems, deleteDone } from '../actions'
+import { deleteDone } from '../store/actions'
 import slice from '../store/slice'
 
 import { ITEM_STATUS } from '../constants'
 
-import classes from './Controls.module.css'
-
 export default function Controls() {
   const dispatch = useDispatch()
 
-  const countAll = useSelector(state =>
-    slice.selectors.selectCount({ [slice.reducerPath]: state }, null)
-  )
-
-  const countDone = useSelector(state =>
-    slice.selectors.selectCount({ [slice.reducerPath]: state }, ITEM_STATUS.DONE)
-  )
-
-  const countNotDone = useSelector(state =>
-    slice.selectors.selectCount({ [slice.reducerPath]: state }, ITEM_STATUS.NOT_DONE)
-  )
-
   const filter = useSelector(state => slice.selectors.selectFilter({ [slice.reducerPath]: state }))
+  const counters = useSelector(state =>
+    slice.selectors.selectCounters({ [slice.reducerPath]: state })
+  )
 
   const handleDeleteDone = () => {
     dispatch(deleteDone())
@@ -37,26 +25,23 @@ export default function Controls() {
   const handleSetFilter = (ev, filter) => {
     if (filter === null) return
 
-    dispatch(getItems({ status: filter === false ? null : filter }))
+    dispatch(slice.actions.setFilter({ status: filter === false ? null : filter }))
   }
 
-  useEffect(() => {
-    dispatch(getItems())
-    dispatch(getItems({ status: filter }))
-  }, [dispatch, filter])
-
-  if (!countAll) return null
+  if (!counters.all) return null
 
   return (
-    <div className={classes.root}>
+    <Container>
       <Counters variant="body2">
-        <span>{`${countDone} completed`}</span>
+        <span>{`${counters.done} completed`}</span>
         {', '}
-        <span>{`${countNotDone} left`}</span>
+        <span>{`${counters.notDone} left`}</span>
+        {', '}
+        <span>{`${counters.all} total`}</span>
       </Counters>
       <ToggleButtonGroupStyled
         exclusive
-        value={filter === null ? false : filter}
+        value={filter.status === null ? false : filter.status}
         onChange={handleSetFilter}
       >
         <ToggleButton value={false}>all</ToggleButton>
@@ -66,9 +51,19 @@ export default function Controls() {
       <ClearAllButton variant="base" onClick={handleDeleteDone}>
         clear completed
       </ClearAllButton>
-    </div>
+    </Container>
   )
 }
+
+const Container = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 8px 8px;
+
+  color: ${props => props.theme.palette.util.dark};
+`
 
 const ToggleButtonGroupStyled = styled(ToggleButtonGroup)`
   column-gap: 2px;
@@ -80,5 +75,5 @@ const ClearAllButton = styled(Button)`
 `
 
 const Counters = styled(Typography)`
-  color: #589054;
+  color: ${props => props.theme.palette.util.green};
 `

@@ -2,10 +2,10 @@ import { createRoot } from 'react-dom/client'
 import { Provider } from 'react-redux'
 import { ThemeProvider } from '@mui/material/styles'
 
-import store from './store/store'
-import theme from './components/theme'
+import store from './src/store/store'
+import theme from './src/theme/index'
 
-import App from './App'
+import App from './src/App'
 
 document.addEventListener('DOMContentLoaded', () => {
   const container = document.querySelector('main')

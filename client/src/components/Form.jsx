@@ -5,9 +5,7 @@ import styled from '@emotion/styled'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 
-import { create } from '../actions'
-
-import classes from './Form.module.css'
+import { create } from '../store/actions'
 
 export default function Form() {
   const dispatch = useDispatch()
@@ -27,8 +25,8 @@ export default function Form() {
   }
 
   return (
-    <form className={classes.root}>
-      <TextFieldStyled
+    <FormEl onSubmit={handleSubmit}>
+      <TextField
         type="text"
         variant="filled"
         fullWidth
@@ -39,16 +37,16 @@ export default function Form() {
       <Button variant="main" onClick={handleSubmit}>
         submit
       </Button>
-    </form>
+    </FormEl>
   )
 }
 
-const TextFieldStyled = styled(TextField)`
-  & .MuiFilledInput-root {
-    background-color: ${props => props.theme.palette.util.main};
-  }
+const FormEl = styled.form`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-  & .MuiFilledInput-root.Mui-focused {
-    background-color: rgba(0, 0, 0, 0.06);
-  }
+  row-gap: 16px;
+
+  margin-bottom: 8px;
 `

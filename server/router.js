@@ -1,5 +1,5 @@
 import Router from '@koa/router'
-import { parseBody, validateContentType, validateBody } from './middleware/index.js'
+import { validateBody } from './middleware/index.js'
 
 import create from './controllers/create.js'
 import update from './controllers/update.js'
@@ -12,8 +12,8 @@ const router = new Router({
 })
 
 router.get('/', getAll)
-router.post('/', validateContentType, parseBody, validateBody, create)
-router.patch('/:id', validateContentType, parseBody, validateBody, update)
+router.post('/', validateBody, create)
+router.patch('/:id', validateBody, update)
 router.delete('/:id', deleteById)
 router.delete('/', deleteDone)
 

@@ -4,6 +4,7 @@ const schema = new mongoose.Schema(
   {
     name: {
       type: String,
+      index: 1,
       required: true,
     },
     status: {
@@ -26,6 +27,32 @@ const schema = new mongoose.Schema(
     },
   }
 )
+
+schema.statics.getAll = async function (status, sort) {
+  const filter = {}
+
+  if (status) {
+    filter.status = status
+  }
+
+  let _sort = null
+
+  if (!sort || (_sort?.field && !_sort?.order) || (_sort?.order && !_sort?.field)) {
+    _sort = { createdAt: 1 }
+  } else {
+    _sort = { [sort.field]: sort.order }
+  }
+
+  const items = await this.find(filter).sort(_sort)
+
+  const counters = {
+    all: await this.countDocuments(),
+    done: await this.countDocuments({ status: 1 }),
+    notDone: await this.countDocuments({ status: 2 }),
+  }
+
+  return { items, counters }
+}
 
 schema.statics.deleteDone = function () {
   return this.deleteMany({ status: 1 })
