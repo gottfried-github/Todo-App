@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import styled from '@emotion/styled'
+import { format } from 'date-fns'
 
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
@@ -125,6 +126,7 @@ export default function Items() {
         {
           field: 'status',
           type: 'number',
+          width: 30,
           sortable: false,
           renderCell: params => {
             return (
@@ -144,8 +146,9 @@ export default function Items() {
         {
           field: 'createdAt',
           headerName: 'created at',
+          width: 110,
           valueFormatter: params => {
-            return params.value.toString()
+            return format(params.value, 'MMM d, y')
           },
         },
         {
