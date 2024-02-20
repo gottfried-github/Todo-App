@@ -4,6 +4,7 @@ const schema = new mongoose.Schema(
   {
     name: {
       type: String,
+      index: 1,
       required: true,
     },
     status: {
