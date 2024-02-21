@@ -21,61 +21,7 @@ export default function Items() {
   const items = useSelector(state => slice.selectors.selectItems({ [slice.reducerPath]: state }))
 
   const handleEdit = itemId => {
-    const _editingId = !editingId || editingId !== itemId ? itemId : null
-
-    if (!editingId) {
-      gridApiRef.current.updateRows([
-        {
-          id: itemId,
-          name: {
-            ...gridApiRef.current.getCellValue(itemId, 'name'),
-            isEditing: true,
-          },
-        },
-      ])
-
-      setEditingId(_editingId)
-
-      return
-    }
-
-    if (!_editingId) {
-      gridApiRef.current.updateRows([
-        {
-          id: itemId,
-          name: {
-            ...gridApiRef.current.getCellValue(itemId, 'name'),
-            isEditing: false,
-          },
-        },
-      ])
-
-      setEditingId(_editingId)
-
-      return
-    }
-
-    gridApiRef.current.updateRows([
-      {
-        id: editingId,
-        name: {
-          ...gridApiRef.current.getCellValue(editingId, 'name'),
-          isEditing: false,
-        },
-      },
-    ])
-
-    gridApiRef.current.updateRows([
-      {
-        id: _editingId,
-        name: {
-          ...gridApiRef.current.getCellValue(itemId, 'name'),
-          isEditing: true,
-        },
-      },
-    ])
-
-    setEditingId(_editingId)
+    setEditingId(!editingId || editingId !== itemId ? itemId : null)
   }
 
   const handleStatusChange = (ev, data) => {
@@ -157,7 +103,7 @@ export default function Items() {
           headerName: 'Name',
           flex: 1,
           renderCell: params => {
-            if (params.value.isEditing) {
+            if (params.row.id === editingId) {
               return (
                 <TextFieldStyled
                   type="text"
@@ -217,7 +163,6 @@ export default function Items() {
         id: item.id,
         status: item.status,
         name: {
-          isEditing: item.id === editingId,
           name: item.name,
         },
         createdAt: item.createdAt,
