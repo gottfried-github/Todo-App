@@ -21,19 +21,11 @@ class Item {
 function* create(action) {
   const item = new Item(action.payload)
 
-  const filter = yield select(state => slice.selectors.selectFilter({ [slice.reducerPath]: state }))
-
-  const body = { item, sort: filter.sort }
-
-  if (filter.status) {
-    body.status = filter.status
-  }
-
   try {
-    const res = yield call(axios.post, '/todos', body)
+    const res = yield call(axios.post, '/todos', item)
 
     yield put({
-      type: slice.actions.setItems.type,
+      type: slice.actions.append.type,
       payload: res.data,
     })
   } catch (e) {
@@ -45,25 +37,14 @@ function* create(action) {
 }
 
 function* updateStatus(action) {
-  const filter = yield select(state => slice.selectors.selectFilter({ [slice.reducerPath]: state }))
-
-  const body = {
-    item: {
-      status: action.payload.status,
-    },
-    sort: filter.sort,
-  }
-
-  if (filter.status) {
-    body.status = filter.status
-  }
-
   try {
-    const res = yield call(axios.patch, `/todos/${action.payload.id}`, body)
+    yield call(axios.patch, `/todos/${action.payload.id}`, {
+      status: action.payload.status,
+    })
 
     yield put({
-      type: slice.actions.setItems.type,
-      payload: res.data,
+      type: slice.actions.updateItem.type,
+      payload: { id: action.payload.id, fields: { status: action.payload.status } },
     })
   } catch (e) {
     yield put({
@@ -74,25 +55,14 @@ function* updateStatus(action) {
 }
 
 function* updateName(action) {
-  const filter = yield select(state => slice.selectors.selectFilter({ [slice.reducerPath]: state }))
-
-  const body = {
-    item: {
-      name: action.payload.name,
-    },
-    sort: filter.sort,
-  }
-
-  if (filter.status) {
-    body.status = filter.status
-  }
-
   try {
-    const res = yield call(axios.patch, `/todos/${action.payload.id}`, body)
+    yield call(axios.patch, `/todos/${action.payload.id}`, {
+      name: action.payload.name,
+    })
 
     yield put({
-      type: slice.actions.setItems.type,
-      payload: res.data,
+      type: slice.actions.updateItem.type,
+      payload: { id: action.payload.id, fields: { name: action.payload.name } },
     })
   } catch (e) {
     yield put({
@@ -103,21 +73,10 @@ function* updateName(action) {
 }
 
 function* deleteOne(action) {
-  const filter = yield select(state => slice.selectors.selectFilter({ [slice.reducerPath]: state }))
-
-  const body = { sort: filter.sort }
-
-  if (filter.status) {
-    body.status = filter.status
-  }
-
   try {
-    const res = yield call(axios.delete, `/todos/${action.payload}`, body)
+    yield call(axios.delete, `/todos/${action.payload}`)
 
-    yield put({
-      type: slice.actions.setItems.type,
-      payload: res.data,
-    })
+    yield call(getItems)
   } catch (e) {
     yield put({
       type: slice.actions.setError.type,
@@ -127,21 +86,10 @@ function* deleteOne(action) {
 }
 
 function* deleteDone() {
-  const filter = yield select(state => slice.selectors.selectFilter({ [slice.reducerPath]: state }))
-
-  const body = { sort: filter.sort }
-
-  if (filter.status) {
-    body.status = filter.status
-  }
-
   try {
-    const res = yield call(axios.delete, '/todos', body)
+    yield call(axios.delete, '/todos')
 
-    yield put({
-      type: slice.actions.setItems.type,
-      payload: res.data,
-    })
+    yield call(getItems)
   } catch (e) {
     yield put({
       type: slice.actions.setError.type,
@@ -153,7 +101,12 @@ function* deleteDone() {
 function* getItems() {
   const filter = yield select(state => slice.selectors.selectFilter({ [slice.reducerPath]: state }))
 
-  const params = { sortField: filter.sort.field, sortOrder: filter.sort.order }
+  const params = {
+    sortField: filter.sort.field,
+    sortOrder: filter.sort.order,
+    page: filter.pagination.page,
+    pageSize: filter.pagination.pageSize,
+  }
 
   if (filter.status) {
     params.status = filter.status

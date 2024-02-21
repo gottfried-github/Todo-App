@@ -28,7 +28,7 @@ const schema = new mongoose.Schema(
   }
 )
 
-schema.statics.getAll = async function (status, sort) {
+schema.statics.getAll = async function (status, sort, pagination) {
   const filter = {}
 
   if (status) {
@@ -43,7 +43,15 @@ schema.statics.getAll = async function (status, sort) {
     _sort = { [sort.field]: sort.order }
   }
 
-  const items = await this.find(filter).sort(_sort)
+  let items = null
+  if (!pagination) {
+    items = await this.find(filter).sort(_sort)
+  } else {
+    items = await this.find(filter)
+      .sort(_sort)
+      .skip(pagination.page * pagination.pageSize)
+      .limit(pagination.pageSize)
+  }
 
   const counters = {
     all: await this.countDocuments(),

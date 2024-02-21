@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import styled from '@emotion/styled'
 import { format } from 'date-fns'
@@ -6,6 +6,8 @@ import { format } from 'date-fns'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import Checkbox from '@mui/material/Checkbox'
+import EditIcon from '@mui/icons-material/Edit'
+import DeleteIcon from '@mui/icons-material/Delete'
 import { DataGrid, useGridApiRef } from '@mui/x-data-grid'
 
 import { ITEM_STATUS } from '../constants'
@@ -18,64 +20,21 @@ export default function Items() {
 
   const [editingId, setEditingId] = useState(null)
 
+  const filter = useSelector(state => slice.selectors.selectFilter({ [slice.reducerPath]: state }))
+  const counters = useSelector(state =>
+    slice.selectors.selectCounters({ [slice.reducerPath]: state })
+  )
+
+  const [paginationModel, setPaginationModel] = useState(filter.pagination)
+
+  useEffect(() => {
+    dispatch(slice.actions.setFilter({ pagination: paginationModel }))
+  }, [dispatch, paginationModel])
+
   const items = useSelector(state => slice.selectors.selectItems({ [slice.reducerPath]: state }))
 
   const handleEdit = itemId => {
-    const _editingId = !editingId || editingId !== itemId ? itemId : null
-
-    if (!editingId) {
-      gridApiRef.current.updateRows([
-        {
-          id: itemId,
-          name: {
-            ...gridApiRef.current.getCellValue(itemId, 'name'),
-            isEditing: true,
-          },
-        },
-      ])
-
-      setEditingId(_editingId)
-
-      return
-    }
-
-    if (!_editingId) {
-      gridApiRef.current.updateRows([
-        {
-          id: itemId,
-          name: {
-            ...gridApiRef.current.getCellValue(itemId, 'name'),
-            isEditing: false,
-          },
-        },
-      ])
-
-      setEditingId(_editingId)
-
-      return
-    }
-
-    gridApiRef.current.updateRows([
-      {
-        id: editingId,
-        name: {
-          ...gridApiRef.current.getCellValue(editingId, 'name'),
-          isEditing: false,
-        },
-      },
-    ])
-
-    gridApiRef.current.updateRows([
-      {
-        id: _editingId,
-        name: {
-          ...gridApiRef.current.getCellValue(itemId, 'name'),
-          isEditing: true,
-        },
-      },
-    ])
-
-    setEditingId(_editingId)
+    setEditingId(!editingId || editingId !== itemId ? itemId : null)
   }
 
   const handleStatusChange = (ev, data) => {
@@ -115,113 +74,116 @@ export default function Items() {
     dispatch(slice.actions.setFilter({ sort }))
   }
 
+  const columns = [
+    {
+      field: 'status',
+      headerName: 'Status',
+      type: 'number',
+      width: 30,
+      sortable: false,
+      renderCell: params => {
+        return (
+          <Checkbox
+            id={params.row.id}
+            checked={params.value === ITEM_STATUS.DONE}
+            onClick={ev => {
+              handleStatusChange(ev, {
+                id: params.row.id,
+                status: params.value,
+              })
+            }}
+          />
+        )
+      },
+    },
+    {
+      field: 'createdAt',
+      headerName: 'Created At',
+      width: 110,
+      valueFormatter: params => {
+        return format(params.value, 'MMM d, y')
+      },
+    },
+    {
+      field: 'name',
+      headerName: 'Name',
+      flex: 1,
+      renderCell: params => {
+        if (params.row.id === editingId) {
+          return (
+            <TextFieldStyled
+              type="text"
+              variant="filled"
+              fullWidth
+              defaultValue={params.value}
+              onKeyUp={ev => {
+                handleNameChange(ev, params.row.id)
+              }}
+            />
+          )
+        }
+
+        return (
+          <Label checked={params.row.status === ITEM_STATUS.DONE} htmlFor={params.row.id}>
+            {params.value}
+          </Label>
+        )
+      },
+    },
+    {
+      field: 'edit',
+      headerName: 'Edit',
+      sortable: false,
+      renderCell: params => {
+        return (
+          <EditIcon
+            onClick={() => {
+              handleEdit(params.row.id)
+            }}
+          />
+        )
+      },
+    },
+    {
+      field: 'delete',
+      headerName: 'Delete',
+      sortable: false,
+      renderCell: params => {
+        return (
+          <DeleteIcon
+            onClick={() => {
+              handleDelete(params.row.id)
+            }}
+          />
+        )
+      },
+    },
+  ]
+
   return (
     <DataGridStyled
       apiRef={gridApiRef}
-      disableRowSelectionOnClick
       sortingMode="server"
       onSortModelChange={handleSortModelChange}
       sortingOrder={['desc', 'asc']}
-      columns={[
-        {
-          field: 'status',
-          headerName: 'Status',
-          type: 'number',
-          width: 30,
-          sortable: false,
-          renderCell: params => {
-            return (
-              <Checkbox
-                id={params.row.id}
-                checked={params.value === ITEM_STATUS.DONE}
-                onClick={ev => {
-                  handleStatusChange(ev, {
-                    id: params.row.id,
-                    status: params.value,
-                  })
-                }}
-              />
-            )
-          },
-        },
-        {
-          field: 'createdAt',
-          headerName: 'Created At',
-          width: 110,
-          valueFormatter: params => {
-            return format(params.value, 'MMM d, y')
-          },
-        },
-        {
-          field: 'name',
-          headerName: 'Name',
-          flex: 1,
-          renderCell: params => {
-            if (params.value.isEditing) {
-              return (
-                <TextFieldStyled
-                  type="text"
-                  variant="filled"
-                  fullWidth
-                  defaultValue={params.value.name}
-                  onKeyUp={ev => {
-                    handleNameChange(ev, params.row.id)
-                  }}
-                />
-              )
-            }
-
-            return (
-              <Label checked={params.row.status === ITEM_STATUS.DONE} htmlFor={params.row.id}>
-                {params.value.name}
-              </Label>
-            )
-          },
-        },
-        {
-          field: 'edit',
-          headerName: 'Edit',
-          sortable: false,
-          renderCell: params => {
-            return (
-              <Button
-                variant="base"
-                onClick={() => {
-                  handleEdit(params.row.id)
-                }}
-              >
-                edit
-              </Button>
-            )
-          },
-        },
-        {
-          field: 'delete',
-          headerName: 'Delete',
-          sortable: false,
-          renderCell: params => {
-            return (
-              <Button
-                variant="base"
-                onClick={() => {
-                  handleDelete(params.row.id)
-                }}
-              >
-                delete
-              </Button>
-            )
-          },
-        },
-      ]}
-      rows={items.map(item => ({
-        id: item.id,
-        status: item.status,
-        name: {
-          isEditing: item.id === editingId,
-          name: item.name,
-        },
-        createdAt: item.createdAt,
-      }))}
+      pageSizeOptions={[5, 10]}
+      rowCount={
+        filter.status === null
+          ? counters.all
+          : filter.status === ITEM_STATUS.DONE
+            ? counters.done
+            : counters.notDone
+      }
+      paginationModel={paginationModel}
+      paginationMode="server"
+      onPaginationModelChange={setPaginationModel}
+      disableRowSelectionOnClick
+      disableColumnMenu
+      slots={{
+        noRowsOverlay: ItemsPlaceholder,
+      }}
+      columns={columns}
+      rows={items}
     />
   )
 }
@@ -233,6 +195,7 @@ const TextFieldStyled = styled(TextField)`
 `
 
 const DataGridStyled = styled(DataGrid)`
+  grid-row: 4;
   border: none;
 
   & .MuiDataGrid-withBorderColor {
@@ -255,3 +218,14 @@ const Label = styled.label(props => {
 
   return styles
 })
+
+function ItemsPlaceholder() {
+  return <ItemsPlaceholderDiv>No data</ItemsPlaceholderDiv>
+}
+
+const ItemsPlaceholderDiv = styled.div`
+  height: 100%;
+
+  text-align: center;
+  line-height: 40px;
+`

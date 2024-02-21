@@ -14,6 +14,9 @@ export default function App() {
   const dispatch = useDispatch()
 
   const filter = useSelector(state => slice.selectors.selectFilter({ [slice.reducerPath]: state }))
+  const counters = useSelector(state =>
+    slice.selectors.selectCounters({ [slice.reducerPath]: state })
+  )
 
   useEffect(() => {
     dispatch(getItems())
@@ -26,7 +29,7 @@ export default function App() {
   }
 
   return (
-    <Container>
+    <Container empty={!counters.all}>
       <Heading variant="h1">todo list</Heading>
       <Form />
       <Controls />
@@ -45,9 +48,9 @@ const Heading = styled(Typography)`
 
 const Container = styled.div`
   display: grid;
-  grid-template-rows: auto auto auto 1fr;
+  grid-template-rows: auto auto auto minmax(150px, 1fr);
 
-  width: 650px;
+  width: 850px;
   max-height: 650px;
 
   margin: auto;
