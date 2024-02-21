@@ -195,6 +195,7 @@ const TextFieldStyled = styled(TextField)`
 `
 
 const DataGridStyled = styled(DataGrid)`
+  grid-row: 4;
   border: none;
 
   & .MuiDataGrid-withBorderColor {

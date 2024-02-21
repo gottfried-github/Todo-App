@@ -48,8 +48,7 @@ const Heading = styled(Typography)`
 
 const Container = styled.div`
   display: grid;
-  grid-template-rows: ${props =>
-    props.empty ? 'auto auto minmax(150px, 1fr)' : 'auto auto auto 1fr'};
+  grid-template-rows: auto auto auto minmax(150px, 1fr);
 
   width: 850px;
   max-height: 650px;
