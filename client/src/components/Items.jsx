@@ -182,6 +182,7 @@ export default function Items() {
       paginationMode="server"
       onPaginationModelChange={setPaginationModel}
       disableRowSelectionOnClick
+      disableColumnMenu
       slots={{
         noRowsOverlay: ItemsPlaceholder,
       }}
