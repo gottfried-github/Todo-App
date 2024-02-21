@@ -182,6 +182,9 @@ export default function Items() {
       paginationMode="server"
       onPaginationModelChange={setPaginationModel}
       disableRowSelectionOnClick
+      slots={{
+        noRowsOverlay: ItemsPlaceholder,
+      }}
       columns={columns}
       rows={items}
     />
@@ -217,3 +220,14 @@ const Label = styled.label(props => {
 
   return styles
 })
+
+function ItemsPlaceholder() {
+  return <ItemsPlaceholderDiv>No data</ItemsPlaceholderDiv>
+}
+
+const ItemsPlaceholderDiv = styled.div`
+  height: 100%;
+
+  text-align: center;
+  line-height: 40px;
+`
