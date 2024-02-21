@@ -21,16 +21,8 @@ class Item {
 function* create(action) {
   const item = new Item(action.payload)
 
-  const filter = yield select(state => slice.selectors.selectFilter({ [slice.reducerPath]: state }))
-
-  const body = { item, sort: filter.sort }
-
-  if (filter.status) {
-    body.status = filter.status
-  }
-
   try {
-    const res = yield call(axios.post, '/todos', body)
+    const res = yield call(axios.post, '/todos', item)
 
     yield put({
       type: slice.actions.append.type,
@@ -45,21 +37,10 @@ function* create(action) {
 }
 
 function* updateStatus(action) {
-  const filter = yield select(state => slice.selectors.selectFilter({ [slice.reducerPath]: state }))
-
-  const body = {
-    item: {
-      status: action.payload.status,
-    },
-    sort: filter.sort,
-  }
-
-  if (filter.status) {
-    body.status = filter.status
-  }
-
   try {
-    const res = yield call(axios.patch, `/todos/${action.payload.id}`, body)
+    const res = yield call(axios.patch, `/todos/${action.payload.id}`, {
+      status: action.payload.status,
+    })
 
     yield put({
       type: slice.actions.updateItem.type,
@@ -74,21 +55,10 @@ function* updateStatus(action) {
 }
 
 function* updateName(action) {
-  const filter = yield select(state => slice.selectors.selectFilter({ [slice.reducerPath]: state }))
-
-  const body = {
-    item: {
-      name: action.payload.name,
-    },
-    sort: filter.sort,
-  }
-
-  if (filter.status) {
-    body.status = filter.status
-  }
-
   try {
-    const res = yield call(axios.patch, `/todos/${action.payload.id}`, body)
+    const res = yield call(axios.patch, `/todos/${action.payload.id}`, {
+      name: action.payload.name,
+    })
 
     yield put({
       type: slice.actions.updateItem.type,
@@ -103,16 +73,8 @@ function* updateName(action) {
 }
 
 function* deleteOne(action) {
-  const filter = yield select(state => slice.selectors.selectFilter({ [slice.reducerPath]: state }))
-
-  const body = { sort: filter.sort }
-
-  if (filter.status) {
-    body.status = filter.status
-  }
-
   try {
-    const res = yield call(axios.delete, `/todos/${action.payload}`, body)
+    const res = yield call(axios.delete, `/todos/${action.payload}`)
 
     yield put({
       type: slice.actions.deleteItem.type,
@@ -127,16 +89,8 @@ function* deleteOne(action) {
 }
 
 function* deleteDone() {
-  const filter = yield select(state => slice.selectors.selectFilter({ [slice.reducerPath]: state }))
-
-  const body = { sort: filter.sort }
-
-  if (filter.status) {
-    body.status = filter.status
-  }
-
   try {
-    const res = yield call(axios.delete, '/todos', body)
+    const res = yield call(axios.delete, '/todos')
 
     yield put({
       type: slice.actions.deleteDone.type,
