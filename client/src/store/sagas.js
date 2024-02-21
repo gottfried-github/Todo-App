@@ -107,7 +107,12 @@ function* deleteDone() {
 function* getItems() {
   const filter = yield select(state => slice.selectors.selectFilter({ [slice.reducerPath]: state }))
 
-  const params = { sortField: filter.sort.field, sortOrder: filter.sort.order }
+  const params = {
+    sortField: filter.sort.field,
+    sortOrder: filter.sort.order,
+    page: filter.pagination.page,
+    pageSize: filter.pagination.pageSize,
+  }
 
   if (filter.status) {
     params.status = filter.status

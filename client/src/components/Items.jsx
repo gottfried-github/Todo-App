@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import styled from '@emotion/styled'
 import { format } from 'date-fns'
@@ -17,6 +17,17 @@ export default function Items() {
   const gridApiRef = useGridApiRef()
 
   const [editingId, setEditingId] = useState(null)
+
+  const filter = useSelector(state => slice.selectors.selectFilter({ [slice.reducerPath]: state }))
+  const counters = useSelector(state =>
+    slice.selectors.selectCounters({ [slice.reducerPath]: state })
+  )
+
+  const [paginationModel, setPaginationModel] = useState(filter.pagination)
+
+  useEffect(() => {
+    dispatch(slice.actions.setFilter({ pagination: paginationModel }))
+  }, [dispatch, paginationModel])
 
   const items = useSelector(state => slice.selectors.selectItems({ [slice.reducerPath]: state }))
 
@@ -156,10 +167,21 @@ export default function Items() {
   return (
     <DataGridStyled
       apiRef={gridApiRef}
-      disableRowSelectionOnClick
       sortingMode="server"
       onSortModelChange={handleSortModelChange}
       sortingOrder={['desc', 'asc']}
+      pageSizeOptions={[5, 10]}
+      rowCount={
+        filter.status === null
+          ? counters.all
+          : filter.status === ITEM_STATUS.DONE
+            ? counters.done
+            : counters.notDone
+      }
+      paginationModel={paginationModel}
+      paginationMode="server"
+      onPaginationModelChange={setPaginationModel}
+      disableRowSelectionOnClick
       columns={columns}
       rows={items}
     />

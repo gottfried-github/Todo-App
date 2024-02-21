@@ -3,6 +3,7 @@ import Todo from '../models/todo.js'
 export default async function getAll(ctx) {
   let status = null
   let sort = null
+  let pagination = null
 
   if (ctx.query?.status) {
     status = parseInt(ctx.query.status)
@@ -15,6 +16,10 @@ export default async function getAll(ctx) {
     ctx.throw(400, 'both sortField and sortOrder must be specified')
   }
 
+  if ((ctx.query?.page && !ctx.query?.pageSize) || (ctx.query?.pageSize && !ctx.query?.page)) {
+    ctx.throw(400, 'both page and pageSize must be specified')
+  }
+
   if (ctx.query?.sortField) {
     sort = {
       field: ctx.query.sortField,
@@ -22,8 +27,15 @@ export default async function getAll(ctx) {
     }
   }
 
+  if (ctx.query?.page) {
+    pagination = {
+      page: parseInt(ctx.query.page),
+      pageSize: parseInt(ctx.query.pageSize),
+    }
+  }
+
   try {
-    const res = await Todo.getAll(status, sort)
+    const res = await Todo.getAll(status, sort, pagination)
 
     await ctx.send(200, res)
   } catch (e) {
