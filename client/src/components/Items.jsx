@@ -109,7 +109,7 @@ export default function Items() {
                   type="text"
                   variant="filled"
                   fullWidth
-                  defaultValue={params.value.name}
+                  defaultValue={params.value}
                   onKeyUp={ev => {
                     handleNameChange(ev, params.row.id)
                   }}
@@ -119,7 +119,7 @@ export default function Items() {
 
             return (
               <Label checked={params.row.status === ITEM_STATUS.DONE} htmlFor={params.row.id}>
-                {params.value.name}
+                {params.value}
               </Label>
             )
           },
@@ -159,14 +159,7 @@ export default function Items() {
           },
         },
       ]}
-      rows={items.map(item => ({
-        id: item.id,
-        status: item.status,
-        name: {
-          name: item.name,
-        },
-        createdAt: item.createdAt,
-      }))}
+      rows={items}
     />
   )
 }
