@@ -61,6 +61,98 @@ export default function Items() {
     dispatch(slice.actions.setFilter({ sort }))
   }
 
+  const columns = [
+    {
+      field: 'status',
+      headerName: 'Status',
+      type: 'number',
+      width: 30,
+      sortable: false,
+      renderCell: params => {
+        return (
+          <Checkbox
+            id={params.row.id}
+            checked={params.value === ITEM_STATUS.DONE}
+            onClick={ev => {
+              handleStatusChange(ev, {
+                id: params.row.id,
+                status: params.value,
+              })
+            }}
+          />
+        )
+      },
+    },
+    {
+      field: 'createdAt',
+      headerName: 'Created At',
+      width: 110,
+      valueFormatter: params => {
+        return format(params.value, 'MMM d, y')
+      },
+    },
+    {
+      field: 'name',
+      headerName: 'Name',
+      flex: 1,
+      renderCell: params => {
+        if (params.row.id === editingId) {
+          return (
+            <TextFieldStyled
+              type="text"
+              variant="filled"
+              fullWidth
+              defaultValue={params.value}
+              onKeyUp={ev => {
+                handleNameChange(ev, params.row.id)
+              }}
+            />
+          )
+        }
+
+        return (
+          <Label checked={params.row.status === ITEM_STATUS.DONE} htmlFor={params.row.id}>
+            {params.value}
+          </Label>
+        )
+      },
+    },
+    {
+      field: 'edit',
+      headerName: 'Edit',
+      sortable: false,
+      renderCell: params => {
+        return (
+          <Button
+            variant="base"
+            onClick={() => {
+              handleEdit(params.row.id)
+            }}
+          >
+            edit
+          </Button>
+        )
+      },
+    },
+    {
+      field: 'delete',
+      headerName: 'Delete',
+      sortable: false,
+      renderCell: params => {
+        return (
+          <Button
+            variant="base"
+            onClick={() => {
+              handleDelete(params.row.id)
+            }}
+          >
+            delete
+          </Button>
+        )
+      },
+    },
+  ]
+
   return (
     <DataGridStyled
       apiRef={gridApiRef}
@@ -68,97 +160,7 @@ export default function Items() {
       sortingMode="server"
       onSortModelChange={handleSortModelChange}
       sortingOrder={['desc', 'asc']}
-      columns={[
-        {
-          field: 'status',
-          headerName: 'Status',
-          type: 'number',
-          width: 30,
-          sortable: false,
-          renderCell: params => {
-            return (
-              <Checkbox
-                id={params.row.id}
-                checked={params.value === ITEM_STATUS.DONE}
-                onClick={ev => {
-                  handleStatusChange(ev, {
-                    id: params.row.id,
-                    status: params.value,
-                  })
-                }}
-              />
-            )
-          },
-        },
-        {
-          field: 'createdAt',
-          headerName: 'Created At',
-          width: 110,
-          valueFormatter: params => {
-            return format(params.value, 'MMM d, y')
-          },
-        },
-        {
-          field: 'name',
-          headerName: 'Name',
-          flex: 1,
-          renderCell: params => {
-            if (params.row.id === editingId) {
-              return (
-                <TextFieldStyled
-                  type="text"
-                  variant="filled"
-                  fullWidth
-                  defaultValue={params.value}
-                  onKeyUp={ev => {
-                    handleNameChange(ev, params.row.id)
-                  }}
-                />
-              )
-            }
-
-            return (
-              <Label checked={params.row.status === ITEM_STATUS.DONE} htmlFor={params.row.id}>
-                {params.value}
-              </Label>
-            )
-          },
-        },
-        {
-          field: 'edit',
-          headerName: 'Edit',
-          sortable: false,
-          renderCell: params => {
-            return (
-              <Button
-                variant="base"
-                onClick={() => {
-                  handleEdit(params.row.id)
-                }}
-              >
-                edit
-              </Button>
-            )
-          },
-        },
-        {
-          field: 'delete',
-          headerName: 'Delete',
-          sortable: false,
-          renderCell: params => {
-            return (
-              <Button
-                variant="base"
-                onClick={() => {
-                  handleDelete(params.row.id)
-                }}
-              >
-                delete
-              </Button>
-            )
-          },
-        },
-      ]}
+      columns={columns}
       rows={items}
     />
   )
