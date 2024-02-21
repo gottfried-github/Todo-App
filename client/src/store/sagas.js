@@ -33,7 +33,7 @@ function* create(action) {
     const res = yield call(axios.post, '/todos', body)
 
     yield put({
-      type: slice.actions.setItems.type,
+      type: slice.actions.append.type,
       payload: res.data,
     })
   } catch (e) {
@@ -62,8 +62,8 @@ function* updateStatus(action) {
     const res = yield call(axios.patch, `/todos/${action.payload.id}`, body)
 
     yield put({
-      type: slice.actions.setItems.type,
-      payload: res.data,
+      type: slice.actions.updateItem.type,
+      payload: { id: action.payload.id, fields: { status: action.payload.status } },
     })
   } catch (e) {
     yield put({
@@ -91,8 +91,8 @@ function* updateName(action) {
     const res = yield call(axios.patch, `/todos/${action.payload.id}`, body)
 
     yield put({
-      type: slice.actions.setItems.type,
-      payload: res.data,
+      type: slice.actions.updateItem.type,
+      payload: { id: action.payload.id, fields: { name: action.payload.name } },
     })
   } catch (e) {
     yield put({
@@ -115,8 +115,8 @@ function* deleteOne(action) {
     const res = yield call(axios.delete, `/todos/${action.payload}`, body)
 
     yield put({
-      type: slice.actions.setItems.type,
-      payload: res.data,
+      type: slice.actions.deleteItem.type,
+      payload: action.payload,
     })
   } catch (e) {
     yield put({
@@ -139,7 +139,7 @@ function* deleteDone() {
     const res = yield call(axios.delete, '/todos', body)
 
     yield put({
-      type: slice.actions.setItems.type,
+      type: slice.actions.deleteDone.type,
       payload: res.data,
     })
   } catch (e) {
