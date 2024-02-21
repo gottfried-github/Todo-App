@@ -38,7 +38,7 @@ function* create(action) {
 
 function* updateStatus(action) {
   try {
-    const res = yield call(axios.patch, `/todos/${action.payload.id}`, {
+    yield call(axios.patch, `/todos/${action.payload.id}`, {
       status: action.payload.status,
     })
 
@@ -56,7 +56,7 @@ function* updateStatus(action) {
 
 function* updateName(action) {
   try {
-    const res = yield call(axios.patch, `/todos/${action.payload.id}`, {
+    yield call(axios.patch, `/todos/${action.payload.id}`, {
       name: action.payload.name,
     })
 
@@ -74,7 +74,7 @@ function* updateName(action) {
 
 function* deleteOne(action) {
   try {
-    const res = yield call(axios.delete, `/todos/${action.payload}`)
+    yield call(axios.delete, `/todos/${action.payload}`)
 
     yield put({
       type: slice.actions.deleteItem.type,
