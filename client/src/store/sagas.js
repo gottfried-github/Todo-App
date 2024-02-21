@@ -76,10 +76,7 @@ function* deleteOne(action) {
   try {
     yield call(axios.delete, `/todos/${action.payload}`)
 
-    yield put({
-      type: slice.actions.deleteItem.type,
-      payload: action.payload,
-    })
+    yield call(getItems)
   } catch (e) {
     yield put({
       type: slice.actions.setError.type,
@@ -90,12 +87,9 @@ function* deleteOne(action) {
 
 function* deleteDone() {
   try {
-    const res = yield call(axios.delete, '/todos')
+    yield call(axios.delete, '/todos')
 
-    yield put({
-      type: slice.actions.deleteDone.type,
-      payload: res.data,
-    })
+    yield call(getItems)
   } catch (e) {
     yield put({
       type: slice.actions.setError.type,

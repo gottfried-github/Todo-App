@@ -90,25 +90,6 @@ const slice = createSlice({
         }
       }
     },
-    deleteItem: (state, action) => {
-      const item = state.items[state.items.map(item => item.id).indexOf(action.payload)]
-
-      state.items = state.items.filter(item => item.id !== action.payload)
-
-      state.counters.all--
-
-      if (item.status === ITEM_STATUS.DONE) {
-        state.counters.done--
-      } else {
-        state.counters.notDone--
-      }
-    },
-    deleteDone: (state, action) => {
-      state.items = state.items.filter(item => item.status === 2)
-
-      state.counters.all -= action.payload.deletedCount
-      state.counters.done -= action.payload.deletedCount
-    },
   },
   selectors: {
     selectItems: state => {
