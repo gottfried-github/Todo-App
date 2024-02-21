@@ -6,6 +6,8 @@ import { format } from 'date-fns'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import Checkbox from '@mui/material/Checkbox'
+import EditIcon from '@mui/icons-material/Edit'
+import DeleteIcon from '@mui/icons-material/Delete'
 import { DataGrid, useGridApiRef } from '@mui/x-data-grid'
 
 import { ITEM_STATUS } from '../constants'
@@ -134,14 +136,11 @@ export default function Items() {
       sortable: false,
       renderCell: params => {
         return (
-          <Button
-            variant="base"
+          <EditIcon
             onClick={() => {
               handleEdit(params.row.id)
             }}
-          >
-            edit
-          </Button>
+          />
         )
       },
     },
@@ -151,14 +150,11 @@ export default function Items() {
       sortable: false,
       renderCell: params => {
         return (
-          <Button
-            variant="base"
+          <DeleteIcon
             onClick={() => {
               handleDelete(params.row.id)
             }}
-          >
-            delete
-          </Button>
+          />
         )
       },
     },
