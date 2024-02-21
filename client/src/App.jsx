@@ -47,7 +47,7 @@ const Container = styled.div`
   display: grid;
   grid-template-rows: auto auto auto 1fr;
 
-  width: 650px;
+  width: 850px;
   max-height: 650px;
 
   margin: auto;
