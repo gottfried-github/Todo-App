@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import styled from '@emotion/styled'
 import { format } from 'date-fns'
@@ -31,6 +31,13 @@ export default function Items() {
   }, [dispatch, paginationModel])
 
   const items = useSelector(state => slice.selectors.selectItems({ [slice.reducerPath]: state }))
+  const rowCount = useMemo(() => {
+    if (filter.status === null) {
+      return counters.all
+    }
+
+    return filter.status === ITEM_STATUS.DONE ? counters.done : counters.notDone
+  }, [filter, counters])
 
   const handleEdit = itemId => {
     setEditingId(!editingId || editingId !== itemId ? itemId : null)
@@ -166,13 +173,7 @@ export default function Items() {
       onSortModelChange={handleSortModelChange}
       sortingOrder={['desc', 'asc']}
       pageSizeOptions={[5, 10]}
-      rowCount={
-        filter.status === null
-          ? counters.all
-          : filter.status === ITEM_STATUS.DONE
-            ? counters.done
-            : counters.notDone
-      }
+      rowCount={rowCount}
       paginationModel={paginationModel}
       paginationMode="server"
       onPaginationModelChange={setPaginationModel}
