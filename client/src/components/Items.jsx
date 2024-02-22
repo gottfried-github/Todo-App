@@ -39,6 +39,16 @@ export default function Items() {
     return filter.status === ITEM_STATUS.DONE ? counters.done : counters.notDone
   }, [filter, counters])
 
+  const handlePaginationModelChange = paginationModel => {
+    setPaginationModel(modelPrev => {
+      if (paginationModel.pageSize !== modelPrev.pageSize) {
+        return { ...paginationModel, page: 0 }
+      }
+
+      return paginationModel
+    })
+  }
+
   const handleEdit = itemId => {
     setEditingId(!editingId || editingId !== itemId ? itemId : null)
   }
@@ -176,7 +186,7 @@ export default function Items() {
       rowCount={rowCount}
       paginationModel={paginationModel}
       paginationMode="server"
-      onPaginationModelChange={setPaginationModel}
+      onPaginationModelChange={handlePaginationModelChange}
       disableRowSelectionOnClick
       disableColumnMenu
       slots={{
