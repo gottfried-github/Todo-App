@@ -95,7 +95,7 @@ export default function Items() {
       field: 'status',
       headerName: 'Status',
       type: 'number',
-      width: 30,
+      width: 80,
       sortable: false,
       renderCell: params => {
         return (
@@ -115,7 +115,7 @@ export default function Items() {
     {
       field: 'createdAt',
       headerName: 'Created At',
-      width: 110,
+      width: 120,
       valueFormatter: params => {
         return format(params.value, 'MMM d, y')
       },
