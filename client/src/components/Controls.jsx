@@ -25,7 +25,12 @@ export default function Controls() {
   const handleSetFilter = (ev, filter) => {
     if (filter === null) return
 
-    dispatch(slice.actions.setFilter({ status: filter === false ? null : filter }))
+    dispatch(
+      slice.actions.setFilter({
+        status: filter === false ? null : filter,
+        pagination: { ...filter.pagination, page: 0 },
+      })
+    )
   }
 
   if (!counters.all) return null
