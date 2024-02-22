@@ -1,4 +1,4 @@
-import Todo from '../models/todo.js'
+import TodoService from '../services/todo.js'
 
 export default async function getAll(ctx) {
   let status = null
@@ -35,7 +35,7 @@ export default async function getAll(ctx) {
   }
 
   try {
-    const res = await Todo.getAll(status, sort, pagination)
+    const res = await TodoService.getAll(status, sort, pagination)
 
     await ctx.send(200, res)
   } catch (e) {
