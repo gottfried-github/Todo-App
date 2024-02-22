@@ -8,20 +8,13 @@ export default {
       filter.status = status
     }
 
-    let _sort = null
-
-    if (!sort || (_sort?.field && !_sort?.order) || (_sort?.order && !_sort?.field)) {
-      _sort = { createdAt: 1 }
-    } else {
-      _sort = { [sort.field]: sort.order }
-    }
-
     let items = null
+
     if (!pagination) {
-      items = await Todo.find(filter).sort(_sort)
+      items = await Todo.find(filter).sort(sort)
     } else {
       items = await Todo.find(filter)
-        .sort(_sort)
+        .sort(sort)
         .skip(pagination.page * pagination.pageSize)
         .limit(pagination.pageSize)
     }

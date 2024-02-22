@@ -1,41 +1,23 @@
 import TodoService from '../services/todo.js'
 
 export default async function getAll(ctx) {
-  let status = null
-  let sort = null
-  let pagination = null
+  const sort = {}
 
-  if (ctx.query?.status) {
-    status = parseInt(ctx.query.status)
-  }
-
-  if (
-    (ctx.query?.sortField && !ctx.query?.sortOrder) ||
-    (ctx.query?.sortOrder && !ctx.query?.sortField)
-  ) {
-    ctx.throw(400, 'both sortField and sortOrder must be specified')
-  }
-
-  if ((ctx.query?.page && !ctx.query?.pageSize) || (ctx.query?.pageSize && !ctx.query?.page)) {
-    ctx.throw(400, 'both page and pageSize must be specified')
-  }
-
-  if (ctx.query?.sortField) {
-    sort = {
-      field: ctx.query.sortField,
-      order: parseInt(ctx.query.sortOrder),
-    }
-  }
-
-  if (ctx.query?.page) {
-    pagination = {
-      page: parseInt(ctx.query.page),
-      pageSize: parseInt(ctx.query.pageSize),
-    }
+  if (ctx.query?.sortField && ctx.query?.sortOrder) {
+    sort[ctx.query.sortField] = parseInt(ctx.query.sortOrder)
   }
 
   try {
-    const res = await TodoService.getAll(status, sort, pagination)
+    const res = await TodoService.getAll(
+      ctx.query?.status ? parseInt(ctx.query.status) : null,
+      sort,
+      ctx.query?.page && ctx.query?.pageSize
+        ? {
+            page: parseInt(ctx.query.page),
+            pageSize: parseInt(ctx.query.pageSize),
+          }
+        : null
+    )
 
     await ctx.send(200, res)
   } catch (e) {
