@@ -49,11 +49,17 @@ export default function Controls() {
         value={filter.status === null ? false : filter.status}
         onChange={handleSetFilter}
       >
-        <ToggleButton value={false}>all</ToggleButton>
-        <ToggleButton value={ITEM_STATUS.DONE}>completed</ToggleButton>
-        <ToggleButton value={ITEM_STATUS.NOT_DONE}>active</ToggleButton>
+        <ToggleButton size="small" value={false}>
+          all
+        </ToggleButton>
+        <ToggleButton size="small" value={ITEM_STATUS.DONE}>
+          completed
+        </ToggleButton>
+        <ToggleButton size="small" value={ITEM_STATUS.NOT_DONE}>
+          active
+        </ToggleButton>
       </ToggleButtonGroupStyled>
-      <ClearAllButton variant="base" onClick={handleDeleteDone}>
+      <ClearAllButton variant="danger" onClick={handleDeleteDone}>
         clear completed
       </ClearAllButton>
     </Container>
@@ -66,8 +72,7 @@ const Container = styled.div`
   justify-content: space-between;
 
   padding: 8px 8px;
-
-  color: ${props => props.theme.palette.util.dark};
+  padding-top: 24px;
 `
 
 const ToggleButtonGroupStyled = styled(ToggleButtonGroup)`
@@ -76,9 +81,6 @@ const ToggleButtonGroupStyled = styled(ToggleButtonGroup)`
 
 const ClearAllButton = styled(Button)`
   font-weight: 800;
-  color: ${props => props.theme.palette.danger.main} !important;
 `
 
-const Counters = styled(Typography)`
-  color: ${props => props.theme.palette.util.green};
-`
+const Counters = styled(Typography)``

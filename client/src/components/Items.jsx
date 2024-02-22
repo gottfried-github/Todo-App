@@ -221,7 +221,7 @@ const Label = styled.label(props => {
   if (props.checked) {
     return {
       ...styles,
-      color: props.theme.palette.util.dark,
+      // color: props.theme.palette.util.dark,
       textDecoration: 'line-through',
     }
   }

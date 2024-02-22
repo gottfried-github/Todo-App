@@ -50,15 +50,11 @@ const Container = styled.div`
   display: grid;
   grid-template-rows: auto auto auto minmax(150px, 1fr);
 
-  width: 850px;
-  max-height: 650px;
+  width: 100%;
+  height: 100vh;
 
   margin: auto;
   padding: 16px 45px;
 
   font-size: 0.875rem;
-
-  background-color: ${props => props.theme.palette.backgrounds.main};
-  border-radius: 12px;
-  box-shadow: 2px 4px 8px 0px ${props => props.theme.palette.util.shadow};
 `

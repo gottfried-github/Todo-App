@@ -34,7 +34,7 @@ export default function Form() {
         value={name}
         onChange={handleInputChange}
       />
-      <Button variant="main" onClick={handleSubmit}>
+      <Button variant="contained" size="large" onClick={handleSubmit}>
         submit
       </Button>
     </FormEl>
