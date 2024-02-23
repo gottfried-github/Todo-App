@@ -7,7 +7,7 @@ export function generateHash(password) {
   return { salt, hash }
 }
 
-export function isEqualHash(salt, hash, password) {
+export function isEqualHash({ salt, hash }, password) {
   const _hash = crypto.pbkdf2Sync(password, salt, 10000, 512, 'sha512')
   return crypto.timingSafeEqual(_hash, hash)
 }
