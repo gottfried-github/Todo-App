@@ -6,6 +6,7 @@ const schema = new mongoose.Schema(
       type: String,
       minLength: 2,
       maxLength: 300,
+      unique: true,
       required: true,
     },
     firstName: {
@@ -24,6 +25,7 @@ const schema = new mongoose.Schema(
       type: String,
       minLength: 3,
       maxLength: 300,
+      unique: true,
       required: true,
     },
     password: {
