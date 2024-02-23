@@ -1,4 +1,4 @@
-import TodoService from '../services/todo.js'
+import TodoService from '../../../services/todo.js'
 
 export default async function deleteDone(ctx) {
   try {

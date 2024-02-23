@@ -3,7 +3,7 @@ import mongoose from 'mongoose'
 import Koa from 'koa'
 
 import { handleErrors, utils, parseBody, validateContentType } from './middleware/index.js'
-import router from './router.js'
+import router from './routers/secure/router.js'
 
 async function main() {
   await mongoose.connect(process.env.DB_CONNECTION)

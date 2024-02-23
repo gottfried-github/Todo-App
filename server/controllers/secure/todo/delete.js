@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-import Todo from '../models/todo.js'
+import Todo from '../../../models/todo.js'
 
 export default async function deleteById(ctx) {
   try {
