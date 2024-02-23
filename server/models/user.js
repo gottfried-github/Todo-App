@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 
 const schema = new mongoose.Schema(
   {
-    username: {
+    userName: {
       type: String,
       minLength: 2,
       maxLength: 300,
