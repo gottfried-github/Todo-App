@@ -32,6 +32,10 @@ const schema = new mongoose.Schema(
       hash: { type: Buffer, required: true },
       salt: { type: Buffer, required: true },
     },
+    refreshToken: {
+      type: String,
+      maxLength: 1000,
+    },
   },
   {
     versionKey: false,
