@@ -22,7 +22,7 @@ export default async function signout(ctx) {
   try {
     await user.save()
     ctx.cookies.set('jwt')
-    ctx.send(200, 'signed out')
+    ctx.send(200, null, 'signed out')
   } catch (e) {
     ctx.throw(500, 'database errored')
   }
