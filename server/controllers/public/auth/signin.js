@@ -3,7 +3,10 @@ import jwt from 'jsonwebtoken'
 import UserService from '../../../services/user.js'
 
 export default async function signin(ctx) {
-  const user = await UserService.getAndValidate(ctx.body.indentifier, ctx.body.password)
+  const user = await UserService.getAndValidate(
+    ctx.request.body.identifier,
+    ctx.request.body.password
+  )
 
   if (user === null) {
     ctx.throw(404, "user with given user name doesn't exist")
@@ -14,11 +17,11 @@ export default async function signin(ctx) {
   }
 
   const accessToken = jwt.sign({ userName: user.userName }, process.env.JWT_ACCESS_SECRET, {
-    expiresIn: process.env.JWT_ACCESS_EXPIRE / 1000,
+    expiresIn: parseInt(process.env.JWT_ACCESS_EXPIRE),
   })
 
-  const refreshToken = jwt.sign({}, process.env.REFRESH_TOKEN_SECRET, {
-    expiresIn: process.env.JWT_REFRESH_EXPIRE / 1000,
+  const refreshToken = jwt.sign({}, process.env.JWT_REFRESH_SECRET, {
+    expiresIn: parseInt(process.env.JWT_REFRESH_EXPIRE),
   })
 
   user.refreshToken = refreshToken
@@ -33,7 +36,7 @@ export default async function signin(ctx) {
     httpOnly: true,
     // secure: true,
     // sameSite: 'none',
-    maxAge: process.env.JWT_REFRESH_EXPIRE,
+    maxAge: parseInt(process.env.JWT_REFRESH_EXPIRE) * 1000,
   })
 
   ctx.send(200, { accessToken })

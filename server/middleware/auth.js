@@ -1,18 +1,18 @@
 export async function validateSignup(ctx, next) {
   if (
-    !ctx.body.userName ||
-    !ctx.body.password ||
-    !ctx.body.firstName ||
-    !ctx.body.lastName ||
-    !ctx.body.email
+    !ctx.request.body.userName ||
+    !ctx.request.body.password ||
+    !ctx.request.body.firstName ||
+    !ctx.request.body.lastName ||
+    !ctx.request.body.email
   ) {
     ctx.throw(400, 'user name and password must be provided', {
       errors: {
-        userName: !ctx.body.userName ? 'the field is required' : null,
-        password: !ctx.body.password ? 'the field is required' : null,
-        firstName: !ctx.body.firstName ? 'the field is required' : null,
-        lastName: !ctx.body.lastName ? 'the field is required' : null,
-        email: !ctx.body.email ? 'the field is required' : null,
+        userName: !ctx.request.body.userName ? 'the field is required' : null,
+        password: !ctx.request.body.password ? 'the field is required' : null,
+        firstName: !ctx.request.body.firstName ? 'the field is required' : null,
+        lastName: !ctx.request.body.lastName ? 'the field is required' : null,
+        email: !ctx.request.body.email ? 'the field is required' : null,
       },
     })
   }
@@ -20,12 +20,12 @@ export async function validateSignup(ctx, next) {
   await next()
 }
 
-export async function validateSignin() {
-  if (!ctx.body.identifier || !ctx.body.password) {
+export async function validateSignin(ctx, next) {
+  if (!ctx.request.body.identifier || !ctx.request.body.password) {
     ctx.throw(400, 'user name and password must be provided', {
       errors: {
-        identifier: !ctx.body.identifier ? 'the field is required' : null,
-        password: !ctx.body.password ? 'the field is required' : null,
+        identifier: !ctx.request.body.identifier ? 'the field is required' : null,
+        password: !ctx.request.body.password ? 'the field is required' : null,
       },
     })
   }

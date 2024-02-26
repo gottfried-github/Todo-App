@@ -17,11 +17,14 @@ export default {
    *    `user` - else
    */
   getAndValidate: async (identifier, password) => {
-    let user = await User.find({ userName: identifier })
+    console.log('UserService.getAndValidate, identifier:', identifier)
+    let user = await User.findOne({ userName: identifier })
 
     if (!user) {
-      user = await User.find({ email: identifier })
+      user = await User.findOne({ email: identifier })
     }
+
+    console.log('UserService.getAndValidate, user, user.password:', user, user.password)
 
     if (!user) return null
 

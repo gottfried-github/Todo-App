@@ -1,3 +1,5 @@
+import jwt from 'jsonwebtoken'
+
 import User from '../../../models/user.js'
 
 export default async function refresh(ctx) {
@@ -18,7 +20,7 @@ export default async function refresh(ctx) {
     }
 
     const accessToken = jwt.sign({ userName: user.userName }, process.env.JWT_ACCESS_SECRET, {
-      expiresIn: process.env.JWT_ACCESS_EXPIRE / 1000,
+      expiresIn: parseInt(process.env.JWT_ACCESS_EXPIRE),
     })
 
     ctx.send(200, { accessToken })

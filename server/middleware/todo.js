@@ -1,3 +1,5 @@
+import jwt from 'jsonwebtoken'
+
 export const validateBody = async (ctx, next) => {
   if (!Object.keys(ctx.request.body).length) {
     ctx.status = 400
@@ -17,12 +19,20 @@ export const authorize = async (ctx, next) => {
 
   const token = ctx.headers.authorization.split(' ')[1]
 
-  jwt.verify(token, process.env.JWT_ACCESS_SECRET, async (err, token) => {
-    if (err) {
-      ctx.throw(403, 'invalid token')
-    }
+  try {
+    const tokenDecoded = await new Promise((resolve, reject) => {
+      jwt.verify(token, process.env.JWT_ACCESS_SECRET, async (err, token) => {
+        if (err) {
+          reject(err)
+        }
 
-    ctx.user = token
+        resolve(token)
+      })
+    })
+
+    ctx.user = tokenDecoded
     await next()
-  })
+  } catch (e) {
+    ctx.throw(403, 'invalid token')
+  }
 }
