@@ -27,7 +27,7 @@ export default {
 
     if (!isEqualHash(user.password, password)) return false
 
-    return { ...user, password: null }
+    return user
   },
 
   exists: async ({ email, userName }) => {
