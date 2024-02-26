@@ -3,7 +3,7 @@ import mongoose from 'mongoose'
 import Koa from 'koa'
 
 import { handleErrors, utils, parseBody, validateContentType } from './middleware/app.js'
-import router from './routers/secure/todo.js'
+import router from './routers/index.js'
 
 async function main() {
   await mongoose.connect(process.env.DB_CONNECTION)
@@ -25,7 +25,7 @@ async function main() {
     .use(router.routes())
     .use(router.allowedMethods())
     .on('error', e => {
-      console.log(e)
+      console.log('error:', e)
     })
     .listen(process.env.HTTP_PORT, () => {
       console.log(`server is running at port ${process.env.HTTP_PORT}`)

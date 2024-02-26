@@ -7,9 +7,7 @@ import deleteById from '../../controllers/secure/todo/delete.js'
 import deleteDone from '../../controllers/secure/todo/deleteDone.js'
 import getAll from '../../controllers/secure/todo/getAll.js'
 
-const router = new Router({
-  prefix: '/todos',
-})
+const router = new Router()
 
 router.use(authorize)
 router.get('/', getAll)
