@@ -20,7 +20,7 @@ export default async function signout(ctx) {
   user.refreshToken = ''
 
   try {
-    await foundUser.save()
+    await user.save()
     ctx.cookies.set('jwt')
     ctx.send(200, 'signed out')
   } catch (e) {
