@@ -24,8 +24,6 @@ export default {
       user = await User.findOne({ email: identifier })
     }
 
-    console.log('UserService.getAndValidate, user, user.password:', user, user.password)
-
     if (!user) return null
 
     if (!isEqualHash(user.password, password)) return false
