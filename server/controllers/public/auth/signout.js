@@ -12,7 +12,7 @@ export default async function signout(ctx) {
 
   if (!user) {
     ctx.cookies.set('jwt')
-    res.send(200, 'user is not signed in')
+    ctx.send(200, null, 'user is not signed in')
     return
   }
 
