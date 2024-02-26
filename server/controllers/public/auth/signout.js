@@ -2,8 +2,7 @@ import User from '../../../models/user.js'
 
 export default async function signout(ctx) {
   if (!ctx.cookies.get('jwt')) {
-    ctx.send(400, 'no refresh token')
-    return
+    ctx.throw(400, 'no refresh token')
   }
 
   const refreshToken = ctx.cookies.get('jwt')
