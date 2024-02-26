@@ -13,7 +13,7 @@ export default async function signin(ctx) {
   }
 
   if (user === false) {
-    ctx.throw(400, 'incorrect password')
+    ctx.throw(400, null, { errors: { password: 'incorrect password' } })
   }
 
   const accessToken = jwt.sign({ userName: user.userName }, process.env.JWT_ACCESS_SECRET, {
