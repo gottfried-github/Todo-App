@@ -55,16 +55,6 @@ export default function Signup() {
     })
   }
 
-  console.log(
-    'SignupForm, render, signup.error?.errors?.userName?.message:',
-    signup.error?.errors?.userName?.message
-  )
-
-  console.log(
-    'SignupForm, render, signup.error?.errors?.userName?.message:',
-    signup.error?.errors?.userName?.message || userName ? validators.userName(userName) : null
-  )
-
   return (
     <Paper elevation={8}>
       <form onSubmit={submitCb}>
