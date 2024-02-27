@@ -3,7 +3,7 @@ import UserService from '../../../services/user.js'
 export default async function signup(ctx) {
   try {
     await UserService.create(ctx.request.body)
-    ctx.send(201, 'successfully signed up')
+    ctx.send(201, null, 'successfully signed up')
   } catch (e) {
     // 11000 === unique index violation
     if (e.code === 11000) {

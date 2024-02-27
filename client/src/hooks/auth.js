@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import sliceAuth from './store/slice-auth'
+import axios from '../store/http'
+import sliceAuth from '../store/store/slice-auth'
 
 /**
  * @description has nothing to do with the store
@@ -14,14 +15,15 @@ export const useSignup = () => {
     },
     send: async data => {
       try {
-        await instance.post('/auth/signup', data)
+        await axios.post('/auth/signup', data)
 
         setState({ ...state, status: 'success', error: null })
       } catch (e) {
+        console.log('useSignup, axios errorer, e:', e)
         setState({
           ...state,
           status: 'error',
-          error: e,
+          error: { errors: e.response.data.errors },
         })
       }
     },
@@ -40,7 +42,7 @@ export const useSignin = () => {
     status: 'idle',
     send: async data => {
       try {
-        const res = await instance.post('/auth/signin', data)
+        const res = await axios.post('/auth/signin', data)
 
         dispatch(sliceAuth.actions.setToken(res.data.accessToken))
         setState({ status: 'success' })
@@ -63,7 +65,7 @@ export const useSignout = () => {
     status: 'idle',
     send: async data => {
       try {
-        await instance.post('/auth/signin', data)
+        await axios.post('/auth/signin', data)
 
         dispatch(sliceAuth.actions.unsetToken())
         setState({ status: 'success' })

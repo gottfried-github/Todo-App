@@ -5,8 +5,8 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
 import ToggleButton from '@mui/material/ToggleButton'
 import Button from '@mui/material/Button'
 
-import { deleteDone } from '../store/actions'
-import slice from '../store/store/slice-todo'
+import { deleteDone } from '../../store/actions/todo'
+import slice from '../../store/store/slice-todo'
 
 import { ITEM_STATUS } from '../../constants'
 
