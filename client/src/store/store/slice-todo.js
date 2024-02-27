@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-import { ITEM_STATUS } from '../constants'
+import { ITEM_STATUS } from '../../constants'
 
 const slice = createSlice({
   name: 'todos',

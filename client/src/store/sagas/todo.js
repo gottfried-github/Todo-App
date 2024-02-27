@@ -1,7 +1,7 @@
 import { call, put, takeEvery, takeLatest, select } from 'redux-saga/effects'
-import axios from './http'
+import axios from '../http'
 
-import slice from './slice'
+import slice from '../store/slice-todo'
 
 import {
   create as actionCreate,
@@ -10,7 +10,7 @@ import {
   deleteOne as actionDeleteOne,
   deleteDone as actionDeleteDone,
   getItems as actionGetItems,
-} from './actions'
+} from '../actions/todo'
 
 class Item {
   constructor(name) {
