@@ -14,9 +14,9 @@ import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 
-import { ITEM_STATUS } from '../constants'
-import { updateStatus, updateName, deleteOne } from '../store/actions'
-import slice from '../store/slice'
+import { ITEM_STATUS } from '../../constants'
+import { updateStatus, updateName, deleteOne } from '../store/actions/todo'
+import slice from '../store/store/slice-todo'
 
 export default function Items() {
   const dispatch = useDispatch()

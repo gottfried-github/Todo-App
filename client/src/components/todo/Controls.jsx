@@ -6,9 +6,9 @@ import ToggleButton from '@mui/material/ToggleButton'
 import Button from '@mui/material/Button'
 
 import { deleteDone } from '../store/actions'
-import slice from '../store/slice'
+import slice from '../store/store/slice-todo'
 
-import { ITEM_STATUS } from '../constants'
+import { ITEM_STATUS } from '../../constants'
 
 export default function Controls() {
   const dispatch = useDispatch()
