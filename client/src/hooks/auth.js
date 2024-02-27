@@ -8,13 +8,21 @@ import sliceAuth from './store/slice-auth'
 export const useSignup = () => {
   const [state, setState] = useState({
     status: 'idle',
+    error: null,
+    reset: () => {
+      setState({ ...state, status: 'idle', error: null })
+    },
     send: async data => {
       try {
-        const res = await instance.post('/auth/signup', data)
+        await instance.post('/auth/signup', data)
 
-        setState({ status: 'success', body: res.data })
+        setState({ ...state, status: 'success', error: null })
       } catch (e) {
-        setState({ status: 'error', error: e })
+        setState({
+          ...state,
+          status: 'error',
+          error: e,
+        })
       }
     },
   })
