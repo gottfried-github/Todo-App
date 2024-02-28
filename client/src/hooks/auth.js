@@ -1,6 +1,8 @@
-import { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 import axios from '../store/http'
+
 import sliceAuth from '../store/store/slice-auth'
 
 /**
@@ -40,14 +42,24 @@ export const useSignin = () => {
 
   const [state, setState] = useState({
     status: 'idle',
+    error: null,
+    reset: () => {
+      setState({ ...state, status: 'idle', error: null })
+    },
     send: async data => {
       try {
         const res = await axios.post('/auth/signin', data)
 
+        console.log('useSignin, axios responded, res:', res)
+
         dispatch(sliceAuth.actions.setToken(res.data.accessToken))
-        setState({ status: 'success' })
+        setState({ ...state, status: 'success', error: null })
       } catch (e) {
-        setState({ status: 'error', error: e })
+        setState({
+          ...state,
+          status: 'error',
+          error: { errors: e.response.data.errors },
+        })
       }
     },
   })
@@ -77,3 +89,21 @@ export const useSignout = () => {
 
   return state
 }
+
+export const useRoot = () => {
+  const navigate = useNavigate()
+
+  const token = useSelector(state =>
+    sliceAuth.selectors.selectToken({ [sliceAuth.reducerPath]: state })
+  )
+
+  useEffect(() => {
+    if (token) {
+      navigate('/cabinet')
+    } else {
+      navigate('/auth/signup')
+    }
+  }, [token, navigate])
+}
+
+export const useProtected = () => {}
