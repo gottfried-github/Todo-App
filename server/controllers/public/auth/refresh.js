@@ -16,7 +16,7 @@ export default async function refresh(ctx) {
 
   jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, e => {
     if (e) {
-      ctx.throw(403, 'refresh token is invalid')
+      ctx.throw(401, 'refresh token is invalid')
     }
 
     const accessToken = jwt.sign({ userName: user.userName }, process.env.JWT_ACCESS_SECRET, {
