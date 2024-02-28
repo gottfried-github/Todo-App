@@ -53,6 +53,7 @@ const Container = styled.div`
 
   margin: auto;
   padding: 16px 45px;
+  padding-top: 65px;
 
   font-size: 0.875rem;
 `
