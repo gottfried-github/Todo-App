@@ -1,14 +1,15 @@
-import { RouterProvider, createBrowserRouter } from 'react-router-dom'
+import { RouterProvider, createBrowserRouter, Navigate } from 'react-router-dom'
 
-import Root from './components/Root'
+import Protected from './components/auth/Protected'
 import SignupComponent from './components/auth/Signup/Signup'
+import SigninComponent from './components/auth/Signin/Signin'
 import AuthPage from './pages/Auth'
 import Cabinet from './components/Cabinet'
 
 const routes = [
   {
     path: '/',
-    element: <Root />,
+    element: <Navigate to="/cabinet" />,
   },
   {
     path: '/auth',
@@ -18,11 +19,19 @@ const routes = [
         path: 'signup',
         element: <SignupComponent />,
       },
+      {
+        path: 'signin',
+        element: <SigninComponent />,
+      },
     ],
   },
   {
     path: '/cabinet',
-    element: <Cabinet />,
+    element: (
+      <Protected>
+        <Cabinet />
+      </Protected>
+    ),
   },
 ]
 

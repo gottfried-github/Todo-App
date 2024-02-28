@@ -90,7 +90,7 @@ export const useSignout = () => {
   return state
 }
 
-export const useRoot = () => {
+export const useProtected = () => {
   const navigate = useNavigate()
 
   const token = useSelector(state =>
@@ -98,12 +98,8 @@ export const useRoot = () => {
   )
 
   useEffect(() => {
-    if (token) {
-      navigate('/cabinet')
-    } else {
-      navigate('/auth/signup')
+    if (!token) {
+      navigate('/auth/signin')
     }
   }, [token, navigate])
 }
-
-export const useProtected = () => {}
