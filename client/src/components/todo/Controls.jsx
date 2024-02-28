@@ -13,10 +13,8 @@ import { ITEM_STATUS } from '../../constants'
 export default function Controls() {
   const dispatch = useDispatch()
 
-  const filter = useSelector(state => slice.selectors.selectFilter({ [slice.reducerPath]: state }))
-  const counters = useSelector(state =>
-    slice.selectors.selectCounters({ [slice.reducerPath]: state })
-  )
+  const filter = useSelector(state => slice.selectors.selectFilter(state))
+  const counters = useSelector(state => slice.selectors.selectCounters(state))
 
   const handleDeleteDone = () => {
     dispatch(deleteDone())

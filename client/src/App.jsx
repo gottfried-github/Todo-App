@@ -13,10 +13,8 @@ import Items from './components/todo/Items'
 export default function App() {
   const dispatch = useDispatch()
 
-  const filter = useSelector(state => slice.selectors.selectFilter({ [slice.reducerPath]: state }))
-  const counters = useSelector(state =>
-    slice.selectors.selectCounters({ [slice.reducerPath]: state })
-  )
+  const filter = useSelector(state => slice.selectors.selectFilter(state))
+  const counters = useSelector(state => slice.selectors.selectCounters(state))
 
   useEffect(() => {
     dispatch(getItems())

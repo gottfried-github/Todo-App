@@ -24,10 +24,8 @@ export default function Items() {
 
   const [editingId, setEditingId] = useState(null)
 
-  const filter = useSelector(state => slice.selectors.selectFilter({ [slice.reducerPath]: state }))
-  const counters = useSelector(state =>
-    slice.selectors.selectCounters({ [slice.reducerPath]: state })
-  )
+  const filter = useSelector(state => slice.selectors.selectFilter(state))
+  const counters = useSelector(state => slice.selectors.selectCounters(state))
 
   const [paginationModel, setPaginationModel] = useState(filter.pagination)
 
@@ -35,7 +33,7 @@ export default function Items() {
     dispatch(slice.actions.setFilter({ pagination: paginationModel }))
   }, [dispatch, paginationModel])
 
-  const items = useSelector(state => slice.selectors.selectItems({ [slice.reducerPath]: state }))
+  const items = useSelector(state => slice.selectors.selectItems(state))
   const rowCount = useMemo(() => {
     if (filter.status === null) {
       return counters.all
