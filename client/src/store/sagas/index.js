@@ -1,8 +1,8 @@
 import { all } from 'redux-saga/effects'
 
 import todo from './todo'
-// import auth from './auth'
+import auth from './auth'
 
-export default function* () {
-  yield all([todo])
+export default function* main() {
+  yield all([todo(), auth()])
 }

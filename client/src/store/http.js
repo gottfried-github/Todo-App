@@ -27,7 +27,7 @@ instance.interceptors.response.use(
     }
 
     if (e.config.url === '/auth/refresh') {
-      store.dispatch(sliceAuth.actions.setToken(''))
+      store.dispatch(sliceAuth.actions.unsetToken())
       return
     }
 
@@ -40,7 +40,7 @@ instance.interceptors.response.use(
         return Promise.reject(e)
       }
 
-      store.dispatch(sliceAuth.actions.setToken(''))
+      store.dispatch(sliceAuth.actions.unsetToken())
     }
   }
 )

@@ -4,7 +4,7 @@ import logger from 'redux-logger'
 
 import sliceTodo from './slice-todo'
 import sliceAuth from './slice-auth'
-import sagaTodo from '../sagas/todo'
+import saga from '../sagas/index'
 
 const sagaMiddleware = createSagaMiddleware()
 
@@ -16,6 +16,6 @@ const store = configureStore({
   middleware: getDefaultMiddleware => [...getDefaultMiddleware(), logger, sagaMiddleware],
 })
 
-sagaMiddleware.run(sagaTodo)
+sagaMiddleware.run(saga)
 
 export default store
