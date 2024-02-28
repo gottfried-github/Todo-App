@@ -12,41 +12,6 @@ const instance = axios.create({
   withCredentials: true,
   transformRequest: [data => JSON.stringify(data)],
   transformResponse: [data => (data ? JSON.parse(data) : null)],
-  /*
-  adapter: config => {
-    console.log('axios, config.adapter')
-    return new Promise((resolve, reject) => {
-      console.log('axios, config.adapter, promise handler')
-      if (config.url.startsWith('/todos') && store.getState().auth.token) {
-        config.headers = {
-          ...config.headers,
-          authorization: `Bearer ${store.getState().auth.token}`,
-        }
-      }
-
-      // config.adapter = null
-      // config.transformRequest = null
-      // config.transformResponse = null
-
-      axios({
-        method: config.method,
-        baseURL: config.baseURL,
-        url: config.url,
-        headers: config.headers,
-        data: config.data,
-        transformResponse: null,
-      })
-        .then(res => {
-          console.log('adapter-called instance, res:', res)
-          settle(resolve, reject, res)
-        })
-        .catch(e => {
-          console.log('adapter-called instance, e:', e)
-          settle(resolve, reject, e.response)
-        })
-    })
-  },
-  */
 })
 
 instance.interceptors.response.use(
