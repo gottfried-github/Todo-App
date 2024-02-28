@@ -34,7 +34,6 @@ export default function Signup() {
   }
 
   const submitCb = ev => {
-    console.log('submitCb')
     ev.preventDefault()
 
     if (
