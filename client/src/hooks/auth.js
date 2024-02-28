@@ -93,9 +93,9 @@ export const useSignout = () => {
 export const useProtected = () => {
   const navigate = useNavigate()
 
-  const token = useSelector(state =>
-    sliceAuth.selectors.selectToken({ [sliceAuth.reducerPath]: state })
-  )
+  const token = useSelector(state => sliceAuth.selectors.selectToken(state))
+
+  console.log('useProtected, token:', token)
 
   useEffect(() => {
     if (!token) {
