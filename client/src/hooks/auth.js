@@ -67,29 +67,6 @@ export const useSignin = () => {
   return state
 }
 
-/**
- * @description dispatches `unsetToken`
- */
-export const useSignout = () => {
-  const dispatch = useDispatch()
-
-  const [state, setState] = useState({
-    status: 'idle',
-    send: async data => {
-      try {
-        await axios.post('/auth/signin', data)
-
-        dispatch(sliceAuth.actions.unsetToken())
-        setState({ status: 'success' })
-      } catch (e) {
-        setState({ status: 'error', error: e })
-      }
-    },
-  })
-
-  return state
-}
-
 export const useProtected = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
