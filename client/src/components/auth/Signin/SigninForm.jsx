@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from '@emotion/styled'
-import Paper from '@mui/material/Paper'
-import Button from '@mui/material/Button'
-import TextField from '@mui/material/TextField'
+import Paper from '../AuthPaper'
+import Button from '../AuthButton'
+import TextField from '../AuthTextField'
+import Form from '../AuthForm'
 
 import { useSignin } from '../../../hooks/auth'
 
@@ -40,7 +41,7 @@ export default function Signup() {
 
   return (
     <Paper elevation={8}>
-      <form onSubmit={submitCb}>
+      <Form onSubmit={submitCb}>
         <TextFieldStyled
           variant="filled"
           label="Username or Email"
@@ -83,8 +84,10 @@ export default function Signup() {
           }}
         />
 
-        <Button type="submit">sign in</Button>
-      </form>
+        <Button type="submit" variant="contained">
+          sign in
+        </Button>
+      </Form>
     </Paper>
   )
 }
