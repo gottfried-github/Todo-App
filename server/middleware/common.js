@@ -18,7 +18,7 @@ export const authorize = async (ctx, next) => {
       })
     })
 
-    ctx.user = tokenDecoded
+    ctx.state.user = tokenDecoded
     await next()
   } catch (e) {
     ctx.throw(401, 'invalid token')
