@@ -94,11 +94,19 @@ export const useProtected = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
+  const [accessGranted, setAccessGranted] = useState(false)
+
   const token = useSelector(state => sliceAuth.selectors.selectToken(state))
 
   useEffect(() => {
     const handleEmptyToken = async () => {
-      if (token) return
+      if (token) {
+        if (!accessGranted) {
+          setAccessGranted(true)
+        }
+
+        return
+      }
 
       try {
         const res = await axios.get('/auth/refresh')
@@ -114,5 +122,7 @@ export const useProtected = () => {
     }
 
     handleEmptyToken()
-  }, [token, dispatch, navigate])
+  }, [token, accessGranted, dispatch, navigate])
+
+  return accessGranted
 }

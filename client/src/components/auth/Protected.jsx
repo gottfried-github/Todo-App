@@ -1,7 +1,7 @@
 import { useProtected } from '../../hooks/auth'
 
 export default function Protected({ children }) {
-  useProtected()
+  const accessGranted = useProtected()
 
-  return <>{children}</>
+  return <>{accessGranted ? children : null}</>
 }
