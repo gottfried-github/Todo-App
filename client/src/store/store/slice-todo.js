@@ -55,8 +55,9 @@ const slice = createSlice({
             : state.counters.notDone
 
       if (
-        counter % ((state.filter.pagination.page + 1) * state.filter.pagination.pageSize) !==
-        counter
+        ![0, counter].includes(
+          counter % ((state.filter.pagination.page + 1) * state.filter.pagination.pageSize)
+        )
       )
         return
 

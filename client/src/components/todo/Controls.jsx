@@ -20,12 +20,12 @@ export default function Controls() {
     dispatch(deleteDone())
   }
 
-  const handleSetFilter = (ev, filter) => {
-    if (filter === null) return
+  const handleSetFilter = (ev, _filter) => {
+    if (_filter === null) return
 
     dispatch(
       slice.actions.setFilter({
-        status: filter === false ? null : filter,
+        status: _filter === false ? null : _filter,
         pagination: { ...filter.pagination, page: 0 },
       })
     )
