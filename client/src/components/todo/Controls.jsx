@@ -5,29 +5,27 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
 import ToggleButton from '@mui/material/ToggleButton'
 import Button from '@mui/material/Button'
 
-import { deleteDone } from '../store/actions'
-import slice from '../store/slice'
+import { deleteDone } from '../../store/actions/todo'
+import slice from '../../store/store/slice-todo'
 
-import { ITEM_STATUS } from '../constants'
+import { ITEM_STATUS } from '../../constants'
 
 export default function Controls() {
   const dispatch = useDispatch()
 
-  const filter = useSelector(state => slice.selectors.selectFilter({ [slice.reducerPath]: state }))
-  const counters = useSelector(state =>
-    slice.selectors.selectCounters({ [slice.reducerPath]: state })
-  )
+  const filter = useSelector(state => slice.selectors.selectFilter(state))
+  const counters = useSelector(state => slice.selectors.selectCounters(state))
 
   const handleDeleteDone = () => {
     dispatch(deleteDone())
   }
 
-  const handleSetFilter = (ev, filter) => {
-    if (filter === null) return
+  const handleSetFilter = (ev, _filter) => {
+    if (_filter === null) return
 
     dispatch(
       slice.actions.setFilter({
-        status: filter === false ? null : filter,
+        status: _filter === false ? null : _filter,
         pagination: { ...filter.pagination, page: 0 },
       })
     )

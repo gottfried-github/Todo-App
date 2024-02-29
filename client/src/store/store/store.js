@@ -2,13 +2,17 @@ import { configureStore } from '@reduxjs/toolkit'
 import createSagaMiddleware from 'redux-saga'
 import logger from 'redux-logger'
 
-import slice from './slice'
-import saga from './sagas'
+import sliceTodo from './slice-todo'
+import sliceAuth from './slice-auth'
+import saga from '../sagas/index'
 
 const sagaMiddleware = createSagaMiddleware()
 
 const store = configureStore({
-  reducer: slice.reducer,
+  reducer: {
+    todos: sliceTodo.reducer,
+    auth: sliceAuth.reducer,
+  },
   middleware: getDefaultMiddleware => [...getDefaultMiddleware(), logger, sagaMiddleware],
 })
 

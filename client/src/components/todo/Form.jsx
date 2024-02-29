@@ -5,7 +5,7 @@ import styled from '@emotion/styled'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 
-import { create } from '../store/actions'
+import { create } from '../../store/actions/todo'
 
 export default function Form() {
   const dispatch = useDispatch()

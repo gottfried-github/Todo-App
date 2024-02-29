@@ -1,10 +1,10 @@
 import mongoose from 'mongoose'
 
-import Todo from '../models/todo.js'
+import Todo from '../../../models/todo.js'
 
 export default async function deleteById(ctx) {
   try {
-    const _res = await Todo.deleteOne({ _id: ctx.params.id })
+    const _res = await Todo.deleteOne({ _id: ctx.params.id, userId: ctx.state.user.id })
 
     if (_res.deletedCount === 0) {
       ctx.throw(404, 'no documents have been deleted')
