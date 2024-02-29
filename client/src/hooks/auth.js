@@ -91,15 +91,28 @@ export const useSignout = () => {
 }
 
 export const useProtected = () => {
+  const dispatch = useDispatch()
   const navigate = useNavigate()
 
   const token = useSelector(state => sliceAuth.selectors.selectToken(state))
 
-  console.log('useProtected, token:', token)
-
   useEffect(() => {
-    if (!token) {
-      navigate('/auth/signin')
+    const handleEmptyToken = async () => {
+      if (!token) {
+        try {
+          const res = await axios.get('/auth/refresh')
+
+          dispatch(sliceAuth.actions.setToken(res.data.accessToken))
+        } catch (e) {
+          if (![401, 403].includes(e.response.status)) {
+            dispatch(sliceAuth.actions.setError(e.response?.data || 'something went wrong'))
+          }
+
+          return navigate('/auth/signin')
+        }
+      }
     }
-  }, [token, navigate])
+
+    handleEmptyToken()
+  }, [token, dispatch, navigate])
 }
