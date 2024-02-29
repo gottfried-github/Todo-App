@@ -1,11 +1,11 @@
 import { Outlet } from 'react-router-dom'
 
-import Layout from '../components/auth/Layout'
+import PageLayout from '../components/auth/PageLayout'
 
 export default function Auth() {
   return (
-    <Layout>
+    <PageLayout>
       <Outlet />
-    </Layout>
+    </PageLayout>
   )
 }

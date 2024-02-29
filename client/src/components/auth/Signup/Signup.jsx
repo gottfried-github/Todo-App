@@ -1,5 +1,10 @@
+import BoxLayout from '../BoxLayout'
 import SignupForm from './SignupForm'
 
 export default function Signup() {
-  return <SignupForm />
+  return (
+    <BoxLayout>
+      <SignupForm />
+    </BoxLayout>
+  )
 }
