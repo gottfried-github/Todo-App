@@ -39,6 +39,7 @@ instance.interceptors.response.use(
 
       const resOriginal = await instance({
         ...e.config,
+        transformRequest: null,
         headers: { ...e.config.headers, Authorization: `Bearer ${resRefresh.data.accessToken}` },
       })
 
