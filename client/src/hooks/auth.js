@@ -98,18 +98,18 @@ export const useProtected = () => {
 
   useEffect(() => {
     const handleEmptyToken = async () => {
-      if (!token) {
-        try {
-          const res = await axios.get('/auth/refresh')
+      if (token) return
 
-          dispatch(sliceAuth.actions.setToken(res.data.accessToken))
-        } catch (e) {
-          if (![401, 403].includes(e.response.status)) {
-            dispatch(sliceAuth.actions.setError(e.response?.data || 'something went wrong'))
-          }
+      try {
+        const res = await axios.get('/auth/refresh')
 
-          return navigate('/auth/signin')
+        dispatch(sliceAuth.actions.setToken(res.data.accessToken))
+      } catch (e) {
+        if (![401, 403].includes(e.response.status)) {
+          dispatch(sliceAuth.actions.setError(e.response?.data || 'something went wrong'))
         }
+
+        return navigate('/auth/signin')
       }
     }
 
