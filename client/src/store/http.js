@@ -28,7 +28,8 @@ instance.interceptors.response.use(
 
     if (e.config.url === '/auth/refresh') {
       store.dispatch(sliceAuth.actions.unsetToken())
-      return
+
+      return Promise.reject(e)
     }
 
     try {
