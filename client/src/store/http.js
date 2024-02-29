@@ -32,9 +32,16 @@ instance.interceptors.response.use(
     }
 
     try {
-      const res = await instance.get('/auth/refresh')
+      const resRefresh = await instance.get('/auth/refresh')
 
-      store.dispatch(sliceAuth.actions.setToken(res.data.accessToken))
+      store.dispatch(sliceAuth.actions.setToken(resRefresh.data.accessToken))
+
+      const resOriginal = await instance({
+        ...e.config,
+        headers: { ...e.config.headers, Authorization: `Bearer ${resRefresh.data.accessToken}` },
+      })
+
+      return Promise.resolve(resOriginal)
     } catch (e) {
       if (![401, 403].includes(e.response.status)) {
         return Promise.reject(e)
