@@ -1,18 +1,22 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import styled from '@emotion/styled'
 import { format } from 'date-fns'
 
-import Button from '@mui/material/Button'
+import ButtonBase from '@mui/material/ButtonBase'
 import TextField from '@mui/material/TextField'
 import Checkbox from '@mui/material/Checkbox'
-import EditIcon from '@mui/icons-material/Edit'
-import DeleteIcon from '@mui/icons-material/Delete'
+import Menu from '@mui/material/Menu'
+import MenuItem from '@mui/material/MenuItem'
 import { DataGrid, useGridApiRef } from '@mui/x-data-grid'
 
-import { ITEM_STATUS } from '../constants'
-import { updateStatus, updateName, deleteOne } from '../store/actions'
-import slice from '../store/slice'
+import EditIcon from '@mui/icons-material/Edit'
+import DeleteIcon from '@mui/icons-material/Delete'
+import MoreVertIcon from '@mui/icons-material/MoreVert'
+
+import { ITEM_STATUS } from '../../constants'
+import { updateStatus, updateName, deleteOne } from '../../store/actions/todo'
+import slice from '../../store/store/slice-todo'
 
 export default function Items() {
   const dispatch = useDispatch()
@@ -20,10 +24,8 @@ export default function Items() {
 
   const [editingId, setEditingId] = useState(null)
 
-  const filter = useSelector(state => slice.selectors.selectFilter({ [slice.reducerPath]: state }))
-  const counters = useSelector(state =>
-    slice.selectors.selectCounters({ [slice.reducerPath]: state })
-  )
+  const filter = useSelector(state => slice.selectors.selectFilter(state))
+  const counters = useSelector(state => slice.selectors.selectCounters(state))
 
   const [paginationModel, setPaginationModel] = useState(filter.pagination)
 
@@ -31,7 +33,24 @@ export default function Items() {
     dispatch(slice.actions.setFilter({ pagination: paginationModel }))
   }, [dispatch, paginationModel])
 
-  const items = useSelector(state => slice.selectors.selectItems({ [slice.reducerPath]: state }))
+  const items = useSelector(state => slice.selectors.selectItems(state))
+  const rowCount = useMemo(() => {
+    if (filter.status === null) {
+      return counters.all
+    }
+
+    return filter.status === ITEM_STATUS.DONE ? counters.done : counters.notDone
+  }, [filter, counters])
+
+  const handlePaginationModelChange = paginationModel => {
+    setPaginationModel(modelPrev => {
+      if (paginationModel.pageSize !== modelPrev.pageSize) {
+        return { ...paginationModel, page: 0 }
+      }
+
+      return paginationModel
+    })
+  }
 
   const handleEdit = itemId => {
     setEditingId(!editingId || editingId !== itemId ? itemId : null)
@@ -79,7 +98,7 @@ export default function Items() {
       field: 'status',
       headerName: 'Status',
       type: 'number',
-      width: 30,
+      width: 80,
       sortable: false,
       renderCell: params => {
         return (
@@ -99,7 +118,7 @@ export default function Items() {
     {
       field: 'createdAt',
       headerName: 'Created At',
-      width: 110,
+      width: 120,
       valueFormatter: params => {
         return format(params.value, 'MMM d, y')
       },
@@ -131,27 +150,16 @@ export default function Items() {
       },
     },
     {
-      field: 'edit',
-      headerName: 'Edit',
+      field: 'options',
+      headerName: 'Options',
       sortable: false,
       renderCell: params => {
         return (
-          <EditIcon
-            onClick={() => {
+          <RowMenu
+            handleEdit={() => {
               handleEdit(params.row.id)
             }}
-          />
-        )
-      },
-    },
-    {
-      field: 'delete',
-      headerName: 'Delete',
-      sortable: false,
-      renderCell: params => {
-        return (
-          <DeleteIcon
-            onClick={() => {
+            handleDelete={() => {
               handleDelete(params.row.id)
             }}
           />
@@ -167,16 +175,10 @@ export default function Items() {
       onSortModelChange={handleSortModelChange}
       sortingOrder={['desc', 'asc']}
       pageSizeOptions={[5, 10]}
-      rowCount={
-        filter.status === null
-          ? counters.all
-          : filter.status === ITEM_STATUS.DONE
-            ? counters.done
-            : counters.notDone
-      }
+      rowCount={rowCount}
       paginationModel={paginationModel}
       paginationMode="server"
-      onPaginationModelChange={setPaginationModel}
+      onPaginationModelChange={handlePaginationModelChange}
       disableRowSelectionOnClick
       disableColumnMenu
       slots={{
@@ -211,7 +213,7 @@ const Label = styled.label(props => {
   if (props.checked) {
     return {
       ...styles,
-      color: props.theme.palette.util.dark,
+      // color: props.theme.palette.util.dark,
       textDecoration: 'line-through',
     }
   }
@@ -229,3 +231,57 @@ const ItemsPlaceholderDiv = styled.div`
   text-align: center;
   line-height: 40px;
 `
+
+function RowMenu({ handleEdit, handleDelete }) {
+  const [anchorEl, setAnchorEl] = useState(null)
+
+  const open = Boolean(anchorEl)
+
+  const handleClick = event => {
+    setAnchorEl(event.currentTarget)
+  }
+
+  const handleClose = () => {
+    setAnchorEl(null)
+  }
+
+  return (
+    <div>
+      <ButtonBase
+        id="basic-button"
+        aria-controls={open ? 'basic-menu' : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? 'true' : undefined}
+        onClick={handleClick}
+      >
+        <MoreVertIcon />
+      </ButtonBase>
+      <Menu
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        MenuListProps={{
+          'aria-labelledby': 'basic-button',
+        }}
+      >
+        <MenuItem
+          onClick={() => {
+            handleEdit()
+            handleClose()
+          }}
+        >
+          <EditIcon />
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            handleDelete()
+            handleClose()
+          }}
+        >
+          <DeleteIcon />
+        </MenuItem>
+      </Menu>
+    </div>
+  )
+}

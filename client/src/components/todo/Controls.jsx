@@ -5,27 +5,30 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
 import ToggleButton from '@mui/material/ToggleButton'
 import Button from '@mui/material/Button'
 
-import { deleteDone } from '../store/actions'
-import slice from '../store/slice'
+import { deleteDone } from '../../store/actions/todo'
+import slice from '../../store/store/slice-todo'
 
-import { ITEM_STATUS } from '../constants'
+import { ITEM_STATUS } from '../../constants'
 
 export default function Controls() {
   const dispatch = useDispatch()
 
-  const filter = useSelector(state => slice.selectors.selectFilter({ [slice.reducerPath]: state }))
-  const counters = useSelector(state =>
-    slice.selectors.selectCounters({ [slice.reducerPath]: state })
-  )
+  const filter = useSelector(state => slice.selectors.selectFilter(state))
+  const counters = useSelector(state => slice.selectors.selectCounters(state))
 
   const handleDeleteDone = () => {
     dispatch(deleteDone())
   }
 
-  const handleSetFilter = (ev, filter) => {
-    if (filter === null) return
+  const handleSetFilter = (ev, _filter) => {
+    if (_filter === null) return
 
-    dispatch(slice.actions.setFilter({ status: filter === false ? null : filter }))
+    dispatch(
+      slice.actions.setFilter({
+        status: _filter === false ? null : _filter,
+        pagination: { ...filter.pagination, page: 0 },
+      })
+    )
   }
 
   if (!counters.all) return null
@@ -44,11 +47,17 @@ export default function Controls() {
         value={filter.status === null ? false : filter.status}
         onChange={handleSetFilter}
       >
-        <ToggleButton value={false}>all</ToggleButton>
-        <ToggleButton value={ITEM_STATUS.DONE}>completed</ToggleButton>
-        <ToggleButton value={ITEM_STATUS.NOT_DONE}>active</ToggleButton>
+        <ToggleButton size="small" value={false}>
+          all
+        </ToggleButton>
+        <ToggleButton size="small" value={ITEM_STATUS.DONE}>
+          completed
+        </ToggleButton>
+        <ToggleButton size="small" value={ITEM_STATUS.NOT_DONE}>
+          active
+        </ToggleButton>
       </ToggleButtonGroupStyled>
-      <ClearAllButton variant="base" onClick={handleDeleteDone}>
+      <ClearAllButton variant="danger" onClick={handleDeleteDone}>
         clear completed
       </ClearAllButton>
     </Container>
@@ -61,8 +70,7 @@ const Container = styled.div`
   justify-content: space-between;
 
   padding: 8px 8px;
-
-  color: ${props => props.theme.palette.util.dark};
+  padding-top: 24px;
 `
 
 const ToggleButtonGroupStyled = styled(ToggleButtonGroup)`
@@ -71,9 +79,6 @@ const ToggleButtonGroupStyled = styled(ToggleButtonGroup)`
 
 const ClearAllButton = styled(Button)`
   font-weight: 800;
-  color: ${props => props.theme.palette.danger.main} !important;
 `
 
-const Counters = styled(Typography)`
-  color: ${props => props.theme.palette.util.green};
-`
+const Counters = styled(Typography)``

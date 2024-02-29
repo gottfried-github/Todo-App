@@ -2,8 +2,8 @@ import mongoose from 'mongoose'
 
 import Koa from 'koa'
 
-import { handleErrors, utils, parseBody, validateContentType } from './middleware/index.js'
-import router from './router.js'
+import { handleErrors, utils, parseBody, validateContentType } from './middleware/app.js'
+import router from './routers/index.js'
 
 async function main() {
   await mongoose.connect(process.env.DB_CONNECTION)
@@ -12,9 +12,10 @@ async function main() {
 
   app
     .use(async (ctx, next) => {
-      ctx.set('Access-Control-Allow-Origin', '*')
-      ctx.set('Access-Control-Allow-Headers', 'Content-Type')
+      ctx.set('Access-Control-Allow-Origin', ctx.header.origin || '*')
+      ctx.set('Access-Control-Allow-Headers', 'Content-Type, Authorization')
       ctx.set('Access-Control-Allow-Methods', 'PATCH, DELETE')
+      ctx.set('Access-Control-Allow-Credentials', 'true')
 
       await next()
     })
@@ -25,7 +26,7 @@ async function main() {
     .use(router.routes())
     .use(router.allowedMethods())
     .on('error', e => {
-      console.log(e)
+      console.log('error:', e)
     })
     .listen(process.env.HTTP_PORT, () => {
       console.log(`server is running at port ${process.env.HTTP_PORT}`)

@@ -3,20 +3,18 @@ import { useSelector, useDispatch } from 'react-redux'
 import styled from '@emotion/styled'
 import Typography from '@mui/material/Typography'
 
-import { getItems } from './store/actions'
-import slice from './store/slice'
+import { getItems } from './store/actions/todo'
+import slice from './store/store/slice-todo'
 
-import Form from './components/Form'
-import Controls from './components/Controls'
-import Items from './components/Items'
+import Form from './components/todo/Form'
+import Controls from './components/todo/Controls'
+import Items from './components/todo/Items'
 
 export default function App() {
   const dispatch = useDispatch()
 
-  const filter = useSelector(state => slice.selectors.selectFilter({ [slice.reducerPath]: state }))
-  const counters = useSelector(state =>
-    slice.selectors.selectCounters({ [slice.reducerPath]: state })
-  )
+  const filter = useSelector(state => slice.selectors.selectFilter(state))
+  const counters = useSelector(state => slice.selectors.selectCounters(state))
 
   useEffect(() => {
     dispatch(getItems())
@@ -50,15 +48,12 @@ const Container = styled.div`
   display: grid;
   grid-template-rows: auto auto auto minmax(150px, 1fr);
 
-  width: 850px;
-  max-height: 650px;
+  width: 100%;
+  height: 100vh;
 
   margin: auto;
   padding: 16px 45px;
+  padding-top: 65px;
 
   font-size: 0.875rem;
-
-  background-color: ${props => props.theme.palette.backgrounds.main};
-  border-radius: 12px;
-  box-shadow: 2px 4px 8px 0px ${props => props.theme.palette.util.shadow};
 `

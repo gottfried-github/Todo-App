@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose, { ObjectId } from 'mongoose'
 
 const schema = new mongoose.Schema(
   {
@@ -12,6 +12,11 @@ const schema = new mongoose.Schema(
       enum: [1, 2],
       default: 2,
       required: true,
+    },
+    userId: {
+      type: ObjectId,
+      required: true,
+      index: true,
     },
   },
   {
@@ -27,44 +32,6 @@ const schema = new mongoose.Schema(
     },
   }
 )
-
-schema.statics.getAll = async function (status, sort, pagination) {
-  const filter = {}
-
-  if (status) {
-    filter.status = status
-  }
-
-  let _sort = null
-
-  if (!sort || (_sort?.field && !_sort?.order) || (_sort?.order && !_sort?.field)) {
-    _sort = { createdAt: 1 }
-  } else {
-    _sort = { [sort.field]: sort.order }
-  }
-
-  let items = null
-  if (!pagination) {
-    items = await this.find(filter).sort(_sort)
-  } else {
-    items = await this.find(filter)
-      .sort(_sort)
-      .skip(pagination.page * pagination.pageSize)
-      .limit(pagination.pageSize)
-  }
-
-  const counters = {
-    all: await this.countDocuments(),
-    done: await this.countDocuments({ status: 1 }),
-    notDone: await this.countDocuments({ status: 2 }),
-  }
-
-  return { items, counters }
-}
-
-schema.statics.deleteDone = function () {
-  return this.deleteMany({ status: 1 })
-}
 
 const model = mongoose.model('Todo', schema)
 

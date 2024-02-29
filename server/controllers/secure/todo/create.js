@@ -1,10 +1,10 @@
 import mongoose from 'mongoose'
 
-import Todo from '../models/todo.js'
+import Todo from '../../../models/todo.js'
 
 export default async function create(ctx) {
   try {
-    const item = await Todo.create(ctx.request.body)
+    const item = await Todo.create({ ...ctx.request.body, userId: ctx.state.user.id })
 
     ctx.send(201, item)
   } catch (e) {
