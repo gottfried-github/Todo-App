@@ -19,9 +19,13 @@ export default async function refresh(ctx) {
       ctx.throw(401, 'refresh token is invalid')
     }
 
-    const accessToken = jwt.sign({ userName: user.userName }, process.env.JWT_ACCESS_SECRET, {
-      expiresIn: parseInt(process.env.JWT_ACCESS_EXPIRE),
-    })
+    const accessToken = jwt.sign(
+      { id: user._id, email: user.email },
+      process.env.JWT_ACCESS_SECRET,
+      {
+        expiresIn: parseInt(process.env.JWT_ACCESS_EXPIRE),
+      }
+    )
 
     ctx.send(200, { accessToken })
   })
