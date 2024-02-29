@@ -99,15 +99,8 @@ export const useProtected = () => {
   const token = useSelector(state => sliceAuth.selectors.selectToken(state))
 
   useEffect(() => {
+    // if empty token, refresh and if unauthorized, navigate away
     const handleEmptyToken = async () => {
-      if (token) {
-        if (!accessGranted) {
-          setAccessGranted(true)
-        }
-
-        return
-      }
-
       try {
         const res = await axios.get('/auth/refresh')
 
@@ -119,6 +112,14 @@ export const useProtected = () => {
 
         return navigate('/auth/signin')
       }
+    }
+
+    if (token) {
+      if (!accessGranted) {
+        setAccessGranted(true)
+      }
+
+      return
     }
 
     handleEmptyToken()
