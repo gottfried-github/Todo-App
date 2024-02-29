@@ -1,8 +1,8 @@
 import Todo from '../models/todo.js'
 
 export default {
-  getAll: async (status, sort, pagination) => {
-    const filter = {}
+  getAll: async (userId, status, sort, pagination) => {
+    const filter = { userId }
 
     if (status) {
       filter.status = status
@@ -20,14 +20,14 @@ export default {
     }
 
     const counters = {
-      all: await Todo.countDocuments(),
-      done: await Todo.countDocuments({ status: 1 }),
-      notDone: await Todo.countDocuments({ status: 2 }),
+      all: await Todo.countDocuments({ userId }),
+      done: await Todo.countDocuments({ status: 1, userId }),
+      notDone: await Todo.countDocuments({ status: 2, userId }),
     }
 
     return { items, counters }
   },
-  deleteDone: async () => {
-    return Todo.deleteMany({ status: 1 })
+  deleteDone: async userId => {
+    return Todo.deleteMany({ status: 1, userId })
   },
 }

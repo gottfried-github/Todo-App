@@ -7,8 +7,11 @@ export default async function getAll(ctx) {
     sort[ctx.query.sortField] = parseInt(ctx.query.sortOrder)
   }
 
+  console.log('todo/getAll controller, ctx.state.user:', ctx.state.user)
+
   try {
     const res = await TodoService.getAll(
+      ctx.state.user.id,
       ctx.query?.status ? parseInt(ctx.query.status) : null,
       sort,
       ctx.query?.page && ctx.query?.pageSize

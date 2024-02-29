@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose, { ObjectId } from 'mongoose'
 
 const schema = new mongoose.Schema(
   {
@@ -12,6 +12,11 @@ const schema = new mongoose.Schema(
       enum: [1, 2],
       default: 2,
       required: true,
+    },
+    userId: {
+      type: ObjectId,
+      required: true,
+      index: true,
     },
   },
   {
