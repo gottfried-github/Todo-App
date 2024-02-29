@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from '@emotion/styled'
-import Paper from '../AuthPaper'
 import Button from '../AuthButton'
 import TextField from '../AuthTextField'
 import Form from '../AuthForm'
@@ -56,112 +55,110 @@ export default function Signup() {
   }
 
   return (
-    <Paper elevation={8}>
-      <Form onSubmit={submitCb}>
-        <TextFieldStyled
-          variant="filled"
-          label="Username"
-          placeholder={'Ed'}
-          defaultValue={userName || ''}
-          error={
-            !!signup.error?.errors?.userName || (userName ? !!validators.userName(userName) : false)
+    <Form onSubmit={submitCb}>
+      <TextFieldStyled
+        variant="filled"
+        label="Username"
+        placeholder={'Ed'}
+        defaultValue={userName || ''}
+        error={
+          !!signup.error?.errors?.userName || (userName ? !!validators.userName(userName) : false)
+        }
+        helperText={
+          signup.error?.errors?.userName?.message ||
+          (userName ? validators.userName(userName) : null)
+        }
+        onInput={ev => {
+          if (signup.status === 'error') {
+            signup.reset()
           }
-          helperText={
-            signup.error?.errors?.userName?.message ||
-            (userName ? validators.userName(userName) : null)
-          }
-          onInput={ev => {
-            if (signup.status === 'error') {
-              signup.reset()
-            }
 
-            setUserName(ev.target.value)
-          }}
-        />
-        <TextFieldStyled
-          variant="filled"
-          label="Email"
-          placeholder="ed@mail"
-          defaultValue={email || ''}
-          error={!!signup.error?.errors?.email || (email ? !!validators.email(email) : false)}
-          helperText={
-            signup.error?.errors?.email?.message || (email ? validators.email(email) : null)
+          setUserName(ev.target.value)
+        }}
+      />
+      <TextFieldStyled
+        variant="filled"
+        label="Email"
+        placeholder="ed@mail"
+        defaultValue={email || ''}
+        error={!!signup.error?.errors?.email || (email ? !!validators.email(email) : false)}
+        helperText={
+          signup.error?.errors?.email?.message || (email ? validators.email(email) : null)
+        }
+        onInput={ev => {
+          if (signup.status === 'error') {
+            signup.reset()
           }
-          onInput={ev => {
-            if (signup.status === 'error') {
-              signup.reset()
-            }
 
-            setEmail(ev.target.value)
-          }}
-        />
-        <TextFieldStyled
-          variant="filled"
-          label="First Name"
-          placeholder="Ed"
-          defaultValue={firstName || ''}
-          error={
-            !!signup.error?.errors?.firstName ||
-            (firstName ? !!validators.firstName(firstName) : false)
+          setEmail(ev.target.value)
+        }}
+      />
+      <TextFieldStyled
+        variant="filled"
+        label="First Name"
+        placeholder="Ed"
+        defaultValue={firstName || ''}
+        error={
+          !!signup.error?.errors?.firstName ||
+          (firstName ? !!validators.firstName(firstName) : false)
+        }
+        helperText={
+          signup.error?.errors?.firstName?.message ||
+          (firstName ? validators.firstName(firstName) : null)
+        }
+        onInput={ev => {
+          if (signup.status === 'error') {
+            signup.reset()
           }
-          helperText={
-            signup.error?.errors?.firstName?.message ||
-            (firstName ? validators.firstName(firstName) : null)
-          }
-          onInput={ev => {
-            if (signup.status === 'error') {
-              signup.reset()
-            }
 
-            setFirstName(ev.target.value)
-          }}
-        />
-        <TextFieldStyled
-          variant="filled"
-          label="Last Name"
-          placeholder="Doe"
-          defaultValue={lastName || ''}
-          error={
-            !!signup.error?.errors?.lastName || (lastName ? !!validators.lastName(lastName) : false)
+          setFirstName(ev.target.value)
+        }}
+      />
+      <TextFieldStyled
+        variant="filled"
+        label="Last Name"
+        placeholder="Doe"
+        defaultValue={lastName || ''}
+        error={
+          !!signup.error?.errors?.lastName || (lastName ? !!validators.lastName(lastName) : false)
+        }
+        helperText={
+          signup.error?.errors?.lastName?.message ||
+          (lastName ? validators.lastName(lastName) : null)
+        }
+        onInput={ev => {
+          if (signup.status === 'error') {
+            signup.reset()
           }
-          helperText={
-            signup.error?.errors?.lastName?.message ||
-            (lastName ? validators.lastName(lastName) : null)
-          }
-          onInput={ev => {
-            if (signup.status === 'error') {
-              signup.reset()
-            }
 
-            setLastName(ev.target.value)
-          }}
-        />
-        <TextFieldStyled
-          variant="filled"
-          label="Password"
-          type="password"
-          defaultValue={password || ''}
-          error={
-            !!signup.error?.errors?.password || (password ? !!validators.password(password) : false)
+          setLastName(ev.target.value)
+        }}
+      />
+      <TextFieldStyled
+        variant="filled"
+        label="Password"
+        type="password"
+        defaultValue={password || ''}
+        error={
+          !!signup.error?.errors?.password || (password ? !!validators.password(password) : false)
+        }
+        helperText={
+          signup.error?.errors?.password?.message ||
+          (password ? validators.password(password) : null)
+        }
+        onInput={ev => {
+          if (signup.status === 'error') {
+            signup.reset()
           }
-          helperText={
-            signup.error?.errors?.password?.message ||
-            (password ? validators.password(password) : null)
-          }
-          onInput={ev => {
-            if (signup.status === 'error') {
-              signup.reset()
-            }
 
-            setPassword(ev.target.value)
-          }}
-        />
+          setPassword(ev.target.value)
+        }}
+      />
 
-        <Button type="submit" variant="contained">
-          sign up
-        </Button>
-      </Form>
-    </Paper>
+      <Button type="submit" variant="contained">
+        sign up
+      </Button>
+    </Form>
   )
 }
 

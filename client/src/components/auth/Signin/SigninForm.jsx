@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from '@emotion/styled'
-import Paper from '../AuthPaper'
 import Button from '../AuthButton'
 import TextField from '../AuthTextField'
 import Form from '../AuthForm'
@@ -40,55 +39,53 @@ export default function Signup() {
   }
 
   return (
-    <Paper elevation={8}>
-      <Form onSubmit={submitCb}>
-        <TextFieldStyled
-          variant="filled"
-          label="Username or Email"
-          placeholder={'ed@mail'}
-          defaultValue={identifier || ''}
-          error={
-            !!signin.error?.errors?.identifier ||
-            (identifier ? !!validators.identifier(identifier) : false)
+    <Form onSubmit={submitCb}>
+      <TextFieldStyled
+        variant="filled"
+        label="Username or Email"
+        placeholder={'ed@mail'}
+        defaultValue={identifier || ''}
+        error={
+          !!signin.error?.errors?.identifier ||
+          (identifier ? !!validators.identifier(identifier) : false)
+        }
+        helperText={
+          signin.error?.errors?.identifier?.message ||
+          (identifier ? validators.identifier(identifier) : null)
+        }
+        onInput={ev => {
+          if (signin.status === 'error') {
+            signin.reset()
           }
-          helperText={
-            signin.error?.errors?.identifier?.message ||
-            (identifier ? validators.identifier(identifier) : null)
-          }
-          onInput={ev => {
-            if (signin.status === 'error') {
-              signin.reset()
-            }
 
-            setIdentifier(ev.target.value)
-          }}
-        />
-        <TextFieldStyled
-          variant="filled"
-          label="Password"
-          type="password"
-          defaultValue={password || ''}
-          error={
-            !!signin.error?.errors?.password || (password ? !!validators.password(password) : false)
+          setIdentifier(ev.target.value)
+        }}
+      />
+      <TextFieldStyled
+        variant="filled"
+        label="Password"
+        type="password"
+        defaultValue={password || ''}
+        error={
+          !!signin.error?.errors?.password || (password ? !!validators.password(password) : false)
+        }
+        helperText={
+          signin.error?.errors?.password?.message ||
+          (password ? validators.password(password) : null)
+        }
+        onInput={ev => {
+          if (signin.status === 'error') {
+            signin.reset()
           }
-          helperText={
-            signin.error?.errors?.password?.message ||
-            (password ? validators.password(password) : null)
-          }
-          onInput={ev => {
-            if (signin.status === 'error') {
-              signin.reset()
-            }
 
-            setPassword(ev.target.value)
-          }}
-        />
+          setPassword(ev.target.value)
+        }}
+      />
 
-        <Button type="submit" variant="contained">
-          sign in
-        </Button>
-      </Form>
-    </Paper>
+      <Button type="submit" variant="contained">
+        sign in
+      </Button>
+    </Form>
   )
 }
 
