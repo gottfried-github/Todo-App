@@ -20,7 +20,7 @@ export default async function signin(ctx) {
     ctx.throw(400, null, { errors: { password: { message: 'incorrect password' } } })
   }
 
-  const accessToken = jwt.sign({ userName: user.userName }, process.env.JWT_ACCESS_SECRET, {
+  const accessToken = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_ACCESS_SECRET, {
     expiresIn: parseInt(process.env.JWT_ACCESS_EXPIRE),
   })
 
