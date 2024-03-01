@@ -7,8 +7,6 @@ import Router from './src/router'
 import store from './src/store/store/store'
 import theme from './src/theme/index'
 
-import App from './src/App'
-
 document.addEventListener('DOMContentLoaded', () => {
   const container = document.querySelector('main')
   const root = createRoot(container)

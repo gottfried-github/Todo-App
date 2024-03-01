@@ -6,7 +6,7 @@ import Button from '@mui/material/Button'
 
 import { signout as actionSignout } from '../store/actions/auth'
 
-import App from '../App'
+import Todos from './todo/Todos'
 
 export default function Cabinet() {
   const dispatch = useDispatch()
@@ -25,7 +25,7 @@ export default function Cabinet() {
           </Button>
         </ToolBarStyled>
       </AppBarStyled>
-      <App />
+      <Todos />
     </>
   )
 }

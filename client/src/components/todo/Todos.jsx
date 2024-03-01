@@ -3,12 +3,12 @@ import { useSelector, useDispatch } from 'react-redux'
 import styled from '@emotion/styled'
 import Typography from '@mui/material/Typography'
 
-import { getItems } from './store/actions/todo'
-import slice from './store/store/slice-todo'
+import { getItems } from '../../store/actions/todo'
+import slice from '../../store/store/slice-todo'
 
-import Form from './components/todo/Form'
-import Controls from './components/todo/Controls'
-import Items from './components/todo/Items'
+import Form from './Form'
+import Controls from './Controls'
+import Items from './Items'
 
 export default function App() {
   const dispatch = useDispatch()
