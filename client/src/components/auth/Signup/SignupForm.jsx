@@ -19,14 +19,12 @@ export default function Signup() {
   const [password, setPassword] = useState('')
 
   useEffect(() => {
-    console.log('useEffect on error, error:', error)
-
     return () => {
       if (error) {
         dispatch(sliceAuth.actions.unsetErrorSignup())
       }
     }
-  }, [error])
+  }, [error, dispatch])
 
   const validators = {
     userName: v => (v.length >= 2 ? null : 'field must be at least 2 characters long'),

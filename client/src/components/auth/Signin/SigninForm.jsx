@@ -1,26 +1,27 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from '@emotion/styled'
 import Button from '../AuthButton'
 import TextField from '../AuthTextField'
 import Form from '../AuthForm'
 
-import { useSignin } from '../../../hooks/auth'
+import { signin as actionSignin } from '../../../store/actions/auth'
+import sliceAuth from '../../../store/store/slice-auth'
 
 export default function Signup() {
-  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const error = useSelector(state => sliceAuth.selectors.selectErrorSignin(state))
 
   const [identifier, setIdentifier] = useState('')
   const [password, setPassword] = useState('')
 
-  const signin = useSignin()
-
   useEffect(() => {
-    console.log('useEffect on signin, signin:', signin)
-    if (signin.status === 'success') {
-      navigate('/cabinet')
+    return () => {
+      if (error) {
+        dispatch(sliceAuth.actions.unsetErrorSignin())
+      }
     }
-  }, [navigate, signin])
+  }, [error, dispatch])
 
   const validators = {
     identifier: v => (v.length >= 2 ? null : 'field must be at least 2 characters long'),
@@ -32,10 +33,12 @@ export default function Signup() {
 
     if (validators.identifier(identifier) || validators.password(password)) return
 
-    signin.send({
-      identifier,
-      password,
-    })
+    dispatch(
+      actionSignin({
+        identifier,
+        password,
+      })
+    )
   }
 
   return (
@@ -46,16 +49,15 @@ export default function Signup() {
         placeholder={'ed@mail'}
         defaultValue={identifier || ''}
         error={
-          !!signin.error?.errors?.identifier ||
-          (identifier ? !!validators.identifier(identifier) : false)
+          !!error?.errors?.identifier || (identifier ? !!validators.identifier(identifier) : false)
         }
         helperText={
-          signin.error?.errors?.identifier?.message ||
+          error?.errors?.identifier?.message ||
           (identifier ? validators.identifier(identifier) : null)
         }
         onInput={ev => {
-          if (signin.status === 'error') {
-            signin.reset()
+          if (error) {
+            dispatch(sliceAuth.actions.unsetErrorSignin())
           }
 
           setIdentifier(ev.target.value)
@@ -66,16 +68,13 @@ export default function Signup() {
         label="Password"
         type="password"
         defaultValue={password || ''}
-        error={
-          !!signin.error?.errors?.password || (password ? !!validators.password(password) : false)
-        }
+        error={!!error?.errors?.password || (password ? !!validators.password(password) : false)}
         helperText={
-          signin.error?.errors?.password?.message ||
-          (password ? validators.password(password) : null)
+          error?.errors?.password?.message || (password ? validators.password(password) : null)
         }
         onInput={ev => {
-          if (signin.status === 'error') {
-            signin.reset()
+          if (error) {
+            dispatch(sliceAuth.actions.unsetErrorSignin())
           }
 
           setPassword(ev.target.value)
