@@ -1,14 +1,16 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from '@emotion/styled'
 import Button from '../AuthButton'
 import TextField from '../AuthTextField'
 import Form from '../AuthForm'
 
-import { useSignup } from '../../../hooks/auth'
+import { signup as actionSignup } from '../../../store/actions/auth'
+import sliceAuth from '../../../store/store/slice-auth'
 
 export default function Signup() {
-  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const error = useSelector(state => sliceAuth.selectors.selectErrorSignup(state))
 
   const [userName, setUserName] = useState('')
   const [email, setEmail] = useState('')
@@ -16,14 +18,15 @@ export default function Signup() {
   const [lastName, setLastName] = useState('')
   const [password, setPassword] = useState('')
 
-  const signup = useSignup()
-
   useEffect(() => {
-    console.log('useEffect on signup, signup:', signup)
-    if (signup.status === 'success') {
-      navigate('/cabinet')
+    console.log('useEffect on error, error:', error)
+
+    return () => {
+      if (error) {
+        dispatch(sliceAuth.actions.unsetErrorSignup())
+      }
     }
-  }, [navigate, signup])
+  }, [error])
 
   const validators = {
     userName: v => (v.length >= 2 ? null : 'field must be at least 2 characters long'),
@@ -45,13 +48,15 @@ export default function Signup() {
     )
       return
 
-    signup.send({
-      userName,
-      email,
-      firstName,
-      lastName,
-      password,
-    })
+    dispatch(
+      actionSignup({
+        userName,
+        email,
+        firstName,
+        lastName,
+        password,
+      })
+    )
   }
 
   return (
@@ -61,16 +66,13 @@ export default function Signup() {
         label="Username"
         placeholder={'Ed'}
         defaultValue={userName || ''}
-        error={
-          !!signup.error?.errors?.userName || (userName ? !!validators.userName(userName) : false)
-        }
+        error={!!error?.errors?.userName || (userName ? !!validators.userName(userName) : false)}
         helperText={
-          signup.error?.errors?.userName?.message ||
-          (userName ? validators.userName(userName) : null)
+          error?.errors?.userName?.message || (userName ? validators.userName(userName) : null)
         }
         onInput={ev => {
-          if (signup.status === 'error') {
-            signup.reset()
+          if (error) {
+            dispatch(sliceAuth.actions.unsetErrorSignup())
           }
 
           setUserName(ev.target.value)
@@ -81,13 +83,11 @@ export default function Signup() {
         label="Email"
         placeholder="ed@mail"
         defaultValue={email || ''}
-        error={!!signup.error?.errors?.email || (email ? !!validators.email(email) : false)}
-        helperText={
-          signup.error?.errors?.email?.message || (email ? validators.email(email) : null)
-        }
+        error={!!error?.errors?.email || (email ? !!validators.email(email) : false)}
+        helperText={error?.errors?.email?.message || (email ? validators.email(email) : null)}
         onInput={ev => {
-          if (signup.status === 'error') {
-            signup.reset()
+          if (error) {
+            dispatch(sliceAuth.actions.unsetErrorSignup())
           }
 
           setEmail(ev.target.value)
@@ -99,16 +99,14 @@ export default function Signup() {
         placeholder="Ed"
         defaultValue={firstName || ''}
         error={
-          !!signup.error?.errors?.firstName ||
-          (firstName ? !!validators.firstName(firstName) : false)
+          !!error?.errors?.firstName || (firstName ? !!validators.firstName(firstName) : false)
         }
         helperText={
-          signup.error?.errors?.firstName?.message ||
-          (firstName ? validators.firstName(firstName) : null)
+          error?.errors?.firstName?.message || (firstName ? validators.firstName(firstName) : null)
         }
         onInput={ev => {
-          if (signup.status === 'error') {
-            signup.reset()
+          if (error) {
+            dispatch(sliceAuth.actions.unsetErrorSignup())
           }
 
           setFirstName(ev.target.value)
@@ -119,16 +117,13 @@ export default function Signup() {
         label="Last Name"
         placeholder="Doe"
         defaultValue={lastName || ''}
-        error={
-          !!signup.error?.errors?.lastName || (lastName ? !!validators.lastName(lastName) : false)
-        }
+        error={!!error?.errors?.lastName || (lastName ? !!validators.lastName(lastName) : false)}
         helperText={
-          signup.error?.errors?.lastName?.message ||
-          (lastName ? validators.lastName(lastName) : null)
+          error?.errors?.lastName?.message || (lastName ? validators.lastName(lastName) : null)
         }
         onInput={ev => {
-          if (signup.status === 'error') {
-            signup.reset()
+          if (error) {
+            dispatch(sliceAuth.actions.unsetErrorSignup())
           }
 
           setLastName(ev.target.value)
@@ -139,16 +134,13 @@ export default function Signup() {
         label="Password"
         type="password"
         defaultValue={password || ''}
-        error={
-          !!signup.error?.errors?.password || (password ? !!validators.password(password) : false)
-        }
+        error={!!error?.errors?.password || (password ? !!validators.password(password) : false)}
         helperText={
-          signup.error?.errors?.password?.message ||
-          (password ? validators.password(password) : null)
+          error?.errors?.password?.message || (password ? validators.password(password) : null)
         }
         onInput={ev => {
-          if (signup.status === 'error') {
-            signup.reset()
+          if (error) {
+            dispatch(sliceAuth.actions.unsetErrorSignup())
           }
 
           setPassword(ev.target.value)
