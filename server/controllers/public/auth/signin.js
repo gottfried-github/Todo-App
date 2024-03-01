@@ -24,7 +24,7 @@ export default async function signin(ctx) {
     expiresIn: parseInt(process.env.JWT_ACCESS_EXPIRE),
   })
 
-  const refreshToken = jwt.sign({}, process.env.JWT_REFRESH_SECRET, {
+  const refreshToken = jwt.sign({ id: user._id }, process.env.JWT_REFRESH_SECRET, {
     expiresIn: parseInt(process.env.JWT_REFRESH_EXPIRE),
   })
 
