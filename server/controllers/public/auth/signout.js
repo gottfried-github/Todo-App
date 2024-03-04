@@ -27,7 +27,7 @@ export default async function signout(ctx) {
     }
 
     // Delete refreshToken in the database
-    user.refreshToken = ''
+    user.refreshToken = null
 
     try {
       await user.save()

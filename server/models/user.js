@@ -30,8 +30,13 @@ const schema = new mongoose.Schema(
     },
     password: { type: Buffer, required: true },
     refreshToken: {
-      type: String,
-      maxLength: 1000,
+      token: {
+        type: String,
+        maxLength: 1000,
+      },
+      createdAt: {
+        type: Date,
+      },
     },
   },
   {
