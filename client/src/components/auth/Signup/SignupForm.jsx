@@ -60,7 +60,7 @@ export default function Signup() {
   return (
     <Form onSubmit={submitCb}>
       <TextFieldStyled
-        variant="filled"
+        variant="outlined"
         fullWidth
         label="Username"
         placeholder={'Ed'}
@@ -78,7 +78,7 @@ export default function Signup() {
         }}
       />
       <TextFieldStyled
-        variant="filled"
+        variant="outlined"
         fullWidth
         label="Email"
         placeholder="ed@mail"
@@ -94,7 +94,7 @@ export default function Signup() {
         }}
       />
       <TextFieldStyled
-        variant="filled"
+        variant="outlined"
         fullWidth
         label="First Name"
         placeholder="Ed"
@@ -114,7 +114,7 @@ export default function Signup() {
         }}
       />
       <TextFieldStyled
-        variant="filled"
+        variant="outlined"
         fullWidth
         label="Last Name"
         placeholder="Doe"
@@ -132,7 +132,7 @@ export default function Signup() {
         }}
       />
       <TextFieldStyled
-        variant="filled"
+        variant="outlined"
         fullWidth
         label="Password"
         type="password"
