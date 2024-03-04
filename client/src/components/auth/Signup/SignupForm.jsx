@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import styled from '@emotion/styled'
 import TextField from '@mui/material/TextField'
-import Button from '../AuthButton'
+import Button from '@mui/material/Button'
 import Form from '../AuthForm'
 
 import { signup as actionSignup } from '../../../store/actions/auth'
@@ -149,9 +150,15 @@ export default function Signup() {
         }}
       />
 
-      <Button type="submit" variant="contained">
+      <ButtonStyled type="submit" variant="contained">
         sign up
-      </Button>
+      </ButtonStyled>
     </Form>
   )
 }
+
+const ButtonStyled = styled(Button)`
+  margin-top: 18px;
+`
+
+export { ButtonStyled as Button }

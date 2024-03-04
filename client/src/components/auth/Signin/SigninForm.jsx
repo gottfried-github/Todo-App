@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import TextField from '@mui/material/TextField'
-import Button from '../AuthButton'
+import { Button } from '../Signup/SignupForm'
 import Form from '../AuthForm'
 
 import { signin as actionSignin } from '../../../store/actions/auth'
