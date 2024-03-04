@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from '@emotion/styled'
 import Button from '../AuthButton'
-import TextField from '../AuthTextField'
+import TextField from '@mui/material/TextField'
 import Form from '../AuthForm'
 
 import { signin as actionSignin } from '../../../store/actions/auth'
@@ -45,6 +45,7 @@ export default function Signup() {
     <Form onSubmit={submitCb}>
       <TextFieldStyled
         variant="filled"
+        fullWidth
         label="Username or Email"
         placeholder={'ed@mail'}
         defaultValue={identifier || ''}
@@ -65,6 +66,7 @@ export default function Signup() {
       />
       <TextFieldStyled
         variant="filled"
+        fullWidth
         label="Password"
         type="password"
         defaultValue={password || ''}
