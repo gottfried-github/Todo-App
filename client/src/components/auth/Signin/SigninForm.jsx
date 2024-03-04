@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import styled from '@emotion/styled'
-import Button from '../AuthButton'
 import TextField from '@mui/material/TextField'
+import Button from '../AuthButton'
 import Form from '../AuthForm'
 
 import { signin as actionSignin } from '../../../store/actions/auth'
@@ -43,7 +42,7 @@ export default function Signup() {
 
   return (
     <Form onSubmit={submitCb}>
-      <TextFieldStyled
+      <TextField
         variant="outlined"
         fullWidth
         label="Username or Email"
@@ -64,7 +63,7 @@ export default function Signup() {
           setIdentifier(ev.target.value)
         }}
       />
-      <TextFieldStyled
+      <TextField
         variant="outlined"
         fullWidth
         label="Password"
@@ -89,7 +88,3 @@ export default function Signup() {
     </Form>
   )
 }
-
-const TextFieldStyled = styled(TextField)`
-  display: block;
-`

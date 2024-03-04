@@ -30,5 +30,12 @@ export default createTheme({
         },
       ],
     },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          display: 'block',
+        },
+      },
+    },
   },
 })
