@@ -6,7 +6,7 @@ import sliceAuth from './store/store/slice-auth'
 import SignupComponent from './components/auth/Signup/Signup'
 import SigninComponent from './components/auth/Signin/Signin'
 import AuthPage from './pages/Auth'
-import Cabinet from './components/Cabinet'
+import Cabinet from './pages/Cabinet'
 
 const routerPublic = createBrowserRouter([
   {

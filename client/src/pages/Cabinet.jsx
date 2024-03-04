@@ -6,7 +6,7 @@ import Button from '@mui/material/Button'
 
 import { signout as actionSignout } from '../store/actions/auth'
 
-import Todos from './todo/Todos'
+import Todos from '../components/todo/Todos'
 
 export default function Cabinet() {
   const dispatch = useDispatch()
