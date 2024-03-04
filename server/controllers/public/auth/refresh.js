@@ -9,14 +9,20 @@ export default async function refresh(ctx) {
 
   const refreshToken = ctx.cookies.get('jwt')
 
-  const user = await User.findOne({ refreshToken })
-  if (!user) {
-    ctx.throw(403, 'no user matches the refresh token')
-  }
+  try {
+    const tokenDecoded = await new Promise((resolve, reject) => {
+      jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, async (e, token) => {
+        if (e) {
+          reject(e)
+        }
 
-  jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, e => {
-    if (e) {
-      ctx.throw(401, 'refresh token is invalid')
+        resolve(token)
+      })
+    })
+
+    const user = await User.findById(tokenDecoded.id)
+    if (!user) {
+      ctx.throw(403, 'no user matches the refresh token')
     }
 
     const accessToken = jwt.sign(
@@ -28,5 +34,7 @@ export default async function refresh(ctx) {
     )
 
     ctx.send(200, { accessToken })
-  })
+  } catch (e) {
+    ctx.throw(401, 'refresh token is invalid')
+  }
 }
