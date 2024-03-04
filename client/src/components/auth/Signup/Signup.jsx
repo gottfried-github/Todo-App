@@ -1,14 +1,13 @@
 import { Link } from 'react-router-dom'
 import styled from '@emotion/styled'
 import Typography from '@mui/material/Typography'
-import BoxLayout from '../BoxLayout'
-import Paper from '../AuthPaper'
+import Paper from '@mui/material/Paper'
 import SignupForm from './SignupForm'
 
 export default function Signup() {
   return (
     <BoxLayout>
-      <Paper elevation={8}>
+      <Paper variant="auth">
         <SignupForm />
         <Typography variant="body1" align="center">
           Already have an account? <LinkStyled to="/auth/signin">Sign in</LinkStyled>
@@ -25,4 +24,8 @@ const LinkStyled = styled(Link)`
   text-decoration: none;
 `
 
-export { LinkStyled as Link }
+const BoxLayout = styled.div`
+  margin: auto;
+`
+
+export { LinkStyled as Link, BoxLayout }

@@ -37,5 +37,20 @@ export default createTheme({
         },
       },
     },
+    MuiPaper: {
+      variants: [
+        {
+          props: { variant: 'auth' },
+          style: data => {
+            return {
+              width: '500px',
+              padding: '35px 40px',
+              paddingTop: '50px',
+              boxShadow: data.theme.shadows[data.ownerState.elevation.toString()],
+            }
+          },
+        },
+      ],
+    },
   },
 })
