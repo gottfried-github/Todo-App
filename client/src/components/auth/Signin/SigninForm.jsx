@@ -37,12 +37,12 @@ export default function Signin() {
         identifier: '',
         password: '',
       }}
-      validate={values => {
+      validate={async values => {
         const errors = {}
         let schemaErrors = null
 
         try {
-          schema.validateSync(values, { abortEarly: false, stripUnknown: true })
+          await schema.validate(values, { abortEarly: false, stripUnknown: true })
         } catch (e) {
           schemaErrors = e
         }
