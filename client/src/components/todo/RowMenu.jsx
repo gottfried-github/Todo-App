@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import styled from '@emotion/styled'
 import ButtonBase from '@mui/material/ButtonBase'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
@@ -46,6 +47,7 @@ export default function RowMenu({ handleEdit, handleDelete }) {
           }}
         >
           <EditIcon />
+          <MenuItemText>Edit</MenuItemText>
         </MenuItem>
         <MenuItem
           onClick={() => {
@@ -53,9 +55,13 @@ export default function RowMenu({ handleEdit, handleDelete }) {
             handleClose()
           }}
         >
-          <DeleteIcon />
+          <DeleteIcon /> <MenuItemText>Delete</MenuItemText>
         </MenuItem>
       </Menu>
     </div>
   )
 }
+
+const MenuItemText = styled.span`
+  margin-left: 6px;
+`
