@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Form, Field } from 'react-final-form'
 import TextField from '@mui/material/TextField'
@@ -12,9 +12,6 @@ export default function Signin() {
   const dispatch = useDispatch()
   const error = useSelector(state => sliceAuth.selectors.selectErrorSignin(state))
 
-  const [identifier, setIdentifier] = useState('')
-  const [password, setPassword] = useState('')
-
   useEffect(() => {
     return () => {
       if (error) {
@@ -23,21 +20,8 @@ export default function Signin() {
     }
   }, [error, dispatch])
 
-  const validators = {
-    identifier: v => (v.length >= 2 ? null : 'field must be at least 2 characters long'),
-    password: v => (v.length >= 8 ? null : 'field must be at least 8 characters long'),
-  }
-
   const submitCb = values => {
-    console.log('submitCb, values:', values)
-    // ev.preventDefault()
-    // if (validators.identifier(identifier) || validators.password(password)) return
-    // dispatch(
-    //   actionSignin({
-    //     identifier,
-    //     password,
-    //   })
-    // )
+    dispatch(actionSignin(values))
   }
 
   return (
@@ -48,8 +32,6 @@ export default function Signin() {
         password: '',
       }}
       validate={values => {
-        console.log('Form, validate, values:', values)
-
         const errors = {}
 
         if (!values.identifier) {
@@ -67,8 +49,6 @@ export default function Signin() {
         if (values.password?.length < 8) {
           errors.password = 'password must have at least 8 characters'
         }
-
-        console.log('Form, validate, errors:', errors)
 
         return errors
       }}
