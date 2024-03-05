@@ -159,7 +159,7 @@ export default function Items() {
       field: 'options',
       headerName: 'Options',
       sortable: false,
-      width: 150,
+      width: 180,
       renderCell: params => {
         if (params.row.id !== editingId) {
           return (
@@ -176,9 +176,9 @@ export default function Items() {
         }
 
         return (
-          <>
+          <ItemMenuButtonsContainer>
             <Button
-              variant="filled"
+              variant="ordinary"
               onClick={() => {
                 handleNameSubmit()
                 handleEdit(params.row.id)
@@ -187,7 +187,7 @@ export default function Items() {
               Submit
             </Button>
             <Button
-              variant="filled"
+              variant="ordinary"
               onClick={() => {
                 handleNameChange(params.row.name)
                 handleEdit(params.row.id)
@@ -195,7 +195,7 @@ export default function Items() {
             >
               Cancel
             </Button>
-          </>
+          </ItemMenuButtonsContainer>
         )
       },
     },
@@ -263,4 +263,9 @@ const ItemsPlaceholderDiv = styled.div`
 
   text-align: center;
   line-height: 40px;
+`
+
+const ItemMenuButtonsContainer = styled.div`
+  display: flex;
+  column-gap: 6px;
 `

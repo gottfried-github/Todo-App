@@ -60,6 +60,23 @@ export default createTheme({
           },
         },
         {
+          props: { variant: 'ordinary' },
+          style: data => {
+            return {
+              backgroundColor: palette.custom.main,
+              color: palette.custom.textMain,
+              border: 'none',
+              borderRadius: '12px',
+              textTransform: 'capitalize',
+              fontSize: data.theme.typography.body2.fontSize,
+              '&:hover': {
+                backgroundColor: palette.custom.dark,
+                color: palette.custom.textDark,
+              },
+            }
+          },
+        },
+        {
           props: { variant: 'danger' },
           style: {
             color: `${palette.util.red}`,
