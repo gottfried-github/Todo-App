@@ -16,7 +16,7 @@ export default function Cabinet() {
       <AppBarStyled>
         <ToolBarStyled>
           <Button
-            variant="filled"
+            variant="app-bar"
             onClick={() => {
               dispatch(actionSignout())
             }}
@@ -33,6 +33,7 @@ export default function Cabinet() {
 const AppBarStyled = styled(AppBar)`
   align-items: flex-end;
   padding: 0 45px;
+  background-color: ${props => props.theme.palette.custom.dark};
 `
 
 const ToolBarStyled = styled(ToolBar)`

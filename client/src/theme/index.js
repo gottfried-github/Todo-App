@@ -43,6 +43,23 @@ export default createTheme({
           },
         },
         {
+          props: { variant: 'app-bar' },
+          style: data => {
+            return {
+              backgroundColor: 'transparent',
+              color: palette.custom.textDark,
+              border: 'none',
+              borderRadius: '12px',
+              textTransform: 'capitalize',
+              fontSize: data.theme.typography.body2.fontSize,
+              '&:hover': {
+                backgroundColor: palette.custom.main,
+                color: palette.custom.textMain,
+              },
+            }
+          },
+        },
+        {
           props: { variant: 'danger' },
           style: {
             color: `${palette.util.red}`,
