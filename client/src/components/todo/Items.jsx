@@ -3,20 +3,14 @@ import { useSelector, useDispatch } from 'react-redux'
 import styled from '@emotion/styled'
 import { format } from 'date-fns'
 
-import ButtonBase from '@mui/material/ButtonBase'
 import TextField from '@mui/material/TextField'
 import Checkbox from '@mui/material/Checkbox'
-import Menu from '@mui/material/Menu'
-import MenuItem from '@mui/material/MenuItem'
 import { DataGrid, useGridApiRef } from '@mui/x-data-grid'
-
-import EditIcon from '@mui/icons-material/Edit'
-import DeleteIcon from '@mui/icons-material/Delete'
-import MoreVertIcon from '@mui/icons-material/MoreVert'
 
 import { ITEM_STATUS } from '../../constants'
 import { updateStatus, updateName, deleteOne } from '../../store/actions/todo'
 import slice from '../../store/store/slice-todo'
+import RowMenu from './RowMenu'
 
 export default function Items() {
   const dispatch = useDispatch()
@@ -231,57 +225,3 @@ const ItemsPlaceholderDiv = styled.div`
   text-align: center;
   line-height: 40px;
 `
-
-function RowMenu({ handleEdit, handleDelete }) {
-  const [anchorEl, setAnchorEl] = useState(null)
-
-  const open = Boolean(anchorEl)
-
-  const handleClick = event => {
-    setAnchorEl(event.currentTarget)
-  }
-
-  const handleClose = () => {
-    setAnchorEl(null)
-  }
-
-  return (
-    <div>
-      <ButtonBase
-        id="basic-button"
-        aria-controls={open ? 'basic-menu' : undefined}
-        aria-haspopup="true"
-        aria-expanded={open ? 'true' : undefined}
-        onClick={handleClick}
-      >
-        <MoreVertIcon />
-      </ButtonBase>
-      <Menu
-        id="basic-menu"
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        MenuListProps={{
-          'aria-labelledby': 'basic-button',
-        }}
-      >
-        <MenuItem
-          onClick={() => {
-            handleEdit()
-            handleClose()
-          }}
-        >
-          <EditIcon />
-        </MenuItem>
-        <MenuItem
-          onClick={() => {
-            handleDelete()
-            handleClose()
-          }}
-        >
-          <DeleteIcon />
-        </MenuItem>
-      </Menu>
-    </div>
-  )
-}
