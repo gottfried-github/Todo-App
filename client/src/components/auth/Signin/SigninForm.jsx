@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { object, string } from 'yup'
 import { Form, Field } from 'react-final-form'
 import TextField from '@mui/material/TextField'
 import { Button } from '../Signup/SignupForm'
@@ -7,6 +8,11 @@ import AuthForm from '../AuthForm'
 
 import { signin as actionSignin } from '../../../store/actions/auth'
 import sliceAuth from '../../../store/store/slice-auth'
+
+const schema = object({
+  identifier: string().trim().required().min(2).max(300),
+  password: string().trim().required().min(8).max(300),
+})
 
 export default function Signin() {
   const dispatch = useDispatch()
@@ -33,21 +39,20 @@ export default function Signin() {
       }}
       validate={values => {
         const errors = {}
+        let schemaErrors = null
 
-        if (!values.identifier) {
-          errors.identifier = 'this field is required'
+        try {
+          schema.validateSync(values, { abortEarly: false, stripUnknown: true })
+        } catch (e) {
+          schemaErrors = e
         }
 
-        if (values.identifier?.length < 2) {
-          errors.identifier = 'user name must have at least two characters'
-        }
+        if (!schemaErrors) return errors
 
-        if (!values.password) {
-          errors.password = 'this field is required'
-        }
+        for (const e of schemaErrors.inner) {
+          if (errors[e.path]) continue
 
-        if (values.password?.length < 8) {
-          errors.password = 'password must have at least 8 characters'
+          errors[e.path] = e.errors[0]
         }
 
         return errors
