@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import styled from '@emotion/styled'
 import { format } from 'date-fns'
 
+import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import Checkbox from '@mui/material/Checkbox'
 import { DataGrid, useGridApiRef } from '@mui/x-data-grid'
@@ -17,6 +18,7 @@ export default function Items() {
   const gridApiRef = useGridApiRef()
 
   const [editingId, setEditingId] = useState(null)
+  const [name, setName] = useState('')
 
   const filter = useSelector(state => slice.selectors.selectFilter(state))
   const counters = useSelector(state => slice.selectors.selectCounters(state))
@@ -61,17 +63,17 @@ export default function Items() {
     )
   }
 
-  const handleNameChange = (ev, itemId) => {
-    // for .isComposing see https://developer.mozilla.org/en-US/docs/Web/API/Element/keyup_event
-    if (ev.isComposing || ev.code !== 'Enter') return
+  const handleNameChange = name => {
+    setName(name)
+  }
+
+  const handleNameSubmit = () => {
     dispatch(
       updateName({
-        id: itemId,
-        name: ev.target.value,
+        id: editingId,
+        name,
       })
     )
-
-    handleEdit(itemId)
   }
 
   const handleDelete = itemId => {
@@ -128,9 +130,16 @@ export default function Items() {
               type="text"
               variant="outlined"
               fullWidth
-              defaultValue={params.value}
+              defaultValue={name}
+              onChange={ev => {
+                handleNameChange(ev.target.value)
+              }}
               onKeyUp={ev => {
-                handleNameChange(ev, params.row.id)
+                // for .isComposing see https://developer.mozilla.org/en-US/docs/Web/API/Element/keyup_event
+                if (ev.isComposing || ev.code !== 'Enter') return
+
+                handleNameSubmit()
+                handleEdit(params.row.id)
               }}
               onKeyDown={ev => {
                 ev.stopPropagation()
@@ -150,16 +159,43 @@ export default function Items() {
       field: 'options',
       headerName: 'Options',
       sortable: false,
+      width: 150,
       renderCell: params => {
+        if (params.row.id !== editingId) {
+          return (
+            <RowMenu
+              handleEdit={() => {
+                handleNameChange(params.row.name)
+                handleEdit(params.row.id)
+              }}
+              handleDelete={() => {
+                handleDelete(params.row.id)
+              }}
+            />
+          )
+        }
+
         return (
-          <RowMenu
-            handleEdit={() => {
-              handleEdit(params.row.id)
-            }}
-            handleDelete={() => {
-              handleDelete(params.row.id)
-            }}
-          />
+          <>
+            <Button
+              variant="filled"
+              onClick={() => {
+                handleNameSubmit()
+                handleEdit(params.row.id)
+              }}
+            >
+              Submit
+            </Button>
+            <Button
+              variant="filled"
+              onClick={() => {
+                handleNameChange(params.row.name)
+                handleEdit(params.row.id)
+              }}
+            >
+              Cancel
+            </Button>
+          </>
         )
       },
     },
