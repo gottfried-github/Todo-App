@@ -132,6 +132,9 @@ export default function Items() {
               onKeyUp={ev => {
                 handleNameChange(ev, params.row.id)
               }}
+              onKeyDown={ev => {
+                ev.stopPropagation()
+              }}
             />
           )
         }
