@@ -1,6 +1,6 @@
 {
   "name": "todo-server",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "server for todos",
   "main": "index.js",
   "type": "module",
