@@ -8,6 +8,7 @@ import AuthForm from '../AuthForm'
 
 import { signin as actionSignin } from '../../../store/actions/auth'
 import sliceAuth from '../../../store/store/slice-auth'
+import { validate } from '../../../utils'
 
 const schema = object({
   identifier: string().trim().required().min(2).max(300),
@@ -37,33 +38,13 @@ export default function Signin() {
         identifier: '',
         password: '',
       }}
-      validate={async values => {
-        const errors = {}
-        let schemaErrors = null
-
-        try {
-          await schema.validate(values, { abortEarly: false, stripUnknown: true })
-        } catch (e) {
-          schemaErrors = e
-        }
-
-        if (!schemaErrors) return errors
-
-        for (const e of schemaErrors.inner) {
-          if (errors[e.path]) continue
-
-          errors[e.path] = e.errors[0]
-        }
-
-        return errors
-      }}
+      validate={async values => validate(schema, values)}
       render={({ handleSubmit }) => {
         return (
           <AuthForm onSubmit={handleSubmit}>
             <Field
               name="identifier"
               render={({ input, meta }) => {
-                console.log('Field, identifier, meta.touched:', meta.touched)
                 return (
                   <TextField
                     variant="outlined"
