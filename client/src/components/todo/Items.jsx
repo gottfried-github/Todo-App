@@ -132,7 +132,7 @@ export default function Items() {
           return (
             <TextFieldStyled
               type="text"
-              variant="filled"
+              variant="outlined"
               fullWidth
               defaultValue={params.value}
               onKeyUp={ev => {
@@ -191,8 +191,8 @@ export default function Items() {
 }
 
 const TextFieldStyled = styled(TextField)`
-  & .MuiFilledInput-root .MuiFilledInput-input {
-    padding: 0;
+  & .MuiOutlinedInput-input {
+    padding: 0 4px;
   }
 `
 

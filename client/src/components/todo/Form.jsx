@@ -26,9 +26,9 @@ export default function Form() {
 
   return (
     <FormEl onSubmit={handleSubmit}>
-      <TextField
+      <TextFieldStyled
         type="text"
-        variant="filled"
+        variant="outlined"
         fullWidth
         placeholder="What needs to be done?"
         value={name}
@@ -49,4 +49,10 @@ const FormEl = styled.form`
   row-gap: 16px;
 
   margin-bottom: 8px;
+`
+
+const TextFieldStyled = styled(TextField)`
+  & .MuiOutlinedInput-root {
+    border-radius: 25px;
+  }
 `
