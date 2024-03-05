@@ -6,6 +6,7 @@ import { format } from 'date-fns'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import Checkbox from '@mui/material/Checkbox'
+import CircularProgress from '@mui/material/CircularProgress'
 import { DataGrid, useGridApiRef } from '@mui/x-data-grid'
 
 import { ITEM_STATUS } from '../../constants'
@@ -216,6 +217,8 @@ export default function Items() {
       disableColumnMenu
       slots={{
         noRowsOverlay: ItemsPlaceholder,
+        loadingOverlay: LoadingPlaceholder,
+        noResultsOverlay: LoadingPlaceholder,
       }}
       columns={columns}
       rows={items}
@@ -263,6 +266,21 @@ const ItemsPlaceholderDiv = styled.div`
 
   text-align: center;
   line-height: 40px;
+`
+
+function LoadingPlaceholder() {
+  return (
+    <LoadingPlaceholderDiv>
+      <CircularProgress />
+    </LoadingPlaceholderDiv>
+  )
+}
+
+const LoadingPlaceholderDiv = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
 `
 
 const ItemMenuButtonsContainer = styled.div`
