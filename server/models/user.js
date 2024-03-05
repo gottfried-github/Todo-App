@@ -28,13 +28,15 @@ const schema = new mongoose.Schema(
       unique: true,
       required: true,
     },
-    password: {
-      hash: { type: Buffer, required: true },
-      salt: { type: Buffer, required: true },
-    },
+    password: { type: Buffer, required: true },
     refreshToken: {
-      type: String,
-      maxLength: 1000,
+      token: {
+        type: String,
+        maxLength: 1000,
+      },
+      createdAt: {
+        type: Date,
+      },
     },
   },
   {

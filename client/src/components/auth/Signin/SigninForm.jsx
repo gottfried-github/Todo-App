@@ -1,94 +1,110 @@
-import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import styled from '@emotion/styled'
-import Button from '../AuthButton'
-import TextField from '../AuthTextField'
-import Form from '../AuthForm'
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { object, string } from 'yup'
+import { Form, Field } from 'react-final-form'
+import TextField from '@mui/material/TextField'
+import { Button } from '../Signup/SignupForm'
+import AuthForm from '../AuthForm'
 
-import { useSignin } from '../../../hooks/auth'
+import { signin as actionSignin } from '../../../store/actions/auth'
+import sliceAuth from '../../../store/store/slice-auth'
+import { validate } from '../../../utils'
 
-export default function Signup() {
-  const navigate = useNavigate()
+const schema = object({
+  identifier: string().trim().required().min(2).max(300),
+  password: string().trim().required().min(8).max(300),
+})
 
-  const [identifier, setIdentifier] = useState('')
-  const [password, setPassword] = useState('')
-
-  const signin = useSignin()
+export default function Signin() {
+  const dispatch = useDispatch()
+  const error = useSelector(state => sliceAuth.selectors.selectErrorSignin(state))
 
   useEffect(() => {
-    console.log('useEffect on signin, signin:', signin)
-    if (signin.status === 'success') {
-      navigate('/cabinet')
+    return () => {
+      if (error) {
+        dispatch(sliceAuth.actions.unsetErrorSignin())
+      }
     }
-  }, [navigate, signin])
+  }, [error, dispatch])
 
-  const validators = {
-    identifier: v => (v.length >= 2 ? null : 'field must be at least 2 characters long'),
-    password: v => (v.length >= 8 ? null : 'field must be at least 8 characters long'),
-  }
-
-  const submitCb = ev => {
-    ev.preventDefault()
-
-    if (validators.identifier(identifier) || validators.password(password)) return
-
-    signin.send({
-      identifier,
-      password,
-    })
+  const submitCb = values => {
+    dispatch(actionSignin(values))
   }
 
   return (
-    <Form onSubmit={submitCb}>
-      <TextFieldStyled
-        variant="filled"
-        label="Username or Email"
-        placeholder={'ed@mail'}
-        defaultValue={identifier || ''}
-        error={
-          !!signin.error?.errors?.identifier ||
-          (identifier ? !!validators.identifier(identifier) : false)
-        }
-        helperText={
-          signin.error?.errors?.identifier?.message ||
-          (identifier ? validators.identifier(identifier) : null)
-        }
-        onInput={ev => {
-          if (signin.status === 'error') {
-            signin.reset()
-          }
+    <Form
+      onSubmit={submitCb}
+      initialValues={{
+        identifier: '',
+        password: '',
+      }}
+      validate={async values => validate(schema, values)}
+      render={({ handleSubmit }) => {
+        return (
+          <AuthForm onSubmit={handleSubmit}>
+            <Field
+              name="identifier"
+              render={({ input, meta }) => {
+                return (
+                  <TextField
+                    variant="outlined"
+                    fullWidth
+                    label="Username or Email"
+                    placeholder={'ed@mail'}
+                    name={input.name}
+                    value={input.value}
+                    error={!!error?.errors?.identifier || (meta.touched && !!meta.error)}
+                    helperText={
+                      error?.errors?.identifier?.message || (meta.touched && meta.error) || null
+                    }
+                    onChange={ev => {
+                      if (error) {
+                        dispatch(sliceAuth.actions.unsetErrorSignin())
+                      }
 
-          setIdentifier(ev.target.value)
-        }}
-      />
-      <TextFieldStyled
-        variant="filled"
-        label="Password"
-        type="password"
-        defaultValue={password || ''}
-        error={
-          !!signin.error?.errors?.password || (password ? !!validators.password(password) : false)
-        }
-        helperText={
-          signin.error?.errors?.password?.message ||
-          (password ? validators.password(password) : null)
-        }
-        onInput={ev => {
-          if (signin.status === 'error') {
-            signin.reset()
-          }
+                      input.onChange(ev)
+                    }}
+                    onBlur={input.onBlur}
+                    onFocus={input.onFocus}
+                  />
+                )
+              }}
+            />
+            <Field
+              name="password"
+              render={({ input, meta }) => {
+                return (
+                  <TextField
+                    variant="outlined"
+                    fullWidth
+                    label="Password"
+                    type="password"
+                    name={input.name}
+                    value={input.value}
+                    error={!!error?.errors?.password || (meta.touched && !!meta.error)}
+                    helperText={
+                      error?.errors?.password?.message || (meta.touched && meta.error) || null
+                    }
+                    onChange={ev => {
+                      if (error) {
+                        dispatch(sliceAuth.actions.unsetErrorSignin())
+                      }
 
-          setPassword(ev.target.value)
-        }}
-      />
+                      input.onChange(ev)
+                    }}
+                    onBlur={input.onBlur}
+                    onFocus={input.onFocus}
+                  />
+                )
+              }}
+            />
 
-      <Button type="submit" variant="contained">
-        sign in
-      </Button>
-    </Form>
+            <Button type="submit" variant="contained">
+              sign in
+            </Button>
+          </AuthForm>
+        )
+      }}
+    ></Form>
   )
 }
-
-const TextFieldStyled = styled(TextField)`
-  display: block;
-`

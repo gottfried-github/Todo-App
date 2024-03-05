@@ -3,26 +3,23 @@ import { useSelector, useDispatch } from 'react-redux'
 import styled from '@emotion/styled'
 import { format } from 'date-fns'
 
-import ButtonBase from '@mui/material/ButtonBase'
+import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import Checkbox from '@mui/material/Checkbox'
-import Menu from '@mui/material/Menu'
-import MenuItem from '@mui/material/MenuItem'
+import CircularProgress from '@mui/material/CircularProgress'
 import { DataGrid, useGridApiRef } from '@mui/x-data-grid'
-
-import EditIcon from '@mui/icons-material/Edit'
-import DeleteIcon from '@mui/icons-material/Delete'
-import MoreVertIcon from '@mui/icons-material/MoreVert'
 
 import { ITEM_STATUS } from '../../constants'
 import { updateStatus, updateName, deleteOne } from '../../store/actions/todo'
 import slice from '../../store/store/slice-todo'
+import RowMenu from './RowMenu'
 
 export default function Items() {
   const dispatch = useDispatch()
   const gridApiRef = useGridApiRef()
 
   const [editingId, setEditingId] = useState(null)
+  const [name, setName] = useState('')
 
   const filter = useSelector(state => slice.selectors.selectFilter(state))
   const counters = useSelector(state => slice.selectors.selectCounters(state))
@@ -67,17 +64,17 @@ export default function Items() {
     )
   }
 
-  const handleNameChange = (ev, itemId) => {
-    // for .isComposing see https://developer.mozilla.org/en-US/docs/Web/API/Element/keyup_event
-    if (ev.isComposing || ev.code !== 'Enter') return
+  const handleNameChange = name => {
+    setName(name)
+  }
+
+  const handleNameSubmit = () => {
     dispatch(
       updateName({
-        id: itemId,
-        name: ev.target.value,
+        id: editingId,
+        name,
       })
     )
-
-    handleEdit(itemId)
   }
 
   const handleDelete = itemId => {
@@ -132,11 +129,21 @@ export default function Items() {
           return (
             <TextFieldStyled
               type="text"
-              variant="filled"
+              variant="outlined"
               fullWidth
-              defaultValue={params.value}
+              defaultValue={name}
+              onChange={ev => {
+                handleNameChange(ev.target.value)
+              }}
               onKeyUp={ev => {
-                handleNameChange(ev, params.row.id)
+                // for .isComposing see https://developer.mozilla.org/en-US/docs/Web/API/Element/keyup_event
+                if (ev.isComposing || ev.code !== 'Enter') return
+
+                handleNameSubmit()
+                handleEdit(params.row.id)
+              }}
+              onKeyDown={ev => {
+                ev.stopPropagation()
               }}
             />
           )
@@ -153,16 +160,43 @@ export default function Items() {
       field: 'options',
       headerName: 'Options',
       sortable: false,
+      width: 180,
       renderCell: params => {
+        if (params.row.id !== editingId) {
+          return (
+            <RowMenu
+              handleEdit={() => {
+                handleNameChange(params.row.name)
+                handleEdit(params.row.id)
+              }}
+              handleDelete={() => {
+                handleDelete(params.row.id)
+              }}
+            />
+          )
+        }
+
         return (
-          <RowMenu
-            handleEdit={() => {
-              handleEdit(params.row.id)
-            }}
-            handleDelete={() => {
-              handleDelete(params.row.id)
-            }}
-          />
+          <ItemMenuButtonsContainer>
+            <Button
+              variant="ordinary"
+              onClick={() => {
+                handleNameSubmit()
+                handleEdit(params.row.id)
+              }}
+            >
+              Submit
+            </Button>
+            <Button
+              variant="ordinary"
+              onClick={() => {
+                handleNameChange(params.row.name)
+                handleEdit(params.row.id)
+              }}
+            >
+              Cancel
+            </Button>
+          </ItemMenuButtonsContainer>
         )
       },
     },
@@ -183,6 +217,8 @@ export default function Items() {
       disableColumnMenu
       slots={{
         noRowsOverlay: ItemsPlaceholder,
+        loadingOverlay: LoadingPlaceholder,
+        noResultsOverlay: LoadingPlaceholder,
       }}
       columns={columns}
       rows={items}
@@ -191,8 +227,8 @@ export default function Items() {
 }
 
 const TextFieldStyled = styled(TextField)`
-  & .MuiFilledInput-root .MuiFilledInput-input {
-    padding: 0;
+  & .MuiOutlinedInput-input {
+    padding: 0 4px;
   }
 `
 
@@ -232,56 +268,22 @@ const ItemsPlaceholderDiv = styled.div`
   line-height: 40px;
 `
 
-function RowMenu({ handleEdit, handleDelete }) {
-  const [anchorEl, setAnchorEl] = useState(null)
-
-  const open = Boolean(anchorEl)
-
-  const handleClick = event => {
-    setAnchorEl(event.currentTarget)
-  }
-
-  const handleClose = () => {
-    setAnchorEl(null)
-  }
-
+function LoadingPlaceholder() {
   return (
-    <div>
-      <ButtonBase
-        id="basic-button"
-        aria-controls={open ? 'basic-menu' : undefined}
-        aria-haspopup="true"
-        aria-expanded={open ? 'true' : undefined}
-        onClick={handleClick}
-      >
-        <MoreVertIcon />
-      </ButtonBase>
-      <Menu
-        id="basic-menu"
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        MenuListProps={{
-          'aria-labelledby': 'basic-button',
-        }}
-      >
-        <MenuItem
-          onClick={() => {
-            handleEdit()
-            handleClose()
-          }}
-        >
-          <EditIcon />
-        </MenuItem>
-        <MenuItem
-          onClick={() => {
-            handleDelete()
-            handleClose()
-          }}
-        >
-          <DeleteIcon />
-        </MenuItem>
-      </Menu>
-    </div>
+    <LoadingPlaceholderDiv>
+      <CircularProgress />
+    </LoadingPlaceholderDiv>
   )
 }
+
+const LoadingPlaceholderDiv = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+`
+
+const ItemMenuButtonsContainer = styled.div`
+  display: flex;
+  column-gap: 6px;
+`

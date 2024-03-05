@@ -1,15 +1,17 @@
+import { useSelector } from 'react-redux'
 import { RouterProvider, createBrowserRouter, Navigate } from 'react-router-dom'
 
-import Protected from './components/auth/Protected'
+import sliceAuth from './store/store/slice-auth'
+
 import SignupComponent from './components/auth/Signup/Signup'
 import SigninComponent from './components/auth/Signin/Signin'
 import AuthPage from './pages/Auth'
-import Cabinet from './components/Cabinet'
+import Cabinet from './pages/Cabinet'
 
-const routes = [
+const routerPublic = createBrowserRouter([
   {
     path: '/',
-    element: <Navigate to="/cabinet" />,
+    element: <Navigate to="/auth/signin" />,
   },
   {
     path: '/auth',
@@ -26,15 +28,28 @@ const routes = [
     ],
   },
   {
-    path: '/cabinet',
-    element: (
-      <Protected>
-        <Cabinet />
-      </Protected>
-    ),
+    path: '*',
+    element: <Navigate to="/" />,
   },
-]
+])
+
+const routerProtected = createBrowserRouter([
+  {
+    path: '/',
+    element: <Navigate to="/cabinet" />,
+  },
+  {
+    path: '/cabinet',
+    element: <Cabinet />,
+  },
+  {
+    path: '*',
+    element: <Navigate to="/" />,
+  },
+])
 
 export default function Router() {
-  return <RouterProvider router={createBrowserRouter(routes)} />
+  const token = useSelector(state => sliceAuth.selectors.selectToken(state))
+
+  return <RouterProvider router={token ? routerProtected : routerPublic} />
 }

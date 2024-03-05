@@ -65,19 +65,20 @@ export default function Controls() {
 }
 
 const Container = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 250px 1fr 250px;
 
   padding: 8px 8px;
   padding-top: 24px;
 `
 
 const ToggleButtonGroupStyled = styled(ToggleButtonGroup)`
+  justify-self: center;
   column-gap: 2px;
 `
 
 const ClearAllButton = styled(Button)`
+  justify-self: flex-end;
   font-weight: 800;
 `
 

@@ -1,167 +1,200 @@
-import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { object, string } from 'yup'
+import { Form, Field } from 'react-final-form'
 import styled from '@emotion/styled'
-import Button from '../AuthButton'
-import TextField from '../AuthTextField'
-import Form from '../AuthForm'
+import TextField from '@mui/material/TextField'
+import Button from '@mui/material/Button'
+import AuthForm from '../AuthForm'
 
-import { useSignup } from '../../../hooks/auth'
+import { signup as actionSignup } from '../../../store/actions/auth'
+import sliceAuth from '../../../store/store/slice-auth'
+import { validate } from '../../../utils'
+
+const schema = object({
+  userName: string().trim().required().min(2).max(300),
+  email: string().trim().required().email(),
+  firstName: string().trim().required().min(2).max(300),
+  lastName: string().trim().required().min(2).max(300),
+  password: string().trim().required().min(8).max(300),
+})
 
 export default function Signup() {
-  const navigate = useNavigate()
-
-  const [userName, setUserName] = useState('')
-  const [email, setEmail] = useState('')
-  const [firstName, setFirstName] = useState('')
-  const [lastName, setLastName] = useState('')
-  const [password, setPassword] = useState('')
-
-  const signup = useSignup()
+  const dispatch = useDispatch()
+  const error = useSelector(state => sliceAuth.selectors.selectErrorSignup(state))
 
   useEffect(() => {
-    console.log('useEffect on signup, signup:', signup)
-    if (signup.status === 'success') {
-      navigate('/cabinet')
+    return () => {
+      if (error) {
+        dispatch(sliceAuth.actions.unsetErrorSignup())
+      }
     }
-  }, [navigate, signup])
+  }, [error, dispatch])
 
-  const validators = {
-    userName: v => (v.length >= 2 ? null : 'field must be at least 2 characters long'),
-    email: v => (/^\S+@\S+$/.test(v) ? null : 'incorrect email format'),
-    firstName: v => (v.length >= 2 ? null : 'field must be at least 2 characters long'),
-    lastName: v => (v.length >= 2 ? null : 'field must be at least 2 characters long'),
-    password: v => (v.length >= 8 ? null : 'field must be at least 8 characters long'),
-  }
-
-  const submitCb = ev => {
-    ev.preventDefault()
-
-    if (
-      validators.userName(userName) ||
-      validators.email(email) ||
-      validators.firstName(firstName) ||
-      validators.lastName(lastName) ||
-      validators.password(password)
-    )
-      return
-
-    signup.send({
-      userName,
-      email,
-      firstName,
-      lastName,
-      password,
-    })
+  const submitCb = values => {
+    dispatch(actionSignup(values))
   }
 
   return (
-    <Form onSubmit={submitCb}>
-      <TextFieldStyled
-        variant="filled"
-        label="Username"
-        placeholder={'Ed'}
-        defaultValue={userName || ''}
-        error={
-          !!signup.error?.errors?.userName || (userName ? !!validators.userName(userName) : false)
-        }
-        helperText={
-          signup.error?.errors?.userName?.message ||
-          (userName ? validators.userName(userName) : null)
-        }
-        onInput={ev => {
-          if (signup.status === 'error') {
-            signup.reset()
-          }
+    <Form
+      onSubmit={submitCb}
+      validate={values => validate(schema, values)}
+      render={({ handleSubmit }) => {
+        return (
+          <AuthForm onSubmit={handleSubmit}>
+            <Field
+              name="userName"
+              render={({ input, meta }) => {
+                return (
+                  <TextField
+                    variant="outlined"
+                    fullWidth
+                    label="Username"
+                    placeholder={'Ed'}
+                    name={input.name}
+                    value={input.value}
+                    error={!!error?.errors?.userName || (meta.touched && !!meta.error)}
+                    helperText={
+                      error?.errors?.userName?.message || (meta.touched && meta.error) || null
+                    }
+                    onChange={ev => {
+                      if (error) {
+                        dispatch(sliceAuth.actions.unsetErrorSignup())
+                      }
 
-          setUserName(ev.target.value)
-        }}
-      />
-      <TextFieldStyled
-        variant="filled"
-        label="Email"
-        placeholder="ed@mail"
-        defaultValue={email || ''}
-        error={!!signup.error?.errors?.email || (email ? !!validators.email(email) : false)}
-        helperText={
-          signup.error?.errors?.email?.message || (email ? validators.email(email) : null)
-        }
-        onInput={ev => {
-          if (signup.status === 'error') {
-            signup.reset()
-          }
+                      input.onChange(ev)
+                    }}
+                    onBlur={input.onBlur}
+                    onFocus={input.onFocus}
+                  />
+                )
+              }}
+            />
+            <Field
+              name="email"
+              render={({ input, meta }) => {
+                return (
+                  <TextField
+                    variant="outlined"
+                    fullWidth
+                    label="Email"
+                    placeholder={'ed@mail'}
+                    name={input.name}
+                    value={input.value}
+                    error={!!error?.errors?.email || (meta.touched && !!meta.error)}
+                    helperText={
+                      error?.errors?.email?.message || (meta.touched && meta.error) || null
+                    }
+                    onChange={ev => {
+                      if (error) {
+                        dispatch(sliceAuth.actions.unsetErrorSignup())
+                      }
 
-          setEmail(ev.target.value)
-        }}
-      />
-      <TextFieldStyled
-        variant="filled"
-        label="First Name"
-        placeholder="Ed"
-        defaultValue={firstName || ''}
-        error={
-          !!signup.error?.errors?.firstName ||
-          (firstName ? !!validators.firstName(firstName) : false)
-        }
-        helperText={
-          signup.error?.errors?.firstName?.message ||
-          (firstName ? validators.firstName(firstName) : null)
-        }
-        onInput={ev => {
-          if (signup.status === 'error') {
-            signup.reset()
-          }
+                      input.onChange(ev)
+                    }}
+                    onBlur={input.onBlur}
+                    onFocus={input.onFocus}
+                  />
+                )
+              }}
+            />
+            <Field
+              name="firstName"
+              render={({ input, meta }) => {
+                return (
+                  <TextField
+                    variant="outlined"
+                    fullWidth
+                    label="First Name"
+                    placeholder={'Ed'}
+                    name={input.name}
+                    value={input.value}
+                    error={!!error?.errors?.firstName || (meta.touched && !!meta.error)}
+                    helperText={
+                      error?.errors?.firstName?.message || (meta.touched && meta.error) || null
+                    }
+                    onChange={ev => {
+                      if (error) {
+                        dispatch(sliceAuth.actions.unsetErrorSignup())
+                      }
 
-          setFirstName(ev.target.value)
-        }}
-      />
-      <TextFieldStyled
-        variant="filled"
-        label="Last Name"
-        placeholder="Doe"
-        defaultValue={lastName || ''}
-        error={
-          !!signup.error?.errors?.lastName || (lastName ? !!validators.lastName(lastName) : false)
-        }
-        helperText={
-          signup.error?.errors?.lastName?.message ||
-          (lastName ? validators.lastName(lastName) : null)
-        }
-        onInput={ev => {
-          if (signup.status === 'error') {
-            signup.reset()
-          }
+                      input.onChange(ev)
+                    }}
+                    onBlur={input.onBlur}
+                    onFocus={input.onFocus}
+                  />
+                )
+              }}
+            />
+            <Field
+              name="lastName"
+              render={({ input, meta }) => {
+                return (
+                  <TextField
+                    variant="outlined"
+                    fullWidth
+                    label="Last Name"
+                    placeholder={'Edmonton'}
+                    name={input.name}
+                    value={input.value}
+                    error={!!error?.errors?.lastName || (meta.touched && !!meta.error)}
+                    helperText={
+                      error?.errors?.lastName?.message || (meta.touched && meta.error) || null
+                    }
+                    onChange={ev => {
+                      if (error) {
+                        dispatch(sliceAuth.actions.unsetErrorSignup())
+                      }
 
-          setLastName(ev.target.value)
-        }}
-      />
-      <TextFieldStyled
-        variant="filled"
-        label="Password"
-        type="password"
-        defaultValue={password || ''}
-        error={
-          !!signup.error?.errors?.password || (password ? !!validators.password(password) : false)
-        }
-        helperText={
-          signup.error?.errors?.password?.message ||
-          (password ? validators.password(password) : null)
-        }
-        onInput={ev => {
-          if (signup.status === 'error') {
-            signup.reset()
-          }
+                      input.onChange(ev)
+                    }}
+                    onBlur={input.onBlur}
+                    onFocus={input.onFocus}
+                  />
+                )
+              }}
+            />
+            <Field
+              name="password"
+              render={({ input, meta }) => {
+                return (
+                  <TextField
+                    variant="outlined"
+                    fullWidth
+                    label="Password"
+                    type="password"
+                    name={input.name}
+                    value={input.value}
+                    error={!!error?.errors?.password || (meta.touched && !!meta.error)}
+                    helperText={
+                      error?.errors?.password?.message || (meta.touched && meta.error) || null
+                    }
+                    onChange={ev => {
+                      if (error) {
+                        dispatch(sliceAuth.actions.unsetErrorSignup())
+                      }
 
-          setPassword(ev.target.value)
-        }}
-      />
+                      input.onChange(ev)
+                    }}
+                    onBlur={input.onBlur}
+                    onFocus={input.onFocus}
+                  />
+                )
+              }}
+            />
 
-      <Button type="submit" variant="contained">
-        sign up
-      </Button>
-    </Form>
+            <ButtonStyled type="submit" variant="contained">
+              sign up
+            </ButtonStyled>
+          </AuthForm>
+        )
+      }}
+    />
   )
 }
 
-const TextFieldStyled = styled(TextField)`
-  display: block;
+const ButtonStyled = styled(Button)`
+  margin-top: 18px;
 `
+
+export { ButtonStyled as Button }

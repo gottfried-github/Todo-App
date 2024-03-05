@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-import store from './store/store'
+import { store } from './store/store'
 import sliceAuth from './store/slice-auth'
 
 const instance = axios.create({

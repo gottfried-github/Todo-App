@@ -4,9 +4,9 @@ import { generateHash, isEqualHash } from '../utils/utils.js'
 
 export default {
   create: data => {
-    const passwordData = generateHash(data.password)
+    const password = generateHash(data.password)
 
-    return User.create({ ...data, password: passwordData })
+    return User.create({ ...data, password })
   },
   /**
    *
