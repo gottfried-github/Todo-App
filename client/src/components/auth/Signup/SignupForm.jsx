@@ -5,7 +5,6 @@ import { Form, Field } from 'react-final-form'
 import styled from '@emotion/styled'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
-import AuthForm from '../AuthForm'
 
 import { signup as actionSignup } from '../../../store/actions/auth'
 import sliceAuth from '../../../store/store/slice-auth'
@@ -197,4 +196,12 @@ const ButtonStyled = styled(Button)`
   margin-top: 18px;
 `
 
-export { ButtonStyled as Button }
+const AuthForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
+
+  margin-bottom: 18px;
+`
+
+export { ButtonStyled as Button, AuthForm }
