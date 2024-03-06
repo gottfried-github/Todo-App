@@ -1,8 +1,8 @@
 import Typography from '@mui/material/Typography'
-import { BoxLayout } from '../Signup/Signup'
+import { BoxLayout } from './Signup'
 import Paper from '@mui/material/Paper'
-import { Link } from '../Signup/Signup'
-import SigninForm from './SigninForm'
+import { Link } from './Signup'
+import SigninForm from '../components/auth/Signin/SigninForm'
 
 export default function Signin() {
   return (

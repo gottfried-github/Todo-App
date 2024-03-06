@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import styled from '@emotion/styled'
 import Typography from '@mui/material/Typography'
 import Paper from '@mui/material/Paper'
-import SignupForm from './SignupForm'
+import SignupForm from '../components/auth/Signup/SignupForm'
 
 export default function Signup() {
   return (

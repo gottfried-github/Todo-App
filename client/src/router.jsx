@@ -3,11 +3,11 @@ import { RouterProvider, createBrowserRouter, Navigate } from 'react-router-dom'
 
 import sliceAuth from './store/store/slice-auth'
 
-import SignupComponent from './components/auth/Signup/Signup'
-import SigninComponent from './components/auth/Signin/Signin'
+import Signup from './pages/Signup'
+import Signin from './pages/Signin'
 import AuthPage from './pages/Auth'
 import Cabinet from './pages/Cabinet'
-import LoadingScreen from './components/auth/LoadingScreen'
+import LoadingScreen from './pages/LoadingScreen'
 
 const routerPublic = createBrowserRouter([
   {
@@ -20,11 +20,11 @@ const routerPublic = createBrowserRouter([
     children: [
       {
         path: 'signup',
-        element: <SignupComponent />,
+        element: <Signup />,
       },
       {
         path: 'signin',
-        element: <SigninComponent />,
+        element: <Signin />,
       },
     ],
   },
