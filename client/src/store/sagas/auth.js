@@ -1,4 +1,4 @@
-import { call, put, takeLatest } from 'redux-saga/effects'
+import { call, put, takeLatest, select } from 'redux-saga/effects'
 import axios from '../http'
 
 import slice from '../store/slice-auth'
@@ -59,10 +59,42 @@ function* signout() {
   }
 }
 
+function* handleEmptyToken() {
+  const token = yield select(state => slice.selectors.selectToken(state))
+
+  if (token) return
+
+  try {
+    yield put({
+      type: slice.actions.setIsLoading.type,
+      payload: true,
+    })
+
+    const res = yield call(axios.get, '/auth/refresh')
+
+    yield put({
+      type: slice.actions.setToken.type,
+      payload: res.data.accessToken,
+    })
+  } catch (e) {
+    yield put({
+      type: slice.actions.setError.type,
+      payload: e.response?.data || 'something went wrong',
+    })
+  } finally {
+    yield put({
+      type: slice.actions.setIsLoading.type,
+      payload: false,
+    })
+  }
+}
+
 function* auth() {
   yield takeLatest(actionSignup.type, signup)
   yield takeLatest(actionSignin.type, signin)
   yield takeLatest(actionSignout.type, signout)
+
+  yield handleEmptyToken()
 }
 
 export default auth
