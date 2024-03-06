@@ -7,6 +7,7 @@ import SignupComponent from './components/auth/Signup/Signup'
 import SigninComponent from './components/auth/Signin/Signin'
 import AuthPage from './pages/Auth'
 import Cabinet from './pages/Cabinet'
+import LoadingScreen from './components/auth/LoadingScreen'
 
 const routerPublic = createBrowserRouter([
   {
@@ -50,6 +51,13 @@ const routerProtected = createBrowserRouter([
 
 export default function Router() {
   const token = useSelector(state => sliceAuth.selectors.selectToken(state))
+  const isLoading = useSelector(state => sliceAuth.selectors.selectIsLoading(state))
 
-  return <RouterProvider router={token ? routerProtected : routerPublic} />
+  const component = isLoading ? (
+    <LoadingScreen />
+  ) : (
+    <RouterProvider router={token ? routerProtected : routerPublic} />
+  )
+
+  return component
 }

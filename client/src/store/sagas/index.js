@@ -12,6 +12,11 @@ function* handleEmptyToken() {
   if (token) return
 
   try {
+    yield put({
+      type: sliceAuth.actions.setIsLoading.type,
+      payload: true,
+    })
+
     const res = yield call(axios.get, '/auth/refresh')
 
     yield put({
@@ -22,6 +27,11 @@ function* handleEmptyToken() {
     yield put({
       type: sliceAuth.actions.setError.type,
       payload: e.response?.data || 'something went wrong',
+    })
+  } finally {
+    yield put({
+      type: sliceAuth.actions.setIsLoading.type,
+      payload: false,
     })
   }
 }

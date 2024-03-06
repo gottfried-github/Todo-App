@@ -7,6 +7,7 @@ const slice = createSlice({
     error: null,
     errorSignup: null,
     errorSignin: null,
+    isLoading: true,
   },
   reducers: {
     setToken: (state, action) => {
@@ -33,12 +34,16 @@ const slice = createSlice({
     unsetErrorSignin: state => {
       state.errorSignin = null
     },
+    setIsLoading: (state, action) => {
+      state.isLoading = action.payload
+    },
   },
   selectors: {
     selectToken: state => state.token,
     selectError: state => state.error,
     selectErrorSignup: state => state.errorSignup,
     selectErrorSignin: state => state.errorSignin,
+    selectIsLoading: state => state.isLoading,
   },
 })
 
