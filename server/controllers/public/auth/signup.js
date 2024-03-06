@@ -36,7 +36,15 @@ export default async function signup(ctx) {
       maxAge: parseInt(process.env.JWT_REFRESH_EXPIRE) * 1000,
     })
 
-    ctx.send(201, { accessToken })
+    ctx.send(201, {
+      accessToken,
+      user: {
+        userName: user.userName,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+      },
+    })
   } catch (e) {
     // 11000 === unique index violation
     if (e.code === 11000) {

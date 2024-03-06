@@ -51,5 +51,13 @@ export default async function refresh(ctx) {
     maxAge: parseInt(process.env.JWT_REFRESH_EXPIRE) * 1000,
   })
 
-  ctx.send(200, { accessToken })
+  ctx.send(200, {
+    accessToken,
+    user: {
+      userName: user.userName,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+    },
+  })
 }
