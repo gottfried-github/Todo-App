@@ -11,8 +11,9 @@ const palette = {
   util: {
     main: 'rgb(255, 255, 255)',
     light: 'rgb(255, 255, 255)',
+    lightDark: 'rgba(0, 0, 0, 0.05)',
     dark: 'rgba(0, 0, 0, 0.5)',
-    darker: 'rgb(0, 0, 0)',
+    darkest: 'rgb(0, 0, 0)',
     darkTransparent: 'rgba(0, 0, 0, 0.06)',
     shadow: 'rgba(86, 100, 104, 0.16)',
     green: '#589054',

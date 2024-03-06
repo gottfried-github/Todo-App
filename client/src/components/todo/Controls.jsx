@@ -67,9 +67,11 @@ export default function Controls() {
 const Container = styled.div`
   display: grid;
   grid-template-columns: 250px 1fr 250px;
+  align-items: center;
 
   padding: 8px 8px;
-  padding-top: 24px;
+  padding-top: 16px;
+  padding-bottom: 20px;
 `
 
 const ToggleButtonGroupStyled = styled(ToggleButtonGroup)`

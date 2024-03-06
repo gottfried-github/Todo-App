@@ -235,9 +235,15 @@ const TextFieldStyled = styled(TextField)`
 const DataGridStyled = styled(DataGrid)`
   grid-row: 4;
   border: none;
+  box-shadow: ${props => props.theme.shadows['8']};
 
   & .MuiDataGrid-withBorderColor {
     border-color: transparent;
+  }
+
+  & .MuiDataGrid-columnHeaders,
+  & .MuiDataGrid-footerContainer {
+    background-color: ${props => props.theme.palette.util.lightDark};
   }
 `
 
