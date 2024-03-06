@@ -15,6 +15,11 @@ function* signup(action) {
       type: slice.actions.setToken.type,
       payload: res.data.accessToken,
     })
+
+    yield put({
+      type: slice.actions.setUserData.type,
+      payload: res.data.user,
+    })
   } catch (e) {
     console.log('saga, auth, signup, axios errored, e:', e)
 
@@ -32,6 +37,11 @@ function* signin(action) {
     yield put({
       type: slice.actions.setToken.type,
       payload: res.data.accessToken,
+    })
+
+    yield put({
+      type: slice.actions.setUserData.type,
+      payload: res.data.user,
     })
   } catch (e) {
     console.log('saga, auth, signin, axios errored, e:', e)
@@ -75,6 +85,11 @@ function* handleEmptyToken() {
     yield put({
       type: slice.actions.setToken.type,
       payload: res.data.accessToken,
+    })
+
+    yield put({
+      type: slice.actions.setUserData.type,
+      payload: res.data.user,
     })
   } catch (e) {
     yield put({
