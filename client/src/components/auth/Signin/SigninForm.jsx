@@ -10,7 +10,11 @@ import sliceAuth from '../../../store/store/slice-auth'
 import { validate } from '../../../utils'
 
 const schema = object({
-  identifier: string().trim().required().min(2).max(300),
+  identifier: string()
+    .trim()
+    .required('user name is required')
+    .min(2, 'user name must be at least 2 characters')
+    .max(300, "user name can't be greater than 300 characters"),
   password: string().trim().required().min(8).max(300),
 })
 
