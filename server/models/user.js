@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose, { ObjectId } from 'mongoose'
 
 const schema = new mongoose.Schema(
   {
@@ -37,6 +37,10 @@ const schema = new mongoose.Schema(
       createdAt: {
         type: Date,
       },
+    },
+    teamId: {
+      type: ObjectId,
+      index: true,
     },
   },
   {
