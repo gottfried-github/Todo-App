@@ -2,7 +2,24 @@ import User from '../../../models/user'
 import Team from '../../../models/team'
 
 export default async function create(ctx) {
-  const team = await Team.create(ctx.request.body)
+  try {
+    const team = await Team.create(ctx.request.body)
+    const userUpdRes = await User.updateOne({ _id: ctx.state.user.id }, { teamId: team._id })
 
-  const user = await User.updateOne({ _id: ctx.state.user.id }, { teamId: team._id })
+    if (!userUpdRes.matchedCount || !userUpdRes.modifiedCount) {
+      ctx.throw(
+        500,
+        "either the user doesn't exist in the database or it wasn't updated for some reason",
+        userUpdRes
+      )
+    }
+
+    ctx.send(201, team)
+  } catch (e) {
+    if (e instanceof mongoose.Error.ValidationError) {
+      ctx.throw(400, 'validation error', e)
+    }
+
+    ctx.throw(500, 'database errored', e)
+  }
 }
