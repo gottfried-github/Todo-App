@@ -6,7 +6,11 @@ import sliceAuth from './store/store/slice-auth'
 import Signup from './pages/Signup'
 import Signin from './pages/Signin'
 import AuthPage from './pages/Auth'
+
 import Cabinet from './pages/Cabinet'
+import Todos from './components/todo/Todos'
+import Team from './pages/Team'
+
 import LoadingScreen from './pages/LoadingScreen'
 
 const routerPublic = createBrowserRouter([
@@ -37,11 +41,17 @@ const routerPublic = createBrowserRouter([
 const routerProtected = createBrowserRouter([
   {
     path: '/',
-    element: <Navigate to="/cabinet" />,
-  },
-  {
-    path: '/cabinet',
     element: <Cabinet />,
+    children: [
+      {
+        index: true,
+        element: <Todos />,
+      },
+      {
+        path: 'teams',
+        element: <Team />,
+      },
+    ],
   },
   {
     path: '*',

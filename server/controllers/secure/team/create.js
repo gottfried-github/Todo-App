@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 
-import User from '../../../models/user'
-import Team from '../../../models/team'
+import User from '../../../models/user.js'
+import Team from '../../../models/team.js'
 
 export default async function create(ctx) {
   try {
