@@ -1,3 +1,5 @@
+import mongoose from 'mongoose'
+
 import User from '../../../models/user'
 import Team from '../../../models/team'
 
