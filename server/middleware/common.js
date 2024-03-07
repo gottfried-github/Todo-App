@@ -24,3 +24,15 @@ export const authorize = async (ctx, next) => {
     ctx.throw(401, 'invalid token')
   }
 }
+
+export const validateBody = async (ctx, next) => {
+  if (!Object.keys(ctx.request.body).length) {
+    ctx.status = 400
+
+    ctx.body = { message: 'no data specified' }
+
+    return
+  }
+
+  await next()
+}
