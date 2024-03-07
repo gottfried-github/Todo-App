@@ -5,7 +5,7 @@ import Team from '../../../models/team.js'
 
 export default async function create(ctx) {
   try {
-    const team = await Team.create(ctx.request.body)
+    const team = await Team.create({ ...ctx.request.body, author: ctx.state.user.id })
     const userUpdRes = await User.updateOne({ _id: ctx.state.user.id }, { teamId: team._id })
 
     if (!userUpdRes.matchedCount || !userUpdRes.modifiedCount) {
