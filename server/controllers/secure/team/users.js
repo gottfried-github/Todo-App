@@ -1,9 +1,13 @@
 import User from '../../../models/user.js'
 
 export default async function users(ctx) {
-  const users = await User.find({
-    teamId: { $exists: false },
-  })
+  try {
+    const users = await User.find({
+      teamId: { $exists: false },
+    })
 
-  ctx.send(200, users)
+    ctx.send(200, users)
+  } catch (e) {
+    ctx.throw(500, 'database errored', e)
+  }
 }
