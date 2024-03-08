@@ -3,7 +3,7 @@ import Team from '../../../models/team.js'
 
 export default async function get(ctx) {
   try {
-    const team = Team.findById(ctx.params.teamId)
+    const team = await Team.findById(ctx.params.teamId)
 
     if (!team) {
       ctx.send(404, "specified team doesn't exist")
@@ -14,7 +14,7 @@ export default async function get(ctx) {
 
     const usersFiltered = users.filter(user => user._id !== ctx.state.user.id)
 
-    ctx.send(200, { ...team, members: usersFiltered })
+    ctx.send(200, { data: team, members: usersFiltered })
   } catch (e) {
     ctx.throw(500, 'database errored', e)
   }
