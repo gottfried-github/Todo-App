@@ -73,9 +73,36 @@ function* get() {
   }
 }
 
+function* getUsers() {
+  const token = yield select(state => sliceAuth.selectors.selectToken(state))
+
+  const config = token
+    ? {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      }
+    : null
+
+  try {
+    const res = yield call(axios.get, '/teams/users', config)
+
+    yield put({
+      type: sliceTeam.actions.setUsers.type,
+      payload: res.data,
+    })
+  } catch (e) {
+    yield put({
+      type: sliceTeam.actions.setError.type,
+      payload: e,
+    })
+  }
+}
+
 function* team() {
   yield takeEvery(actionCreate.type, create)
   yield takeEvery(actionGet.type, get)
+  yield takeEvery(actionGetUsers.type, getUsers)
 }
 
 export default team
