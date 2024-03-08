@@ -38,8 +38,44 @@ function* create(action) {
   }
 }
 
+function* get() {
+  const token = yield select(state => sliceAuth.selectors.selectToken(state))
+  const userData = yield select(state => sliceAuth.selectors.selectUserData(state))
+
+  const config = token
+    ? {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      }
+    : null
+
+  try {
+    const res = yield call(axios.get, `/teams/${userData.teamId}`, config)
+
+    /*
+      set team data
+    */
+    yield put({
+      type: sliceTeam.actions.setData.type,
+      payload: res.data.data,
+    })
+
+    yield put({
+      type: sliceTeam.actions.setMembers.type,
+      payload: res.data.members,
+    })
+  } catch (e) {
+    yield put({
+      type: sliceTeam.actions.setError.type,
+      payload: e,
+    })
+  }
+}
+
 function* team() {
   yield takeEvery(actionCreate.type, create)
+  yield takeEvery(actionGet.type, get)
 }
 
 export default team
