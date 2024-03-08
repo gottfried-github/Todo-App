@@ -14,7 +14,7 @@ router.post('/', validateBody, create)
 router.delete('/:teamId', deleteTeam)
 router.post('/:teamId/users/:userId', validateBody, addUser)
 router.delete('/:teamId/users/:userId', deleteUser)
-router.get('/:teamId', get)
 router.get('/users', users)
+router.get('/:teamId', get)
 
 export default router
