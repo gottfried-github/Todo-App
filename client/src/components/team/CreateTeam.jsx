@@ -6,6 +6,8 @@ import Paper from '@mui/material/Paper'
 import Modal from '@mui/material/Modal'
 import { TextField } from '../todo/Form'
 
+import { create as actionCreate } from '../../store/actions/team'
+
 export default function CreateTeam() {
   const dispatch = useDispatch()
   const [teamName, setTeamName] = useState('')
@@ -17,7 +19,13 @@ export default function CreateTeam() {
 
   const handleSubmit = ev => {
     ev.preventDefault()
-    console.log('handleSubmit')
+    console.log('handleSubmit, teamName:', teamName)
+
+    dispatch(
+      actionCreate({
+        name: teamName,
+      })
+    )
   }
 
   const handleOpen = () => {
