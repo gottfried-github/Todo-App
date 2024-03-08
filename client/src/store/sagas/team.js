@@ -99,10 +99,66 @@ function* getUsers() {
   }
 }
 
+function* addUser(action) {
+  const token = yield select(state => sliceAuth.selectors.selectToken(state))
+  const userData = yield select(state => sliceAuth.selectors.selectUserData(state))
+
+  const config = token
+    ? {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      }
+    : null
+
+  try {
+    yield call(axios.post, `/teams/${userData.teamId}/users/${action.payload.id}`, config)
+
+    yield put({
+      type: sliceTeam.actions.appendMember.type,
+      payload: action.payload,
+    })
+  } catch (e) {
+    yield put({
+      type: sliceTeam.actions.setError.type,
+      payload: e,
+    })
+  }
+}
+
+function* deleteUser(action) {
+  const token = yield select(state => sliceAuth.selectors.selectToken(state))
+  const userData = yield select(state => sliceAuth.selectors.selectUserData(state))
+
+  const config = token
+    ? {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      }
+    : null
+
+  try {
+    yield call(axios.delete, `/teams/${userData.teamId}/users/${action.payload.id}`, config)
+
+    yield put({
+      type: sliceTeam.actions.deleteMember.type,
+      payload: action.payload,
+    })
+  } catch (e) {
+    yield put({
+      type: sliceTeam.actions.setError.type,
+      payload: e,
+    })
+  }
+}
+
 function* team() {
   yield takeEvery(actionCreate.type, create)
   yield takeEvery(actionGet.type, get)
   yield takeEvery(actionGetUsers.type, getUsers)
+  yield takeLatest(actionAddUser.type, addUser)
+  yield takeLatest(actionDeleteUser.type, deleteUser)
 }
 
 export default team

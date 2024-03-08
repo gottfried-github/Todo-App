@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from '@emotion/styled'
 import Paper from '@mui/material/Paper'
@@ -10,17 +9,22 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import Checkbox from '@mui/material/Checkbox'
 
-import { getUsers as actionGetUsers } from '../../store/actions/team'
+import { addUser as actionAddUser } from '../../store/actions/team'
+import { deleteUser as actionDeleteUser } from '../../store/actions/team'
 import sliceTeam from '../../store/store/slice-team'
 
-export default function AddUsers({ isModalOpen, modalCloseCb }) {
+export default function AddUsers({ users, isModalOpen, modalCloseCb }) {
   const dispatch = useDispatch()
 
-  const users = useSelector(state => sliceTeam.selectors.selectUsers(state))
+  const members = useSelector(state => sliceTeam.selectors.selectMembers(state))
 
-  useEffect(() => {
-    dispatch(actionGetUsers())
-  }, [dispatch])
+  const handleToggleUser = (user, checked) => {
+    if (!checked) {
+      return dispatch(actionDeleteUser(user))
+    }
+
+    dispatch(actionAddUser(user))
+  }
 
   return (
     <ModalStyled open={isModalOpen} onClose={modalCloseCb}>
@@ -28,11 +32,17 @@ export default function AddUsers({ isModalOpen, modalCloseCb }) {
         <List>
           {users.map(user => (
             <ListItem key={user.id} disablePadding>
-              <ListItemButton role={undefined} dense>
+              <ListItemButton
+                role={undefined}
+                dense
+                onClick={() => {
+                  handleToggleUser(user, !members.map(member => member.id).includes(user.id))
+                }}
+              >
                 <ListItemIcon>
                   <Checkbox
                     edge="start"
-                    checked={false}
+                    checked={members.map(member => member.id).includes(user.id)}
                     tabIndex={-1}
                     disableRipple
                     inputProps={{ 'aria-labelledby': user.id }}

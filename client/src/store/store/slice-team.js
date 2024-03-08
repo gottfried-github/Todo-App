@@ -21,6 +21,12 @@ const slice = createSlice({
     setError: (state, action) => {
       state.error = action.payload
     },
+    appendMember: (state, action) => {
+      state.members.push(action.payload)
+    },
+    deleteMember: (state, action) => {
+      state.members = state.members.filter(member => member.id !== action.payload.id)
+    },
   },
   selectors: {
     selectMembers: state => state.members,

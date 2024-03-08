@@ -9,6 +9,8 @@ import IconDelete from '@mui/icons-material/Delete'
 import AddUsers from './AddUsers'
 
 import { get as actionGet } from '../../store/actions/team'
+import { deleteUser as actionDeleteUser } from '../../store/actions/team'
+import { getUsers as actionGetUsers } from '../../store/actions/team'
 import sliceTeam from '../../store/store/slice-team'
 
 export default function Team() {
@@ -18,17 +20,23 @@ export default function Team() {
 
   const data = useSelector(state => sliceTeam.selectors.selectData(state))
   const members = useSelector(state => sliceTeam.selectors.selectMembers(state))
+  const users = useSelector(state => sliceTeam.selectors.selectUsers(state))
 
   useEffect(() => {
     dispatch(actionGet())
   }, [dispatch])
 
   const handleAddUsersOpen = () => {
+    dispatch(actionGetUsers())
     setIsAddUsersOpen(true)
   }
 
   const handleAddUsersClose = () => {
     setIsAddUsersOpen(false)
+  }
+
+  const handleDeleteUser = user => {
+    dispatch(actionDeleteUser(user))
   }
 
   return (
@@ -38,10 +46,14 @@ export default function Team() {
         <List>
           {members.map(member => (
             <ListItem
-              key={member._id}
+              key={member.id}
               secondaryAction={
                 <IconButton edge="end" aria-label="delete">
-                  <IconDelete />
+                  <IconDelete
+                    onClick={() => {
+                      handleDeleteUser(member)
+                    }}
+                  />
                 </IconButton>
               }
             >
@@ -53,7 +65,7 @@ export default function Team() {
       <Button variant="ordinary" onClick={handleAddUsersOpen}>
         Add users
       </Button>
-      <AddUsers isModalOpen={isAddUsersOpen} modalCloseCb={handleAddUsersClose} />
+      <AddUsers users={users} isModalOpen={isAddUsersOpen} modalCloseCb={handleAddUsersClose} />
     </div>
   )
 }
