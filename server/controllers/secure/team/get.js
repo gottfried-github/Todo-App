@@ -21,7 +21,7 @@ export default async function get(ctx) {
       }
     )
 
-    const usersFiltered = users.filter(user => user._id !== ctx.state.user.id)
+    const usersFiltered = users.filter(user => user._id.toString() !== ctx.state.user.id)
 
     ctx.send(200, { data: team, members: usersFiltered })
   } catch (e) {
