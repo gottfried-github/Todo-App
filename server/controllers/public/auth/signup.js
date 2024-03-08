@@ -43,6 +43,7 @@ export default async function signup(ctx) {
         email: user.email,
         firstName: user.firstName,
         lastName: user.lastName,
+        teamId: user.teamId || null,
       },
     })
   } catch (e) {

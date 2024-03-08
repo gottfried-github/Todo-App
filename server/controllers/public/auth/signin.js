@@ -53,6 +53,7 @@ export default async function signin(ctx) {
       email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,
+      teamId: user.teamId || null,
     },
   })
 }
