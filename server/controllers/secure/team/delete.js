@@ -6,9 +6,9 @@ import Team from '../../../models/team.js'
 export default async function deleteTeam(ctx) {
   try {
     await mongoose.connection.transaction(async session => {
-      await User.updateMany({ teamId: ctx.params.teamId }, { $unset: { teamId: 1 } })
+      await User.updateMany({ teamId: ctx.params.teamId }, { $unset: { teamId: 1 } }, { session })
 
-      await Team.deleteOne({ _id: ctx.params.teamId })
+      await Team.deleteOne({ _id: ctx.params.teamId }, { session })
     })
 
     ctx.send(200, null, 'successfully deleted the team')
