@@ -10,7 +10,16 @@ export default async function get(ctx) {
       return
     }
 
-    const users = await User.find({ teamId: team._id })
+    const users = await User.find(
+      { teamId: team._id },
+      {
+        id: 1,
+        userName: 1,
+        email: 1,
+        firstName: 1,
+        lastName: 1,
+      }
+    )
 
     const usersFiltered = users.filter(user => user._id !== ctx.state.user.id)
 
