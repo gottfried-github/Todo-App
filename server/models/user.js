@@ -45,6 +45,14 @@ const schema = new mongoose.Schema(
   },
   {
     versionKey: false,
+    toJSON: { virtuals: true },
+    virtuals: {
+      id: {
+        get() {
+          return this._id
+        },
+      },
+    },
   }
 )
 
