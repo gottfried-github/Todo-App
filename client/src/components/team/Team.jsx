@@ -11,6 +11,8 @@ import AddUsers from './AddUsers'
 import { get as actionGet } from '../../store/actions/team'
 import { deleteUser as actionDeleteUser } from '../../store/actions/team'
 import { getUsers as actionGetUsers } from '../../store/actions/team'
+import { deleteTeam as actionDeleteTeam } from '../../store/actions/team'
+
 import sliceTeam from '../../store/store/slice-team'
 
 export default function Team() {
@@ -39,6 +41,10 @@ export default function Team() {
     dispatch(actionDeleteUser(user))
   }
 
+  const handleDeleteTeam = () => {
+    dispatch(actionDeleteTeam())
+  }
+
   return (
     <div>
       {data ? <Typography variant="h1">{data.name}</Typography> : null}
@@ -64,6 +70,9 @@ export default function Team() {
       ) : null}
       <Button variant="ordinary" onClick={handleAddUsersOpen}>
         Add users
+      </Button>
+      <Button variant="ordinary" onClick={handleDeleteTeam}>
+        Delete team
       </Button>
       <AddUsers users={users} isModalOpen={isAddUsersOpen} modalCloseCb={handleAddUsersClose} />
     </div>

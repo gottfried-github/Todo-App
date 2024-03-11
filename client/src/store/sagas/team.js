@@ -6,6 +6,7 @@ import { addUser as actionAddUser } from '../actions/team'
 import { deleteUser as actionDeleteUser } from '../actions/team'
 import { get as actionGet } from '../actions/team'
 import { getUsers as actionGetUsers } from '../actions/team'
+import { deleteTeam as actionDeleteTeam } from '../actions/team'
 
 import sliceTeam from '../store/slice-team'
 import sliceAuth from '../store/slice-auth'
@@ -153,12 +154,41 @@ function* deleteUser(action) {
   }
 }
 
+function* deleteTeam() {
+  const token = yield select(state => sliceAuth.selectors.selectToken(state))
+  const userData = yield select(state => sliceAuth.selectors.selectUserData(state))
+
+  const config = token
+    ? {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      }
+    : null
+
+  try {
+    yield call(axios.delete, `/teams/${userData.teamId}`, config)
+
+    // auth slice: set teamId
+    yield put({
+      type: sliceAuth.actions.setUserData.type,
+      payload: { ...userData, teamId: null },
+    })
+  } catch (e) {
+    yield put({
+      type: sliceTeam.actions.setError.type,
+      payload: e,
+    })
+  }
+}
+
 function* team() {
   yield takeEvery(actionCreate.type, create)
   yield takeEvery(actionGet.type, get)
   yield takeEvery(actionGetUsers.type, getUsers)
   yield takeLatest(actionAddUser.type, addUser)
   yield takeLatest(actionDeleteUser.type, deleteUser)
+  yield takeLatest(actionDeleteTeam.type, deleteTeam)
 }
 
 export default team
