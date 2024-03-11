@@ -21,6 +21,22 @@ export const authorize = async (ctx, next) => {
     ctx.state.user = tokenDecoded
     await next()
   } catch (e) {
+    if (e.status) {
+      throw e
+    }
+
     ctx.throw(401, 'invalid token')
   }
+}
+
+export const validateBody = async (ctx, next) => {
+  if (!Object.keys(ctx.request.body).length) {
+    ctx.status = 400
+
+    ctx.body = { message: 'no data specified' }
+
+    return
+  }
+
+  await next()
 }

@@ -3,6 +3,9 @@
 }
 
 body {
+  margin: 0;
+  padding: 0;
+  
   font-size: 16px;
   font-family: 'roboto';
 
@@ -13,4 +16,6 @@ body {
   display: flex;
 
   min-height: 100vh;
+
+  padding-top: 65px;
 }

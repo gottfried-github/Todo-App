@@ -56,3 +56,5 @@ const TextFieldStyled = styled(TextField)`
     border-radius: 25px;
   }
 `
+
+export { TextFieldStyled as TextField }

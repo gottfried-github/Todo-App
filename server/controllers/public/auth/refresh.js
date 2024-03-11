@@ -58,6 +58,7 @@ export default async function refresh(ctx) {
       email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,
+      teamId: user.teamId || null,
     },
   })
 }

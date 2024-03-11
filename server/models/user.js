@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose, { ObjectId } from 'mongoose'
 
 const schema = new mongoose.Schema(
   {
@@ -38,9 +38,21 @@ const schema = new mongoose.Schema(
         type: Date,
       },
     },
+    teamId: {
+      type: ObjectId,
+      index: true,
+    },
   },
   {
     versionKey: false,
+    toJSON: { virtuals: true },
+    virtuals: {
+      id: {
+        get() {
+          return this._id
+        },
+      },
+    },
   }
 )
 
