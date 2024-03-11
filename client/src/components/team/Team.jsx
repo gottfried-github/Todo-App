@@ -95,5 +95,7 @@ const Buttons = styled.div`
   display: flex;
   justify-content: flex-end;
 
+  grid-row: 3;
+
   column-gap: 4px;
 `
