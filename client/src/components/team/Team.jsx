@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import styled from '@emotion/styled'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import List from '@mui/material/List'
@@ -46,8 +47,8 @@ export default function Team() {
   }
 
   return (
-    <div>
-      {data ? <Typography variant="h1">{data.name}</Typography> : null}
+    <Root>
+      {data ? <Typography variant="title1">{data.name}</Typography> : null}
       {members.length ? (
         <List>
           {members.map(member => (
@@ -68,13 +69,31 @@ export default function Team() {
           ))}
         </List>
       ) : null}
-      <Button variant="ordinary" onClick={handleAddUsersOpen}>
-        Add users
-      </Button>
-      <Button variant="ordinary" onClick={handleDeleteTeam}>
-        Delete team
-      </Button>
+      <Buttons>
+        <Button variant="ordinary" onClick={handleAddUsersOpen}>
+          Add users
+        </Button>
+        <Button variant="danger" onClick={handleDeleteTeam}>
+          Delete team
+        </Button>
+      </Buttons>
       <AddUsers users={users} isModalOpen={isAddUsersOpen} modalCloseCb={handleAddUsersClose} />
-    </div>
+    </Root>
   )
 }
+
+const Root = styled.div`
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+
+  width: 100%;
+  padding: 0 45px;
+  padding-bottom: 16px;
+`
+
+const Buttons = styled.div`
+  display: flex;
+  justify-content: flex-end;
+
+  column-gap: 4px;
+`

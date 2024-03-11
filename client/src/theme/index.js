@@ -127,5 +127,21 @@ export default createTheme({
         },
       ],
     },
+    MuiTypography: {
+      variants: [
+        {
+          props: { variant: 'title1' },
+          style: data => {
+            return {
+              fontSize: '2rem',
+              textAlign: 'center',
+              textTransform: 'uppercase',
+              fontWeight: data.theme.typography.fontWeightBold,
+              margin: '30px 0',
+            }
+          },
+        },
+      ],
+    },
   },
 })

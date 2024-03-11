@@ -28,21 +28,13 @@ export default function App() {
 
   return (
     <Container empty={!counters.all}>
-      <Heading variant="h1">todo list</Heading>
+      <Typography variant="title1">todo list</Typography>
       <Form />
       <Controls />
       <Items />
     </Container>
   )
 }
-
-const Heading = styled(Typography)`
-  font-size: 2rem;
-  text-align: center;
-  text-transform: uppercase;
-  font-weight: 800;
-  margin: 30px 0;
-`
 
 const Container = styled.div`
   display: grid;
