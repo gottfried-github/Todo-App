@@ -44,8 +44,8 @@ const Container = styled.div`
   height: 100vh;
 
   margin: auto;
-  padding: 16px 45px;
-  padding-top: 65px;
+  padding: 0 45px;
+  padding-bottom: 16px;
 
   font-size: 0.875rem;
 `
