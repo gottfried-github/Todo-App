@@ -61,7 +61,7 @@ function* getFreeUsers() {
     const res = yield call(axios.get, '/teams/users')
 
     yield put({
-      type: sliceTeam.actions.setUsers.type,
+      type: sliceTeam.actions.setFreeUsers.type,
       payload: res.data,
     })
   } catch (e) {

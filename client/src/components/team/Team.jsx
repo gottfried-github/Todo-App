@@ -23,7 +23,7 @@ export default function Team() {
 
   const data = useSelector(state => sliceTeam.selectors.selectData(state))
   const members = useSelector(state => sliceTeam.selectors.selectMembers(state))
-  const users = useSelector(state => sliceTeam.selectors.selectUsers(state))
+  const users = useSelector(state => sliceTeam.selectors.selectFreeUsers(state))
 
   useEffect(() => {
     dispatch(actionGetTeam())
