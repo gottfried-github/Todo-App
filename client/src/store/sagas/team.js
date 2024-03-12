@@ -4,8 +4,8 @@ import axios from '../http'
 import { create as actionCreate } from '../actions/team'
 import { addUser as actionAddUser } from '../actions/team'
 import { deleteUser as actionDeleteUser } from '../actions/team'
-import { get as actionGet } from '../actions/team'
-import { getUsers as actionGetUsers } from '../actions/team'
+import { getTeam as actionGetTeam } from '../actions/team'
+import { getFreeUsers as actionGetFreeUsers } from '../actions/team'
 import { deleteTeam as actionDeleteTeam } from '../actions/team'
 
 import sliceTeam from '../store/slice-team'
@@ -30,7 +30,7 @@ function* create(action) {
   }
 }
 
-function* get() {
+function* getTeam() {
   const userData = yield select(state => sliceAuth.selectors.selectUserData(state))
 
   try {
@@ -56,7 +56,7 @@ function* get() {
   }
 }
 
-function* getUsers() {
+function* getFreeUsers() {
   try {
     const res = yield call(axios.get, '/teams/users')
 
@@ -129,8 +129,8 @@ function* deleteTeam() {
 
 function* team() {
   yield takeEvery(actionCreate.type, create)
-  yield takeEvery(actionGet.type, get)
-  yield takeEvery(actionGetUsers.type, getUsers)
+  yield takeEvery(actionGetTeam.type, getTeam)
+  yield takeEvery(actionGetFreeUsers.type, getFreeUsers)
   yield takeLatest(actionAddUser.type, addUser)
   yield takeLatest(actionDeleteUser.type, deleteUser)
   yield takeLatest(actionDeleteTeam.type, deleteTeam)
