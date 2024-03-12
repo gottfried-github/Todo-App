@@ -61,6 +61,7 @@ export default function Items() {
     dispatch(
       updateStatus({
         id: data.id,
+        userId: data.userId,
         status,
       })
     )
@@ -70,10 +71,11 @@ export default function Items() {
     setName(name)
   }
 
-  const handleNameSubmit = () => {
+  const handleNameSubmit = userId => {
     dispatch(
       updateName({
         id: editingId,
+        userId,
         name,
       })
     )
@@ -107,6 +109,7 @@ export default function Items() {
             onClick={ev => {
               handleStatusChange(ev, {
                 id: params.row.id,
+                userId: params.row.userId,
                 status: params.value,
               })
             }}
@@ -141,7 +144,7 @@ export default function Items() {
                 // for .isComposing see https://developer.mozilla.org/en-US/docs/Web/API/Element/keyup_event
                 if (ev.isComposing || ev.code !== 'Enter') return
 
-                handleNameSubmit()
+                handleNameSubmit(params.row.userId)
                 handleEdit(params.row.id)
               }}
               onKeyDown={ev => {
@@ -184,7 +187,7 @@ export default function Items() {
             <Button
               variant="ordinary"
               onClick={() => {
-                handleNameSubmit()
+                handleNameSubmit(params.row.userId)
                 handleEdit(params.row.id)
               }}
             >

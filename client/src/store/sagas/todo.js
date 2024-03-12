@@ -63,7 +63,10 @@ function* updateStatus(action) {
       axios.patch,
       `/todos/${action.payload.id}`,
       {
-        status: action.payload.status,
+        userId: action.payload.userId,
+        body: {
+          status: action.payload.status,
+        },
       },
       config
     )
@@ -96,7 +99,10 @@ function* updateName(action) {
       axios.patch,
       `/todos/${action.payload.id}`,
       {
-        name: action.payload.name,
+        userId: action.payload.userId,
+        body: {
+          name: action.payload.name,
+        },
       },
       config
     )
