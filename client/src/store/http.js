@@ -14,6 +14,21 @@ const instance = axios.create({
   transformResponse: [data => (data ? JSON.parse(data) : null)],
 })
 
+instance.interceptors.request.use(
+  config => {
+    const token = store.getState().auth.token
+
+    if (!token) return config
+
+    config.headers = { ...config.headers, authorization: `Bearer ${token}` }
+
+    return config
+  },
+  e => {
+    return Promise.reject(e)
+  }
+)
+
 instance.interceptors.response.use(
   res => {
     console.log('axios response intercetor, res:', res)
