@@ -7,11 +7,8 @@ export default async function users(ctx) {
         teamId: { $exists: false },
       },
       {
-        id: 1,
-        userName: 1,
-        email: 1,
-        firstName: 1,
-        lastName: 1,
+        password: 0,
+        refreshToken: 0,
       }
     )
 
