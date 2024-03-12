@@ -11,17 +11,23 @@ export default async function addUser(ctx) {
       ctx.throw(404, "specified team doesn't exist")
     }
 
-    const res = await User.updateOne(
+    const user = await User.findById(ctx.params.userId)
+
+    if (!user) {
+      ctx.throw(404, "given user doesn't exist")
+    }
+
+    if (user.teamId) {
+      ctx.throw(403, 'user already belongs to a team')
+    }
+
+    await User.updateOne(
       { _id: ctx.params.userId },
       { teamId: ctx.params.teamId },
       {
         runValidators: true,
       }
     )
-
-    if (!res.matchedCount) {
-      ctx.throw(404, "specified user doesn't exist")
-    }
 
     ctx.send(200, null, 'successfully added the user to the team')
   } catch (e) {
