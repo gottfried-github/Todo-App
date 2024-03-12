@@ -7,7 +7,7 @@ import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 
-export default function RowMenu({ handleEdit, handleDelete }) {
+export default function RowMenu({ handleEdit, handleDelete, own }) {
   const [anchorEl, setAnchorEl] = useState(null)
 
   const open = Boolean(anchorEl)
@@ -50,6 +50,7 @@ export default function RowMenu({ handleEdit, handleDelete }) {
           <MenuItemText>Edit</MenuItemText>
         </MenuItem>
         <MenuItem
+          disabled={!own}
           onClick={() => {
             handleDelete()
             handleClose()
