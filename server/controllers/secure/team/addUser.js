@@ -8,8 +8,7 @@ export default async function addUser(ctx) {
     const team = Team.findById(ctx.params.teamId)
 
     if (!team) {
-      ctx.send(404, "specified team doesn't exist")
-      return
+      ctx.throw(404, "specified team doesn't exist")
     }
 
     const res = await User.updateOne(
@@ -21,14 +20,17 @@ export default async function addUser(ctx) {
     )
 
     if (!res.matchedCount) {
-      ctx.send(404, "specified user doesn't exist")
-      return
+      ctx.throw(404, "specified user doesn't exist")
     }
 
     ctx.send(200, null, 'successfully added the user to the team')
   } catch (e) {
     if (e instanceof mongoose.Error.CastError || e instanceof mongoose.Error.ValidationError) {
       ctx.throw(400, 'validation failed', e)
+    }
+
+    if (e.status) {
+      throw e
     }
 
     ctx.throw(500, e)
