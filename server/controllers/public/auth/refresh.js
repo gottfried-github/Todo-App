@@ -54,6 +54,7 @@ export default async function refresh(ctx) {
   ctx.send(200, {
     accessToken,
     user: {
+      id: user.id,
       userName: user.userName,
       email: user.email,
       firstName: user.firstName,

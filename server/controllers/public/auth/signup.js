@@ -39,6 +39,7 @@ export default async function signup(ctx) {
     ctx.send(201, {
       accessToken,
       user: {
+        id: user.id,
         userName: user.userName,
         email: user.email,
         firstName: user.firstName,
