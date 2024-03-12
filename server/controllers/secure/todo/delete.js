@@ -26,6 +26,10 @@ export default async function deleteById(ctx) {
       ctx.throw(400, 'validation error', e)
     }
 
+    if (e.status) {
+      throw e
+    }
+
     ctx.throw(500, 'database errored', e)
   }
 }

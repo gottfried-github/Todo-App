@@ -22,6 +22,10 @@ export default async function update(ctx) {
       ctx.throw(400, 'validation failed', e)
     }
 
+    if (e.status) {
+      throw e
+    }
+
     ctx.throw(500, 'database errored', e)
   }
 }

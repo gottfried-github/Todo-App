@@ -64,6 +64,10 @@ export default async function signup(ctx) {
       ctx.throw(400, null, { errors })
     }
 
+    if (e.status) {
+      throw e
+    }
+
     ctx.throw(500, 'database errored while creating user', e)
   }
 }

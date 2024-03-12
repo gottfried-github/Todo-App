@@ -37,6 +37,10 @@ export default async function signout(ctx) {
       ctx.throw(500, 'database errored')
     }
   } catch (e) {
+    if (e.status) {
+      throw e
+    }
+
     ctx.throw(401, 'refresh token is invalid')
   }
 }
