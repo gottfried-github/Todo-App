@@ -5,8 +5,8 @@ import Todo from '../../../models/todo.js'
 export default async function update(ctx) {
   try {
     const _res = await Todo.updateOne(
-      { _id: ctx.params.id, userId: ctx.state.user.id },
-      ctx.request.body,
+      { _id: ctx.params.id, userId: ctx.request.body.userId },
+      ctx.request.body.body,
       {
         runValidators: true,
       }
