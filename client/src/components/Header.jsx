@@ -16,11 +16,11 @@ export default function Header() {
   return (
     <AppBarStyled>
       <ToolBarStyled>
-        <Chip label={userData.firstName} />
         <Nav>
           <LinkStyled to="/">Tasks</LinkStyled>
           <LinkStyled to="/teams">Team</LinkStyled>
         </Nav>
+        <Chip label={userData.firstName} />
         <Button
           variant="app-bar"
           onClick={() => {
@@ -41,8 +41,9 @@ const AppBarStyled = styled(AppBar)`
 `
 
 const ToolBarStyled = styled(ToolBar)`
+  justify-content: flex-end;
   column-gap: 8px;
-  width: max-content;
+  width: 100%;
   padding-left: 0;
   padding-right: 0;
 
@@ -55,6 +56,9 @@ const ToolBarStyled = styled(ToolBar)`
 const Nav = styled.nav`
   display: flex;
   column-gap: 4px;
+
+  position: absolute;
+  left: 0;
 `
 
 const LinkStyled = styled(NavLink)`
