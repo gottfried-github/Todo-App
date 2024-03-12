@@ -8,7 +8,7 @@ export default async function create(ctx) {
     const user = await User.findById(ctx.state.user.id)
 
     if (user.teamId) {
-      ctx.throw(409, 'user already belongs to a team')
+      ctx.throw(403, 'user already belongs to a team')
     }
 
     const team = await Team.create({ ...ctx.request.body, author: ctx.state.user.id })
