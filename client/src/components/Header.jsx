@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import styled from '@emotion/styled'
 import AppBar from '@mui/material/AppBar'
 import ToolBar from '@mui/material/Toolbar'
@@ -57,7 +57,7 @@ const Nav = styled.nav`
   column-gap: 4px;
 `
 
-const LinkStyled = styled(Link)`
+const LinkStyled = styled(NavLink)`
   padding: 4px;
   font-size: ${props => props.theme.typography.body2.fontSize};
   font-weight: ${props => props.theme.typography.fontWeightBold};
@@ -67,7 +67,8 @@ const LinkStyled = styled(Link)`
   border: 'none';
   text-decoration: none;
 
-  &:hover {
+  &:hover,
+  &.active {
     background-color: ${props => props.theme.palette.custom.main};
     color: ${props => props.theme.palette.custom.textMain};
   }
