@@ -10,7 +10,7 @@ export default async function deleteById(ctx) {
       ctx.throw(404, 'no item with given id')
     }
 
-    if (item.userId !== ctx.state.user.id) {
+    if (item.userId.toString() !== ctx.state.user.id) {
       ctx.throw(403, "the item doesn't belong to the current user")
     }
 
