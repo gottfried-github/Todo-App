@@ -10,7 +10,7 @@ export default async function create(ctx) {
     const user = await User.findById(ctx.state.user.id)
 
     if (user.teamId) {
-      ctx.socketSend(item, user.teamId)
+      ctx.socketSend(item, user.teamId.toString())
     }
 
     ctx.send(201, item)

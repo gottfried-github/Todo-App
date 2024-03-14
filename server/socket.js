@@ -1,6 +1,7 @@
 import { createServer } from 'http'
 import createError from 'http-errors'
 import { Server } from 'socket.io'
+import jwt from 'jsonwebtoken'
 
 import User from './models/user.js'
 import app from './app.js'
@@ -8,6 +9,10 @@ import app from './app.js'
 const httpServer = createServer(app.callback())
 const io = new Server(httpServer, {
   serveClient: false,
+  cors: {
+    origin: true,
+    allowedHeaders: ['Authorization'],
+  },
 })
 
 io.use(async (socket, next) => {
@@ -49,7 +54,7 @@ io.use(async (socket, next) => {
     next()
   } catch (e) {
     if (e.status) {
-      throw e
+      return next(e)
     }
 
     next(createError(401, 'invalid token'))
