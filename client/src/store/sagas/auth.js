@@ -1,11 +1,14 @@
 import { call, put, takeLatest, select } from 'redux-saga/effects'
+import { io } from 'socket.io-client'
 import axios from '../http'
+import socketSubscribe from '../socket-subscribe'
 
 import slice from '../store/slice-auth'
 
 import { signup as actionSignup } from '../actions/auth'
 import { signin as actionSignin } from '../actions/auth'
 import { signout as actionSignout } from '../actions/auth'
+import { tokenSet as actionTokenSet } from '../actions/auth'
 
 function* signup(action) {
   try {
@@ -19,6 +22,10 @@ function* signup(action) {
     yield put({
       type: slice.actions.setUserData.type,
       payload: res.data.user,
+    })
+
+    yield put({
+      type: actionTokenSet.type,
     })
   } catch (e) {
     console.log('saga, auth, signup, axios errored, e:', e)
@@ -42,6 +49,10 @@ function* signin(action) {
     yield put({
       type: slice.actions.setUserData.type,
       payload: res.data.user,
+    })
+
+    yield put({
+      type: actionTokenSet.type,
     })
   } catch (e) {
     console.log('saga, auth, signin, axios errored, e:', e)
@@ -69,6 +80,18 @@ function* signout() {
   }
 }
 
+function* authorizeSocket() {
+  const token = yield select(state => slice.selectors.selectToken(state))
+
+  const socket = yield call(io, 'ws://localhost:3000', {
+    extraHeaders: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+
+  yield call(socketSubscribe, socket)
+}
+
 function* handleEmptyToken() {
   const token = yield select(state => slice.selectors.selectToken(state))
 
@@ -91,6 +114,10 @@ function* handleEmptyToken() {
       type: slice.actions.setUserData.type,
       payload: res.data.user,
     })
+
+    yield put({
+      type: actionTokenSet.type,
+    })
   } catch (e) {
     yield put({
       type: slice.actions.setError.type,
@@ -108,6 +135,7 @@ function* auth() {
   yield takeLatest(actionSignup.type, signup)
   yield takeLatest(actionSignin.type, signin)
   yield takeLatest(actionSignout.type, signout)
+  yield takeLatest(actionTokenSet, authorizeSocket)
 
   yield handleEmptyToken()
 }
