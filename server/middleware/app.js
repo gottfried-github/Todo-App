@@ -1,4 +1,5 @@
 import bodyParser from 'koa-bodyparser'
+import { io } from '../socket.js'
 
 export const parseBody = bodyParser({
   enableTypes: 'json',
@@ -51,6 +52,15 @@ export const utils = async (ctx, next) => {
     }
 
     ctx.body = body
+  }
+
+  ctx.socketSend = async (data, teamId) => {
+    io.in(teamId)
+      .fetchSockets()
+      .filter(socket => socket.data.userId !== ctx.state.user.id)
+      .forEach(socket => {
+        socket.emit('event', data)
+      })
   }
 
   await next()
