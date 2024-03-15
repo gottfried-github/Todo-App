@@ -7,6 +7,10 @@ export default function subscribe(socket) {
     console.log('socket, connect')
   })
 
+  socket.on('disconnect', () => {
+    console.log('socket, disconnect')
+  })
+
   socket.on('event', data => {
     console.log("socket, 'event' fired, data:", data)
   })
