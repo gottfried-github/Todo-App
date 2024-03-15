@@ -106,13 +106,7 @@ function* authorizeSocket() {
 
 function* disconnectSocket() {
   if (!socket || socket.disconnected) {
-    return put({
-      type: slice.actions.setError.type,
-      payload: {
-        message:
-          "attempted to disconnect from the socket server, but socket doesn't exist or is already disconnected",
-      },
-    })
+    return null
   }
 
   yield call(socket.disconnect.bind(socket))
@@ -163,6 +157,7 @@ function* auth() {
   yield takeLatest(actionSignout.type, signout)
   yield takeLatest(actionTokenSet.type, authorizeSocket)
   yield takeEvery(actionUnauthorizedResponse.type, disconnectSocket)
+  yield takeEvery(slice.actions.unsetToken.type, disconnectSocket)
 
   yield handleEmptyToken()
 }
