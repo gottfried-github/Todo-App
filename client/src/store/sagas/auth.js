@@ -1,4 +1,4 @@
-import { call, put, takeLatest, select } from 'redux-saga/effects'
+import { call, put, takeLatest, select, takeEvery } from 'redux-saga/effects'
 import { io } from 'socket.io-client'
 import axios from '../http'
 import socketSubscribe from '../socket-subscribe'
@@ -8,7 +8,10 @@ import slice from '../store/slice-auth'
 import { signup as actionSignup } from '../actions/auth'
 import { signin as actionSignin } from '../actions/auth'
 import { signout as actionSignout } from '../actions/auth'
+import { unauthorizedResponse as actionUnauthorizedResponse } from '../actions/auth'
 import { tokenSet as actionTokenSet } from '../actions/auth'
+
+let socket = null
 
 function* signup(action) {
   try {
@@ -83,13 +86,36 @@ function* signout() {
 function* authorizeSocket() {
   const token = yield select(state => slice.selectors.selectToken(state))
 
-  const socket = yield call(io, 'ws://localhost:3000', {
+  if (socket?.connected) {
+    return put({
+      type: slice.actions.setError.type,
+      payload: {
+        message: 'attempted to connect to the socket server, but socket is already connected',
+      },
+    })
+  }
+
+  socket = yield call(io, 'ws://localhost:3000', {
     extraHeaders: {
       Authorization: `Bearer ${token}`,
     },
   })
 
   yield call(socketSubscribe, socket)
+}
+
+function* disconnectSocket() {
+  if (!socket || socket.disconnected) {
+    return put({
+      type: slice.actions.setError.type,
+      payload: {
+        message:
+          "attempted to disconnect from the socket server, but socket doesn't exist or is already disconnected",
+      },
+    })
+  }
+
+  yield call(socket.disconnect.bind(socket))
 }
 
 function* handleEmptyToken() {
@@ -135,7 +161,8 @@ function* auth() {
   yield takeLatest(actionSignup.type, signup)
   yield takeLatest(actionSignin.type, signin)
   yield takeLatest(actionSignout.type, signout)
-  yield takeLatest(actionTokenSet, authorizeSocket)
+  yield takeLatest(actionTokenSet.type, authorizeSocket)
+  yield takeEvery(actionUnauthorizedResponse.type, disconnectSocket)
 
   yield handleEmptyToken()
 }

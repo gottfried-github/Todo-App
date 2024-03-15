@@ -1,5 +1,7 @@
 import axios from 'axios'
 
+import { unauthorizedResponse as actionUnauthorizedResponse } from './actions/auth'
+import { tokenSet as actionTokenSet } from './actions/auth'
 import { store } from './store/store'
 import sliceAuth from './store/slice-auth'
 
@@ -41,6 +43,8 @@ instance.interceptors.response.use(
       return Promise.reject(e)
     }
 
+    store.dispatch(actionUnauthorizedResponse())
+
     if (e.config.url === '/auth/refresh') {
       store.dispatch(sliceAuth.actions.unsetToken())
 
@@ -51,6 +55,7 @@ instance.interceptors.response.use(
       const resRefresh = await instance.get('/auth/refresh')
 
       store.dispatch(sliceAuth.actions.setToken(resRefresh.data.accessToken))
+      store.dispatch(actionTokenSet())
 
       const resOriginal = await instance({
         ...e.config,
