@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 
+import { ITEM_DELETE } from '../../../events/index.js'
 import Todo from '../../../models/todo.js'
 
 export default async function deleteById(ctx) {
@@ -18,6 +19,10 @@ export default async function deleteById(ctx) {
 
     if (_res.deletedCount === 0) {
       ctx.throw(500, 'no documents have been deleted')
+    }
+
+    if (ctx.state.user.teamId) {
+      ctx.socketSend(ITEM_DELETE, item)
     }
 
     ctx.send(200, { deletedCount: _res.deletedCount })
