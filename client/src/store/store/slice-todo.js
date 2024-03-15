@@ -91,6 +91,17 @@ const slice = createSlice({
         }
       }
     },
+    deleteItem: (state, action) => {
+      state.items = state.items.filter(item => item.id !== action.payload.id)
+
+      state.counters.all--
+
+      if (action.payload.status === ITEM_STATUS.DONE) {
+        state.counters.done--
+      } else {
+        state.counters.notDone--
+      }
+    },
   },
   selectors: {
     selectItems: state => {
