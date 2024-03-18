@@ -23,7 +23,11 @@ const actions = {
 export default function subscribe(socket) {
   socket.on('connect_error', e => {
     console.log('socket, connect_error, e:', e)
-    store.dispatch(sliceAuth.actions.setErrorSocket(e))
+    store.dispatch(
+      sliceAuth.actions.setErrorSocket(
+        e.message || 'something went wrong while connecting to the socket server'
+      )
+    )
   })
 
   socket.on('connect', () => {
