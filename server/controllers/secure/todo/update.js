@@ -17,10 +17,8 @@ export default async function update(ctx) {
       ctx.throw(404, 'no item with given id for the current user')
     }
 
-    if (ctx.state.user.teamId) {
-      const item = await Todo.findOne({ _id: ctx.params.id, userId: ctx.request.body.userId })
-      ctx.socketSend(ITEM_UPDATE, item)
-    }
+    const item = await Todo.findOne({ _id: ctx.params.id, userId: ctx.request.body.userId })
+    ctx.socketSend(ITEM_UPDATE, item)
 
     ctx.send(200, null, 'successfully updated')
   } catch (e) {

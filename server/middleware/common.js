@@ -22,10 +22,6 @@ export const authorize = async (ctx, next) => {
 
     ctx.state.user = tokenDecoded
 
-    const user = await User.findById(ctx.state.user.id)
-
-    ctx.state.user.teamId = user.teamId.toString() || null
-
     await next()
   } catch (e) {
     if (e.status) {

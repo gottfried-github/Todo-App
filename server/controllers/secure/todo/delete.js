@@ -21,9 +21,7 @@ export default async function deleteById(ctx) {
       ctx.throw(500, 'no documents have been deleted')
     }
 
-    if (ctx.state.user.teamId) {
-      ctx.socketSend(ITEM_DELETE, item)
-    }
+    ctx.socketSend(ITEM_DELETE, item)
 
     ctx.send(200, { deletedCount: _res.deletedCount })
   } catch (e) {

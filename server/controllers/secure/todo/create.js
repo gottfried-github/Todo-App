@@ -7,9 +7,7 @@ export default async function create(ctx) {
   try {
     const item = await Todo.create({ ...ctx.request.body, userId: ctx.state.user.id })
 
-    if (ctx.state.user.teamId) {
-      ctx.socketSend(ITEM_CREATE, item)
-    }
+    ctx.socketSend(ITEM_CREATE, item)
 
     ctx.send(201, item)
   } catch (e) {

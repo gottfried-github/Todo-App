@@ -55,10 +55,15 @@ export const utils = async (ctx, next) => {
   }
 
   ctx.socketSend = async (evType, data) => {
-    const sockets = await io.in(ctx.state.user.teamId).fetchSockets()
+    const socketsAll = await io.fetchSockets()
+    const socketUser = socketsAll.find(socket => socket.data.userId === ctx.state.user.id)
 
-    sockets
-      .filter(socket => socket.data.userId !== ctx.state.user.id)
+    if (!socketUser) return
+
+    const socketsTeam = await io.in(socketUser.data.teamId).fetchSockets()
+
+    socketsTeam
+      .filter(socket => socket.data.userId !== socketUser.data.userId)
       .forEach(socket => {
         socket.emit('event', {
           type: evType,
