@@ -67,9 +67,15 @@ instance.interceptors.response.use(
 
     // hasSocketConnected is set by the previous successful socket connection
     store.dispatch(sliceAuth.actions.unsetHasSocketConnected())
+    store.dispatch(sliceAuth.actions.unsetErrorSocket())
 
     const unsubscribe = store.subscribe(async () => {
       const state = store.getState()
+
+      if (state.auth.errorSocket) {
+        return Promise.reject(state.auth.errorSocket)
+      }
+
       if (!state.auth.hasSocketConnected) return
 
       // make the HTTP request
@@ -88,8 +94,6 @@ instance.interceptors.response.use(
         Promise.reject(e)
       } finally {
         unsubscribe()
-
-        store.dispatch(sliceAuth.actions.unsetHasSocketConnected())
       }
     })
 
