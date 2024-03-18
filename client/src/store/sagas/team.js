@@ -4,27 +4,18 @@ import axios from '../http'
 import { create as actionCreate } from '../actions/team'
 import { addUser as actionAddUser } from '../actions/team'
 import { deleteUser as actionDeleteUser } from '../actions/team'
-import { get as actionGet } from '../actions/team'
-import { getUsers as actionGetUsers } from '../actions/team'
+import { getTeam as actionGetTeam } from '../actions/team'
+import { getFreeUsers as actionGetFreeUsers } from '../actions/team'
 import { deleteTeam as actionDeleteTeam } from '../actions/team'
 
 import sliceTeam from '../store/slice-team'
 import sliceAuth from '../store/slice-auth'
 
 function* create(action) {
-  const token = yield select(state => sliceAuth.selectors.selectToken(state))
   const userData = yield select(state => sliceAuth.selectors.selectUserData(state))
 
-  const config = token
-    ? {
-        headers: {
-          authorization: `Bearer ${token}`,
-        },
-      }
-    : null
-
   try {
-    const res = yield call(axios.post, '/teams', action.payload, config)
+    const res = yield call(axios.post, '/teams', action.payload)
 
     // auth slice: set teamId
     yield put({
@@ -39,20 +30,11 @@ function* create(action) {
   }
 }
 
-function* get() {
-  const token = yield select(state => sliceAuth.selectors.selectToken(state))
+function* getTeam() {
   const userData = yield select(state => sliceAuth.selectors.selectUserData(state))
 
-  const config = token
-    ? {
-        headers: {
-          authorization: `Bearer ${token}`,
-        },
-      }
-    : null
-
   try {
-    const res = yield call(axios.get, `/teams/${userData.teamId}`, config)
+    const res = yield call(axios.get, `/teams/${userData.teamId}`)
 
     /*
       set team data
@@ -74,22 +56,12 @@ function* get() {
   }
 }
 
-function* getUsers() {
-  const token = yield select(state => sliceAuth.selectors.selectToken(state))
-
-  const config = token
-    ? {
-        headers: {
-          authorization: `Bearer ${token}`,
-        },
-      }
-    : null
-
+function* getFreeUsers() {
   try {
-    const res = yield call(axios.get, '/teams/users', config)
+    const res = yield call(axios.get, '/teams/users')
 
     yield put({
-      type: sliceTeam.actions.setUsers.type,
+      type: sliceTeam.actions.setFreeUsers.type,
       payload: res.data,
     })
   } catch (e) {
@@ -101,19 +73,10 @@ function* getUsers() {
 }
 
 function* addUser(action) {
-  const token = yield select(state => sliceAuth.selectors.selectToken(state))
   const userData = yield select(state => sliceAuth.selectors.selectUserData(state))
 
-  const config = token
-    ? {
-        headers: {
-          authorization: `Bearer ${token}`,
-        },
-      }
-    : null
-
   try {
-    yield call(axios.post, `/teams/${userData.teamId}/users/${action.payload.id}`, config)
+    yield call(axios.post, `/teams/${userData.teamId}/users/${action.payload.id}`)
 
     yield put({
       type: sliceTeam.actions.appendMember.type,
@@ -128,19 +91,10 @@ function* addUser(action) {
 }
 
 function* deleteUser(action) {
-  const token = yield select(state => sliceAuth.selectors.selectToken(state))
   const userData = yield select(state => sliceAuth.selectors.selectUserData(state))
 
-  const config = token
-    ? {
-        headers: {
-          authorization: `Bearer ${token}`,
-        },
-      }
-    : null
-
   try {
-    yield call(axios.delete, `/teams/${userData.teamId}/users/${action.payload.id}`, config)
+    yield call(axios.delete, `/teams/${userData.teamId}/users/${action.payload.id}`)
 
     yield put({
       type: sliceTeam.actions.deleteMember.type,
@@ -155,19 +109,10 @@ function* deleteUser(action) {
 }
 
 function* deleteTeam() {
-  const token = yield select(state => sliceAuth.selectors.selectToken(state))
   const userData = yield select(state => sliceAuth.selectors.selectUserData(state))
 
-  const config = token
-    ? {
-        headers: {
-          authorization: `Bearer ${token}`,
-        },
-      }
-    : null
-
   try {
-    yield call(axios.delete, `/teams/${userData.teamId}`, config)
+    yield call(axios.delete, `/teams/${userData.teamId}`)
 
     // auth slice: set teamId
     yield put({
@@ -184,8 +129,8 @@ function* deleteTeam() {
 
 function* team() {
   yield takeEvery(actionCreate.type, create)
-  yield takeEvery(actionGet.type, get)
-  yield takeEvery(actionGetUsers.type, getUsers)
+  yield takeEvery(actionGetTeam.type, getTeam)
+  yield takeEvery(actionGetFreeUsers.type, getFreeUsers)
   yield takeLatest(actionAddUser.type, addUser)
   yield takeLatest(actionDeleteUser.type, deleteUser)
   yield takeLatest(actionDeleteTeam.type, deleteTeam)

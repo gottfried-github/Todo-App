@@ -4,7 +4,7 @@ const slice = createSlice({
   name: 'teams',
   initialState: {
     members: [],
-    users: [],
+    freeUsers: [],
     data: null,
     error: null,
   },
@@ -12,8 +12,8 @@ const slice = createSlice({
     setMembers: (state, action) => {
       state.members = action.payload
     },
-    setUsers: (state, action) => {
-      state.users = action.payload
+    setFreeUsers: (state, action) => {
+      state.freeUsers = action.payload
     },
     setData: (state, action) => {
       state.data = action.payload
@@ -30,7 +30,7 @@ const slice = createSlice({
   },
   selectors: {
     selectMembers: state => state.members,
-    selectUsers: state => state.users,
+    selectFreeUsers: state => state.freeUsers,
     selectData: state => state.data,
     selectError: state => state.error,
   },

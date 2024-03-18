@@ -12,7 +12,7 @@ const router = new Router()
 
 router.post('/', validateBody, create)
 router.delete('/:teamId', deleteTeam)
-router.post('/:teamId/users/:userId', validateBody, addUser)
+router.post('/:teamId/users/:userId', addUser)
 router.delete('/:teamId/users/:userId', deleteUser)
 router.get('/users', users)
 router.get('/:teamId', get)

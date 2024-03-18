@@ -9,9 +9,9 @@ import IconButton from '@mui/material/IconButton'
 import IconDelete from '@mui/icons-material/Delete'
 import AddUsers from './AddUsers'
 
-import { get as actionGet } from '../../store/actions/team'
+import { getTeam as actionGetTeam } from '../../store/actions/team'
 import { deleteUser as actionDeleteUser } from '../../store/actions/team'
-import { getUsers as actionGetUsers } from '../../store/actions/team'
+import { getFreeUsers as actionGetFreeUsers } from '../../store/actions/team'
 import { deleteTeam as actionDeleteTeam } from '../../store/actions/team'
 
 import sliceTeam from '../../store/store/slice-team'
@@ -23,14 +23,14 @@ export default function Team() {
 
   const data = useSelector(state => sliceTeam.selectors.selectData(state))
   const members = useSelector(state => sliceTeam.selectors.selectMembers(state))
-  const users = useSelector(state => sliceTeam.selectors.selectUsers(state))
+  const users = useSelector(state => sliceTeam.selectors.selectFreeUsers(state))
 
   useEffect(() => {
-    dispatch(actionGet())
+    dispatch(actionGetTeam())
   }, [dispatch])
 
   const handleAddUsersOpen = () => {
-    dispatch(actionGetUsers())
+    dispatch(actionGetFreeUsers())
     setIsAddUsersOpen(true)
   }
 

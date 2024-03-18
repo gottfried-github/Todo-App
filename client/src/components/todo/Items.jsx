@@ -12,6 +12,7 @@ import { DataGrid, useGridApiRef } from '@mui/x-data-grid'
 import { ITEM_STATUS } from '../../constants'
 import { updateStatus, updateName, deleteOne } from '../../store/actions/todo'
 import slice from '../../store/store/slice-todo'
+import sliceAuth from '../../store/store/slice-auth'
 import RowMenu from './RowMenu'
 
 export default function Items() {
@@ -23,6 +24,7 @@ export default function Items() {
 
   const filter = useSelector(state => slice.selectors.selectFilter(state))
   const counters = useSelector(state => slice.selectors.selectCounters(state))
+  const userData = useSelector(state => sliceAuth.selectors.selectUserData(state))
 
   const [paginationModel, setPaginationModel] = useState(filter.pagination)
 
@@ -59,6 +61,7 @@ export default function Items() {
     dispatch(
       updateStatus({
         id: data.id,
+        userId: data.userId,
         status,
       })
     )
@@ -68,10 +71,11 @@ export default function Items() {
     setName(name)
   }
 
-  const handleNameSubmit = () => {
+  const handleNameSubmit = userId => {
     dispatch(
       updateName({
         id: editingId,
+        userId,
         name,
       })
     )
@@ -105,6 +109,7 @@ export default function Items() {
             onClick={ev => {
               handleStatusChange(ev, {
                 id: params.row.id,
+                userId: params.row.userId,
                 status: params.value,
               })
             }}
@@ -139,7 +144,7 @@ export default function Items() {
                 // for .isComposing see https://developer.mozilla.org/en-US/docs/Web/API/Element/keyup_event
                 if (ev.isComposing || ev.code !== 'Enter') return
 
-                handleNameSubmit()
+                handleNameSubmit(params.row.userId)
                 handleEdit(params.row.id)
               }}
               onKeyDown={ev => {
@@ -165,6 +170,7 @@ export default function Items() {
         if (params.row.id !== editingId) {
           return (
             <RowMenu
+              own={params.row.userId === userData.id}
               handleEdit={() => {
                 handleNameChange(params.row.name)
                 handleEdit(params.row.id)
@@ -181,7 +187,7 @@ export default function Items() {
             <Button
               variant="ordinary"
               onClick={() => {
-                handleNameSubmit()
+                handleNameSubmit(params.row.userId)
                 handleEdit(params.row.id)
               }}
             >

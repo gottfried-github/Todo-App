@@ -2,7 +2,6 @@ import { call, put, takeEvery, takeLatest, select } from 'redux-saga/effects'
 import axios from '../http'
 
 import sliceTodo from '../store/slice-todo'
-import sliceAuth from '../store/slice-auth'
 
 import {
   create as actionCreate,
@@ -22,18 +21,8 @@ class Item {
 function* create(action) {
   const item = new Item(action.payload)
 
-  const token = yield select(state => sliceAuth.selectors.selectToken(state))
-
-  const config = token
-    ? {
-        headers: {
-          authorization: `Bearer ${token}`,
-        },
-      }
-    : null
-
   try {
-    const res = yield call(axios.post, '/todos', item, config)
+    const res = yield call(axios.post, '/todos', item)
 
     yield put({
       type: sliceTodo.actions.append.type,
@@ -48,25 +37,13 @@ function* create(action) {
 }
 
 function* updateStatus(action) {
-  const token = yield select(state => sliceAuth.selectors.selectToken(state))
-
-  const config = token
-    ? {
-        headers: {
-          authorization: `Bearer ${token}`,
-        },
-      }
-    : null
-
   try {
-    yield call(
-      axios.patch,
-      `/todos/${action.payload.id}`,
-      {
+    yield call(axios.patch, `/todos/${action.payload.id}`, {
+      userId: action.payload.userId,
+      body: {
         status: action.payload.status,
       },
-      config
-    )
+    })
 
     yield put({
       type: sliceTodo.actions.updateItem.type,
@@ -81,25 +58,13 @@ function* updateStatus(action) {
 }
 
 function* updateName(action) {
-  const token = yield select(state => sliceAuth.selectors.selectToken(state))
-
-  const config = token
-    ? {
-        headers: {
-          authorization: `Bearer ${token}`,
-        },
-      }
-    : null
-
   try {
-    yield call(
-      axios.patch,
-      `/todos/${action.payload.id}`,
-      {
+    yield call(axios.patch, `/todos/${action.payload.id}`, {
+      userId: action.payload.userId,
+      body: {
         name: action.payload.name,
       },
-      config
-    )
+    })
 
     yield put({
       type: sliceTodo.actions.updateItem.type,
@@ -114,18 +79,8 @@ function* updateName(action) {
 }
 
 function* deleteOne(action) {
-  const token = yield select(state => sliceAuth.selectors.selectToken(state))
-
-  const config = token
-    ? {
-        headers: {
-          authorization: `Bearer ${token}`,
-        },
-      }
-    : null
-
   try {
-    yield call(axios.delete, `/todos/${action.payload}`, config)
+    yield call(axios.delete, `/todos/${action.payload}`)
 
     yield call(getItems)
   } catch (e) {
@@ -137,18 +92,8 @@ function* deleteOne(action) {
 }
 
 function* deleteDone() {
-  const token = yield select(state => sliceAuth.selectors.selectToken(state))
-
-  const config = token
-    ? {
-        headers: {
-          authorization: `Bearer ${token}`,
-        },
-      }
-    : null
-
   try {
-    yield call(axios.delete, '/todos', config)
+    yield call(axios.delete, '/todos')
 
     yield call(getItems)
   } catch (e) {
@@ -160,15 +105,7 @@ function* deleteDone() {
 }
 
 function* getItems() {
-  const token = yield select(state => sliceAuth.selectors.selectToken(state))
-
   const config = {}
-
-  if (token) {
-    config.headers = {
-      authorization: `Bearer ${token}`,
-    }
-  }
 
   const filter = yield select(state => sliceTodo.selectors.selectFilter(state))
 

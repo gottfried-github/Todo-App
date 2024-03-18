@@ -39,6 +39,7 @@ export default async function signup(ctx) {
     ctx.send(201, {
       accessToken,
       user: {
+        id: user.id,
         userName: user.userName,
         email: user.email,
         firstName: user.firstName,
@@ -62,6 +63,10 @@ export default async function signup(ctx) {
       }
 
       ctx.throw(400, null, { errors })
+    }
+
+    if (e.status) {
+      throw e
     }
 
     ctx.throw(500, 'database errored while creating user', e)
