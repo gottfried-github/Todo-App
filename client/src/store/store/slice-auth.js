@@ -9,6 +9,8 @@ const slice = createSlice({
     errorSignin: null,
     isLoading: true,
     userData: null,
+    hasSocketConnected: null,
+    errorSocket: null,
   },
   reducers: {
     setToken: (state, action) => {
@@ -40,6 +42,18 @@ const slice = createSlice({
     },
     setUserData: (state, action) => {
       state.userData = action.payload
+    },
+    setHasSocketConnected: state => {
+      state.hasSocketConnected = true
+    },
+    unsetHasSocketConnected: state => {
+      state.hasSocketConnected = null
+    },
+    setErrorSocket: (state, action) => {
+      state.errorSocket = action.payload
+    },
+    unsetErrorSocket: state => {
+      state.errorSocket = null
     },
   },
   selectors: {

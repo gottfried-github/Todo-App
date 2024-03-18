@@ -95,6 +95,10 @@ function* authorizeSocket() {
     })
   }
 
+  put({
+    type: slice.actions.unsetHasSocketConnected.type,
+  })
+
   socket = yield call(io, 'ws://localhost:3000', {
     extraHeaders: {
       Authorization: `Bearer ${token}`,

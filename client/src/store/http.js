@@ -51,19 +51,10 @@ instance.interceptors.response.use(
       return Promise.reject(e)
     }
 
+    let resRefresh = null
+
     try {
-      const resRefresh = await instance.get('/auth/refresh')
-
-      store.dispatch(sliceAuth.actions.setToken(resRefresh.data.accessToken))
-      store.dispatch(actionTokenSet())
-
-      const resOriginal = await instance({
-        ...e.config,
-        transformRequest: null,
-        headers: { ...e.config.headers, Authorization: `Bearer ${resRefresh.data.accessToken}` },
-      })
-
-      return Promise.resolve(resOriginal)
+      resRefresh = await instance.get('/auth/refresh')
     } catch (e) {
       if (![401, 403].includes(e.response.status)) {
         return Promise.reject(e)
@@ -71,6 +62,38 @@ instance.interceptors.response.use(
 
       store.dispatch(sliceAuth.actions.unsetToken())
     }
+
+    store.dispatch(sliceAuth.actions.setToken(resRefresh.data.accessToken))
+
+    // hasSocketConnected is set by the previous successful socket connection
+    store.dispatch(sliceAuth.actions.unsetHasSocketConnected())
+
+    const unsubscribe = store.subscribe(async () => {
+      const state = store.getState()
+      if (!state.auth.hasSocketConnected) return
+
+      // make the HTTP request
+      try {
+        const resOriginal = await instance({
+          ...e.config,
+          transformRequest: null,
+          headers: {
+            ...e.config.headers,
+            Authorization: `Bearer ${resRefresh.data.accessToken}`,
+          },
+        })
+
+        Promise.resolve(resOriginal)
+      } catch (e) {
+        Promise.reject(e)
+      } finally {
+        unsubscribe()
+
+        store.dispatch(sliceAuth.actions.unsetHasSocketConnected())
+      }
+    })
+
+    store.dispatch(actionTokenSet())
   }
 )
 
