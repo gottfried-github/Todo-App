@@ -24,7 +24,7 @@ export default function Header() {
         <Button
           variant="app-bar"
           onClick={() => {
-            dispatch(actionSignout())
+            dispatch(actionSignout({ server: true }))
           }}
         >
           sign out

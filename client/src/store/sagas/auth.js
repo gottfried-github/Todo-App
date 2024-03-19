@@ -1,4 +1,4 @@
-import { call, put, takeLatest, select, takeEvery } from 'redux-saga/effects'
+import { call, put, takeLatest, select } from 'redux-saga/effects'
 import { io } from 'socket.io-client'
 import axios from '../http'
 import socketSubscribe from '../socket-subscribe'
@@ -8,7 +8,6 @@ import slice from '../store/slice-auth'
 import { signup as actionSignup } from '../actions/auth'
 import { signin as actionSignin } from '../actions/auth'
 import { signout as actionSignout } from '../actions/auth'
-import { unauthorizedResponse as actionUnauthorizedResponse } from '../actions/auth'
 import { tokenSet as actionTokenSet } from '../actions/auth'
 
 let socket = null
@@ -67,9 +66,15 @@ function* signin(action) {
   }
 }
 
-function* signout() {
+function* signout(action) {
   try {
-    yield call(axios.delete, '/auth')
+    if (socket?.connected) {
+      yield call(socket.disconnect.bind(socket))
+    }
+
+    if (action.payload?.server) {
+      yield call(axios.delete, '/auth')
+    }
 
     yield put({
       type: slice.actions.unsetToken.type,
@@ -102,14 +107,6 @@ function* authorizeSocket() {
   })
 
   yield call(socketSubscribe, socket)
-}
-
-function* disconnectSocket() {
-  if (!socket || socket.disconnected) {
-    return null
-  }
-
-  yield call(socket.disconnect.bind(socket))
 }
 
 function* handleEmptyToken() {
@@ -156,8 +153,6 @@ function* auth() {
   yield takeLatest(actionSignin.type, signin)
   yield takeLatest(actionSignout.type, signout)
   yield takeLatest(actionTokenSet.type, authorizeSocket)
-  yield takeEvery(actionUnauthorizedResponse.type, disconnectSocket)
-  yield takeEvery(slice.actions.unsetToken.type, disconnectSocket)
 
   yield handleEmptyToken()
 }
