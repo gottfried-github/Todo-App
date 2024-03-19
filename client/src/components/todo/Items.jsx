@@ -162,6 +162,14 @@ export default function Items() {
       },
     },
     {
+      field: 'createdBy',
+      headerName: 'Created By',
+      sortable: false,
+      valueGetter: params => {
+        return params.row.userId.userName
+      },
+    },
+    {
       field: 'options',
       headerName: 'Options',
       sortable: false,
