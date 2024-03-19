@@ -21,12 +21,19 @@ export default {
     let items = null
 
     if (!pagination) {
-      items = await Todo.find(filter).sort(sort)
+      items = await Todo.find(filter).sort(sort).populate('userId', {
+        password: 0,
+        refreshToken: 0,
+      })
     } else {
       items = await Todo.find(filter)
         .sort(sort)
         .skip(pagination.page * pagination.pageSize)
         .limit(pagination.pageSize)
+        .populate('userId', {
+          password: 0,
+          refreshToken: 0,
+        })
     }
 
     const counters = {
