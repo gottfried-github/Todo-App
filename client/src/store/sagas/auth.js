@@ -68,10 +68,6 @@ function* signin(action) {
 
 function* signout(action) {
   try {
-    if (socket?.connected) {
-      yield call(socket.disconnect.bind(socket))
-    }
-
     if (action.payload?.server) {
       yield call(axios.delete, '/auth')
     }
@@ -79,6 +75,10 @@ function* signout(action) {
     yield put({
       type: slice.actions.unsetToken.type,
     })
+
+    if (socket?.connected) {
+      yield call(socket.disconnect.bind(socket))
+    }
   } catch (e) {
     console.log('saga, signout, e:', e)
     yield put({

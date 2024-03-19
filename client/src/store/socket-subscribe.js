@@ -3,6 +3,8 @@ import { store } from './store/store'
 import sliceTodo from './store/slice-todo'
 import sliceAuth from './store/slice-auth'
 
+import { getItems as actionGetItems } from './actions/todo'
+
 const actions = {
   [ITEM_CREATE]: data => {
     store.dispatch(sliceTodo.actions.append(data))
@@ -37,6 +39,11 @@ export default function subscribe(socket) {
 
   socket.on('disconnect', () => {
     console.log('socket, disconnect')
+    const state = store.getState()
+
+    if (!state.auth.token) return
+
+    store.dispatch(actionGetItems())
   })
 
   socket.on('event', ev => {
