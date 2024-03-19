@@ -8,7 +8,7 @@ import slice from '../store/slice-auth'
 import { signup as actionSignup } from '../actions/auth'
 import { signin as actionSignin } from '../actions/auth'
 import { signout as actionSignout } from '../actions/auth'
-import { tokenSet as actionTokenSet } from '../actions/auth'
+import { signedIn as actionSignedIn } from '../actions/auth'
 
 let socket = null
 
@@ -27,7 +27,7 @@ function* signup(action) {
     })
 
     yield put({
-      type: actionTokenSet.type,
+      type: actionSignedIn.type,
     })
   } catch (e) {
     console.log('saga, auth, signup, axios errored, e:', e)
@@ -54,7 +54,7 @@ function* signin(action) {
     })
 
     yield put({
-      type: actionTokenSet.type,
+      type: actionSignedIn.type,
     })
   } catch (e) {
     console.log('saga, auth, signin, axios errored, e:', e)
@@ -109,7 +109,7 @@ function* authorizeSocket() {
   yield call(socketSubscribe, socket)
 }
 
-function* handleEmptyToken() {
+function* refresh() {
   const token = yield select(state => slice.selectors.selectToken(state))
 
   if (token) return
@@ -133,7 +133,7 @@ function* handleEmptyToken() {
     })
 
     yield put({
-      type: actionTokenSet.type,
+      type: actionSignedIn.type,
     })
   } catch (e) {
     yield put({
@@ -152,9 +152,9 @@ function* auth() {
   yield takeLatest(actionSignup.type, signup)
   yield takeLatest(actionSignin.type, signin)
   yield takeLatest(actionSignout.type, signout)
-  yield takeLatest(actionTokenSet.type, authorizeSocket)
+  yield takeLatest(actionSignedIn.type, authorizeSocket)
 
-  yield handleEmptyToken()
+  yield refresh()
 }
 
 export default auth
