@@ -1,6 +1,15 @@
-import { createAction } from '@reduxjs/toolkit'
+import { createAction } from 'redux-actions'
 
-export const signup = createAction('sagaAuth/signup')
-export const signin = createAction('sagaAuth/signin')
-export const signout = createAction('sagaAuth/signout')
-export const signedIn = createAction('sagaAuth/signedIn')
+export const types = {
+  signup: 'sagaAuth/signup',
+  signin: 'sagaAuth/signin',
+  signout: 'sagaAuth/signout',
+  signedIn: 'sagaAuth/signedIn',
+}
+
+export const creators = {
+  signup: createAction(types.signup),
+  signin: createAction(types.signin),
+  signout: createAction(types.signout),
+  signedIn: createAction(types.signedIn),
+}

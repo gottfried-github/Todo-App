@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux'
 import { RouterProvider, createBrowserRouter, Navigate } from 'react-router-dom'
 
-import sliceAuth from './store/store/slice-auth'
+import { selectors as selectorsAuth } from './store/store/slice-auth'
 
 import Signup from './pages/Signup'
 import Signin from './pages/Signin'
@@ -60,8 +60,8 @@ const routerProtected = createBrowserRouter([
 ])
 
 export default function Router() {
-  const token = useSelector(state => sliceAuth.selectors.selectToken(state))
-  const isLoading = useSelector(state => sliceAuth.selectors.selectIsLoading(state))
+  const token = useSelector(state => selectorsAuth.selectToken(state))
+  const isLoading = useSelector(state => selectorsAuth.selectIsLoading(state))
 
   const component = isLoading ? (
     <LoadingScreen />

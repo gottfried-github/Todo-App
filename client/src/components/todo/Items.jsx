@@ -13,9 +13,7 @@ import { ITEM_STATUS } from '../../constants'
 import { creators as actionCreatorsSaga } from '../../store/actions/sagas/todo'
 import { creators as actionCreatorsStore } from '../../store/actions/store/todo'
 import { selectors as selectorsTodo } from '../../store/store/slice-todo'
-// import { updateStatus, updateName, deleteOne } from '../../store/actions/todo'
-// import slice from '../../store/store/slice-todo'
-import sliceAuth from '../../store/store/slice-auth'
+import { selectors as selectorsAuth } from '../../store/store/slice-auth'
 import RowMenu from './RowMenu'
 
 export default function Items() {
@@ -27,7 +25,7 @@ export default function Items() {
 
   const filter = useSelector(state => selectorsTodo.selectFilter(state))
   const counters = useSelector(state => selectorsTodo.selectCounters(state))
-  const userData = useSelector(state => sliceAuth.selectors.selectUserData(state))
+  const userData = useSelector(state => selectorsAuth.selectUserData(state))
 
   const [paginationModel, setPaginationModel] = useState(filter.pagination)
 

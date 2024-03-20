@@ -3,12 +3,9 @@ import { io } from 'socket.io-client'
 import axios from '../http'
 import socketSubscribe from '../socket-subscribe'
 
-import slice from '../store/slice-auth'
-
-import { signup as actionSignup } from '../actions/sagas/auth'
-import { signin as actionSignin } from '../actions/sagas/auth'
-import { signout as actionSignout } from '../actions/sagas/auth'
-import { signedIn as actionSignedIn } from '../actions/sagas/auth'
+import { selectors } from '../store/slice-auth'
+import { types as actionTypesSaga } from '../actions/sagas/auth'
+import { types as actionTypesStore } from '../actions/store/auth'
 
 let socket = null
 
@@ -17,23 +14,23 @@ function* signup(action) {
     const res = yield call(axios.post, '/auth/signup', action.payload)
 
     yield put({
-      type: slice.actions.setToken.type,
+      type: actionTypesStore.setToken,
       payload: res.data.accessToken,
     })
 
     yield put({
-      type: slice.actions.setUserData.type,
+      type: actionTypesStore.setUserData,
       payload: res.data.user,
     })
 
     yield put({
-      type: actionSignedIn.type,
+      type: actionTypesSaga.signedIn,
     })
   } catch (e) {
     console.log('saga, auth, signup, axios errored, e:', e)
 
     yield put({
-      type: slice.actions.setErrorSignup.type,
+      type: actionTypesStore.setErrorSignup,
       payload: e.response?.data || 'something went wrong',
     })
   }
@@ -44,23 +41,23 @@ function* signin(action) {
     const res = yield call(axios.post, '/auth/signin', action.payload)
 
     yield put({
-      type: slice.actions.setToken.type,
+      type: actionTypesStore.setToken,
       payload: res.data.accessToken,
     })
 
     yield put({
-      type: slice.actions.setUserData.type,
+      type: actionTypesStore.setUserData,
       payload: res.data.user,
     })
 
     yield put({
-      type: actionSignedIn.type,
+      type: actionTypesSaga.signedIn,
     })
   } catch (e) {
     console.log('saga, auth, signin, axios errored, e:', e)
 
     yield put({
-      type: slice.actions.setErrorSignin.type,
+      type: actionTypesStore.setErrorSignin,
       payload: e.response?.data || 'something went wrong',
     })
   }
@@ -73,7 +70,7 @@ function* signout(action) {
     }
 
     yield put({
-      type: slice.actions.unsetToken.type,
+      type: actionTypesStore.unsetToken,
     })
 
     if (socket?.connected) {
@@ -82,18 +79,18 @@ function* signout(action) {
   } catch (e) {
     console.log('saga, signout, e:', e)
     yield put({
-      type: slice.actions.setError.type,
+      type: actionTypesStore.setError,
       payload: e.response?.data || 'something went wrong',
     })
   }
 }
 
 function* authorizeSocket() {
-  const token = yield select(state => slice.selectors.selectToken(state))
+  const token = yield select(state => selectors.selectToken(state))
 
   if (socket?.connected) {
     return put({
-      type: slice.actions.setError.type,
+      type: actionTypesStore.setError,
       payload: {
         message: 'attempted to connect to the socket server, but socket is already connected',
       },
@@ -110,49 +107,49 @@ function* authorizeSocket() {
 }
 
 function* refresh() {
-  const token = yield select(state => slice.selectors.selectToken(state))
+  const token = yield select(state => selectors.selectToken(state))
 
   if (token) return
 
   try {
     yield put({
-      type: slice.actions.setIsLoading.type,
+      type: actionTypesStore.setIsLoading,
       payload: true,
     })
 
     const res = yield call(axios.get, '/auth/refresh')
 
     yield put({
-      type: slice.actions.setToken.type,
+      type: actionTypesStore.setToken,
       payload: res.data.accessToken,
     })
 
     yield put({
-      type: slice.actions.setUserData.type,
+      type: actionTypesStore.setUserData,
       payload: res.data.user,
     })
 
     yield put({
-      type: actionSignedIn.type,
+      type: actionTypesSaga.signedIn,
     })
   } catch (e) {
     yield put({
-      type: slice.actions.setError.type,
+      type: actionTypesStore.setError,
       payload: e.response?.data || 'something went wrong',
     })
   } finally {
     yield put({
-      type: slice.actions.setIsLoading.type,
+      type: actionTypesStore.setIsLoading,
       payload: false,
     })
   }
 }
 
 function* auth() {
-  yield takeLatest(actionSignup.type, signup)
-  yield takeLatest(actionSignin.type, signin)
-  yield takeLatest(actionSignout.type, signout)
-  yield takeLatest(actionSignedIn.type, authorizeSocket)
+  yield takeLatest(actionTypesSaga.signup, signup)
+  yield takeLatest(actionTypesSaga.signin, signin)
+  yield takeLatest(actionTypesSaga.signout, signout)
+  yield takeLatest(actionTypesSaga.signedIn, authorizeSocket)
 
   yield refresh()
 }

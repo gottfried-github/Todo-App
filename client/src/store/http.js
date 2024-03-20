@@ -1,7 +1,6 @@
 import axios from 'axios'
 
-// import { unauthorizedResponse as actionUnauthorizedResponse } from './actions/auth'
-import { signout as actionSignout } from './actions/sagas/auth'
+import { creators as actionCreatorsSagaAuth } from './actions/sagas/auth'
 import { store } from './store/store'
 import sliceAuth from './store/slice-auth'
 
@@ -44,7 +43,7 @@ instance.interceptors.response.use(
     }
 
     if (e.config.url === '/auth/refresh') {
-      store.dispatch(actionSignout())
+      store.dispatch(actionCreatorsSagaAuth.signout())
 
       return Promise.reject(e)
     }
@@ -58,7 +57,7 @@ instance.interceptors.response.use(
         return Promise.reject(e)
       }
 
-      store.dispatch(actionSignout())
+      store.dispatch(actionCreatorsSagaAuth.signout())
       return Promise.reject(e)
     }
 

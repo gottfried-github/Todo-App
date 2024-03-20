@@ -6,8 +6,9 @@ import styled from '@emotion/styled'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 
-import { signup as actionSignup } from '../../../store/actions/sagas/auth'
-import sliceAuth from '../../../store/store/slice-auth'
+import { creators as actionCreatorsSaga } from '../../../store/actions/sagas/auth'
+import { creators as actionCreatorsStore } from '../../../store/actions/store/auth'
+import { selectors as selectorsAuth } from '../../../store/store/slice-auth'
 import { validate } from '../../../utils'
 
 const schema = object({
@@ -20,18 +21,18 @@ const schema = object({
 
 export default function Signup() {
   const dispatch = useDispatch()
-  const error = useSelector(state => sliceAuth.selectors.selectErrorSignup(state))
+  const error = useSelector(state => selectorsAuth.selectErrorSignup(state))
 
   useEffect(() => {
     return () => {
       if (error) {
-        dispatch(sliceAuth.actions.unsetErrorSignup())
+        dispatch(actionCreatorsStore.unsetErrorSignup())
       }
     }
   }, [error, dispatch])
 
   const submitCb = values => {
-    dispatch(actionSignup(values))
+    dispatch(actionCreatorsSaga.signup(values))
   }
 
   return (
@@ -58,7 +59,7 @@ export default function Signup() {
                     }
                     onChange={ev => {
                       if (error) {
-                        dispatch(sliceAuth.actions.unsetErrorSignup())
+                        dispatch(actionCreatorsStore.unsetErrorSignup())
                       }
 
                       input.onChange(ev)
@@ -86,7 +87,7 @@ export default function Signup() {
                     }
                     onChange={ev => {
                       if (error) {
-                        dispatch(sliceAuth.actions.unsetErrorSignup())
+                        dispatch(actionCreatorsStore.unsetErrorSignup())
                       }
 
                       input.onChange(ev)
@@ -114,7 +115,7 @@ export default function Signup() {
                     }
                     onChange={ev => {
                       if (error) {
-                        dispatch(sliceAuth.actions.unsetErrorSignup())
+                        dispatch(actionCreatorsStore.unsetErrorSignup())
                       }
 
                       input.onChange(ev)
@@ -142,7 +143,7 @@ export default function Signup() {
                     }
                     onChange={ev => {
                       if (error) {
-                        dispatch(sliceAuth.actions.unsetErrorSignup())
+                        dispatch(actionCreatorsStore.unsetErrorSignup())
                       }
 
                       input.onChange(ev)
@@ -170,7 +171,7 @@ export default function Signup() {
                     }
                     onChange={ev => {
                       if (error) {
-                        dispatch(sliceAuth.actions.unsetErrorSignup())
+                        dispatch(actionCreatorsStore.unsetErrorSignup())
                       }
 
                       input.onChange(ev)

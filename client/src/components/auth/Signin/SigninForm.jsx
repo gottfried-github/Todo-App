@@ -5,8 +5,9 @@ import { Form, Field } from 'react-final-form'
 import TextField from '@mui/material/TextField'
 import { Button, AuthForm } from '../Signup/SignupForm'
 
-import { signin as actionSignin } from '../../../store/actions/sagas/auth'
-import sliceAuth from '../../../store/store/slice-auth'
+import { creators as actionCreatorsSaga } from '../../../store/actions/sagas/auth'
+import { creators as actionCreatorsStore } from '../../../store/actions/store/auth'
+import { selectors as selectorsAuth } from '../../../store/store/slice-auth'
 import { validate } from '../../../utils'
 
 const schema = object({
@@ -20,18 +21,18 @@ const schema = object({
 
 export default function Signin() {
   const dispatch = useDispatch()
-  const error = useSelector(state => sliceAuth.selectors.selectErrorSignin(state))
+  const error = useSelector(state => selectorsAuth.selectErrorSignin(state))
 
   useEffect(() => {
     return () => {
       if (error) {
-        dispatch(sliceAuth.actions.unsetErrorSignin())
+        dispatch(actionCreatorsStore.unsetErrorSignin())
       }
     }
   }, [error, dispatch])
 
   const submitCb = values => {
-    dispatch(actionSignin(values))
+    dispatch(actionCreatorsSaga.signin(values))
   }
 
   return (
@@ -62,7 +63,7 @@ export default function Signin() {
                     }
                     onChange={ev => {
                       if (error) {
-                        dispatch(sliceAuth.actions.unsetErrorSignin())
+                        dispatch(actionCreatorsStore.unsetErrorSignin())
                       }
 
                       input.onChange(ev)
@@ -90,7 +91,7 @@ export default function Signin() {
                     }
                     onChange={ev => {
                       if (error) {
-                        dispatch(sliceAuth.actions.unsetErrorSignin())
+                        dispatch(actionCreatorsStore.unsetErrorSignin())
                       }
 
                       input.onChange(ev)
