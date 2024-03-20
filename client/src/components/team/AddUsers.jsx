@@ -9,21 +9,20 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import Checkbox from '@mui/material/Checkbox'
 
-import { addUser as actionAddUser } from '../../store/actions/sagas/team'
-import { deleteUser as actionDeleteUser } from '../../store/actions/sagas/team'
-import sliceTeam from '../../store/store/slice-team'
+import { creators as actionCreatorsSaga } from '../../store/actions/sagas/team'
+import { selectors } from '../../store/store/slice-team'
 
 export default function AddUsers({ users, isModalOpen, modalCloseCb }) {
   const dispatch = useDispatch()
 
-  const members = useSelector(state => sliceTeam.selectors.selectMembers(state))
+  const members = useSelector(state => selectors.selectMembers(state))
 
   const handleToggleUser = (user, checked) => {
     if (!checked) {
-      return dispatch(actionDeleteUser(user))
+      return dispatch(actionCreatorsSaga.deleteUser(user))
     }
 
-    dispatch(actionAddUser(user))
+    dispatch(actionCreatorsSaga.addUser(user))
   }
 
   return (

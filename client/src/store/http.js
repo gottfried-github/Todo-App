@@ -1,8 +1,8 @@
 import axios from 'axios'
 
 import { creators as actionCreatorsSagaAuth } from './actions/sagas/auth'
+import { creators as actionCreatorsStoreAuth } from './actions/store/auth'
 import { store } from './store/store'
-import sliceAuth from './store/slice-auth'
 
 const instance = axios.create({
   baseURL: 'http://localhost:3000',
@@ -61,7 +61,7 @@ instance.interceptors.response.use(
       return Promise.reject(e)
     }
 
-    store.dispatch(sliceAuth.actions.setToken(resRefresh.data.accessToken))
+    store.dispatch(actionCreatorsStoreAuth.setToken(resRefresh.data.accessToken))
 
     // make the HTTP request
     try {
