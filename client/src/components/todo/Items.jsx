@@ -181,7 +181,7 @@ export default function Items() {
         if (params.row.id !== editingId) {
           return (
             <RowMenu
-              own={params.row.userId === userData.id}
+              own={params.row.userId.id === userData.id}
               handleEdit={() => {
                 handleNameChange(params.row.name)
                 handleEdit(params.row.id)

@@ -6,7 +6,7 @@ import ToolBar from '@mui/material/Toolbar'
 import Button from '@mui/material/Button'
 import Chip from '@mui/material/Chip'
 
-import { signout as actionSignout } from '../store/actions/auth'
+import { signout as actionSignout } from '../store/actions/sagas/auth'
 import sliceAuth from '../store/store/slice-auth'
 
 export default function Header() {

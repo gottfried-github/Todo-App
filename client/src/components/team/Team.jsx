@@ -9,10 +9,10 @@ import IconButton from '@mui/material/IconButton'
 import IconDelete from '@mui/icons-material/Delete'
 import AddUsers from './AddUsers'
 
-import { getTeam as actionGetTeam } from '../../store/actions/team'
-import { deleteUser as actionDeleteUser } from '../../store/actions/team'
-import { getFreeUsers as actionGetFreeUsers } from '../../store/actions/team'
-import { deleteTeam as actionDeleteTeam } from '../../store/actions/team'
+import { getTeam as actionGetTeam } from '../../store/actions/sagas/team'
+import { deleteUser as actionDeleteUser } from '../../store/actions/sagas/team'
+import { getFreeUsers as actionGetFreeUsers } from '../../store/actions/sagas/team'
+import { deleteTeam as actionDeleteTeam } from '../../store/actions/sagas/team'
 
 import sliceTeam from '../../store/store/slice-team'
 

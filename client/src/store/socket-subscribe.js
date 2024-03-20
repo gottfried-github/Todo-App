@@ -1,24 +1,24 @@
 import { ITEM_CREATE, ITEM_UPDATE, ITEM_DELETE } from './events/index'
 import { store } from './store/store'
-import sliceTodo from './store/slice-todo'
 import sliceAuth from './store/slice-auth'
 
-import { getItems as actionGetItems } from './actions/todo'
+import { creators as actionCreatorsSagaTodo } from './actions/sagas/todo'
+import { creators as actionCreatorsStoreTodo } from './actions/store/todo'
 
 const actions = {
   [ITEM_CREATE]: data => {
-    store.dispatch(sliceTodo.actions.append(data))
+    store.dispatch(actionCreatorsStoreTodo.append(data))
   },
   [ITEM_UPDATE]: data => {
     store.dispatch(
-      sliceTodo.actions.updateItem({
+      actionCreatorsStoreTodo.updateItem({
         id: data.id,
         fields: data,
       })
     )
   },
   [ITEM_DELETE]: data => {
-    store.dispatch(sliceTodo.actions.deleteItem(data))
+    store.dispatch(actionCreatorsStoreTodo.deleteItem(data))
   },
 }
 
@@ -43,7 +43,7 @@ export default function subscribe(socket) {
 
     if (!state.auth.token) return
 
-    store.dispatch(actionGetItems())
+    store.dispatch(actionCreatorsSagaTodo.getItems())
   })
 
   socket.on('event', ev => {

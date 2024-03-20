@@ -9,8 +9,8 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import Checkbox from '@mui/material/Checkbox'
 
-import { addUser as actionAddUser } from '../../store/actions/team'
-import { deleteUser as actionDeleteUser } from '../../store/actions/team'
+import { addUser as actionAddUser } from '../../store/actions/sagas/team'
+import { deleteUser as actionDeleteUser } from '../../store/actions/sagas/team'
 import sliceTeam from '../../store/store/slice-team'
 
 export default function AddUsers({ users, isModalOpen, modalCloseCb }) {

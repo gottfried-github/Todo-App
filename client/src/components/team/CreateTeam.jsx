@@ -6,7 +6,7 @@ import Paper from '@mui/material/Paper'
 import Modal from '@mui/material/Modal'
 import { TextField } from '../todo/Form'
 
-import { create as actionCreate } from '../../store/actions/team'
+import { create as actionCreate } from '../../store/actions/sagas/team'
 
 export default function CreateTeam() {
   const dispatch = useDispatch()

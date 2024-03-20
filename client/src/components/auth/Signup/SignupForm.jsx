@@ -6,7 +6,7 @@ import styled from '@emotion/styled'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 
-import { signup as actionSignup } from '../../../store/actions/auth'
+import { signup as actionSignup } from '../../../store/actions/sagas/auth'
 import sliceAuth from '../../../store/store/slice-auth'
 import { validate } from '../../../utils'
 

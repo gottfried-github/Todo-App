@@ -5,7 +5,7 @@ import { Form, Field } from 'react-final-form'
 import TextField from '@mui/material/TextField'
 import { Button, AuthForm } from '../Signup/SignupForm'
 
-import { signin as actionSignin } from '../../../store/actions/auth'
+import { signin as actionSignin } from '../../../store/actions/sagas/auth'
 import sliceAuth from '../../../store/store/slice-auth'
 import { validate } from '../../../utils'
 

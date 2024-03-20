@@ -1,12 +1,12 @@
 import { call, put, takeEvery, takeLatest, select } from 'redux-saga/effects'
 import axios from '../http'
 
-import { create as actionCreate } from '../actions/team'
-import { addUser as actionAddUser } from '../actions/team'
-import { deleteUser as actionDeleteUser } from '../actions/team'
-import { getTeam as actionGetTeam } from '../actions/team'
-import { getFreeUsers as actionGetFreeUsers } from '../actions/team'
-import { deleteTeam as actionDeleteTeam } from '../actions/team'
+import { create as actionCreate } from '../actions/sagas/team'
+import { addUser as actionAddUser } from '../actions/sagas/team'
+import { deleteUser as actionDeleteUser } from '../actions/sagas/team'
+import { getTeam as actionGetTeam } from '../actions/sagas/team'
+import { getFreeUsers as actionGetFreeUsers } from '../actions/sagas/team'
+import { deleteTeam as actionDeleteTeam } from '../actions/sagas/team'
 
 import sliceTeam from '../store/slice-team'
 import sliceAuth from '../store/slice-auth'

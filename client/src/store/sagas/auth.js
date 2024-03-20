@@ -5,10 +5,10 @@ import socketSubscribe from '../socket-subscribe'
 
 import slice from '../store/slice-auth'
 
-import { signup as actionSignup } from '../actions/auth'
-import { signin as actionSignin } from '../actions/auth'
-import { signout as actionSignout } from '../actions/auth'
-import { signedIn as actionSignedIn } from '../actions/auth'
+import { signup as actionSignup } from '../actions/sagas/auth'
+import { signin as actionSignin } from '../actions/sagas/auth'
+import { signout as actionSignout } from '../actions/sagas/auth'
+import { signedIn as actionSignedIn } from '../actions/sagas/auth'
 
 let socket = null
 

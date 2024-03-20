@@ -1,7 +1,7 @@
 import { call, put, takeEvery, takeLatest, select } from 'redux-saga/effects'
 import axios from '../http'
 
-import sliceTodo from '../store/slice-todo'
+import { selectors as selectorsTodo } from '../store/slice-todo'
 
 import { types as actionTypesSaga } from '../actions/sagas/todo'
 import { types as actionTypesStore } from '../actions/store/todo'
@@ -101,7 +101,7 @@ function* deleteDone() {
 function* getItems() {
   const config = {}
 
-  const filter = yield select(state => sliceTodo.selectors.selectFilter(state))
+  const filter = yield select(state => selectorsTodo.selectFilter(state))
 
   config.params = {
     sortField: filter.sort.field,
