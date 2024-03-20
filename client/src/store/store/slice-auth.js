@@ -1,55 +1,86 @@
-import { handleActions } from 'redux-actions'
+import { combineReducers } from 'redux'
+import { handleAction, handleActions } from 'redux-actions'
 
 import { types } from '../actions/store/auth'
 
-const reducer = handleActions(
+const token = handleActions(
   {
     [types.setToken]: (state, { payload }) => {
-      return { ...state, token: payload }
+      return payload
     },
-    [types.unsetToken]: state => {
-      return { ...state, token: '' }
-    },
-    [types.setError]: (state, { payload }) => {
-      return { ...state, error: payload }
-    },
-    [types.unsetError]: state => {
-      return { ...state, error: null }
-    },
-    [types.setErrorSignup]: (state, { payload }) => {
-      return { ...state, errorSignup: payload }
-    },
-    [types.unsetErrorSignup]: state => {
-      return { ...state, errorSignup: null }
-    },
-    [types.setErrorSignin]: (state, { payload }) => {
-      return { ...state, errorSignin: payload }
-    },
-    [types.unsetErrorSignin]: state => {
-      return { ...state, errorSignin: null }
-    },
-    [types.setIsLoading]: (state, { payload }) => {
-      return { ...state, isLoading: payload }
-    },
-    [types.setUserData]: (state, { payload }) => {
-      return { ...state, userData: payload }
-    },
-    [types.setErrorSocket]: (state, { payload }) => {
-      return { ...state, errorSocket: payload }
-    },
-    [types.unsetErrorSocket]: state => {
-      return { ...state, errorSocket: null }
+    [types.unsetToken]: () => {
+      return ''
     },
   },
+  ''
+)
+
+const errorAuth = handleActions(
   {
-    token: '',
-    error: null,
-    errorSignup: null,
-    errorSignin: null,
-    isLoading: true,
-    userData: null,
-    errorSocket: null,
-  }
+    [types.setError]: (state, { payload }) => {
+      return payload
+    },
+    [types.unsetError]: () => {
+      return null
+    },
+  },
+  null
+)
+
+const errorSignup = handleActions(
+  {
+    [types.setErrorSignup]: (state, { payload }) => {
+      return payload
+    },
+    [types.unsetErrorSignup]: () => {
+      return null
+    },
+  },
+  null
+)
+
+const errorSignin = handleActions(
+  {
+    [types.setErrorSignin]: (state, { payload }) => {
+      return payload
+    },
+    [types.unsetErrorSignin]: () => {
+      return null
+    },
+  },
+  null
+)
+
+const errorSocket = handleActions(
+  {
+    [types.setErrorSocket]: (state, { payload }) => {
+      return payload
+    },
+    [types.unsetErrorSocket]: () => {
+      return null
+    },
+  },
+  null
+)
+
+const isLoading = handleActions(
+  {
+    [types.setIsLoading]: () => {
+      return true
+    },
+    [types.unsetIsLoading]: () => {
+      return false
+    },
+  },
+  true
+)
+
+const userData = handleAction(
+  types.setUserData,
+  (state, { payload }) => {
+    return payload
+  },
+  null
 )
 
 export const selectors = {
@@ -61,4 +92,12 @@ export const selectors = {
   selectUserData: state => state.auth.userData,
 }
 
-export default reducer
+export default combineReducers({
+  token,
+  errorAuth,
+  errorSignup,
+  errorSignin,
+  errorSocket,
+  isLoading,
+  userData,
+})

@@ -114,7 +114,6 @@ function* refresh() {
   try {
     yield put({
       type: actionTypesStore.setIsLoading,
-      payload: true,
     })
 
     const res = yield call(axios.get, '/auth/refresh')
@@ -139,8 +138,7 @@ function* refresh() {
     })
   } finally {
     yield put({
-      type: actionTypesStore.setIsLoading,
-      payload: false,
+      type: actionTypesStore.unsetIsLoading,
     })
   }
 }
