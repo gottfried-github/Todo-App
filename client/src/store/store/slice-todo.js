@@ -39,13 +39,17 @@ const reducer = handleActions(
         stateNew.counters.notDone++
       }
 
-      const counter =
-        state.filter.status === null
-          ? stateNew.counters.all
-          : state.filter.status === ITEM_STATUS.DONE
-            ? stateNew.counters.done
-            : stateNew.counters.notDone
+      let counter = null
 
+      if (state.filter.status === null) {
+        counter = stateNew.counters.all
+      } else if (state.filter.status === ITEM_STATUS.DONE) {
+        counter = stateNew.counters.done
+      } else {
+        counter = stateNew.counters.notDone
+      }
+
+      // whether the new item fits into the current page
       if (
         ![0, counter].includes(
           counter % ((state.filter.pagination.page + 1) * state.filter.pagination.pageSize)
