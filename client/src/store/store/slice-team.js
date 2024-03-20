@@ -1,34 +1,49 @@
-import { handleActions } from 'redux-actions'
+import { combineReducers } from 'redux'
+import { handleAction, handleActions } from 'redux-actions'
 
 import { types } from '../actions/store/team'
 
-const reducer = handleActions(
+const members = handleActions(
   {
     [types.setMembers]: (state, { payload }) => {
-      return { ...state, members: payload }
-    },
-    [types.setFreeUsers]: (state, { payload }) => {
-      return { ...state, freeUsers: payload }
-    },
-    [types.setData]: (state, { payload }) => {
-      return { ...state, data: payload }
-    },
-    [types.setError]: (state, { payload }) => {
-      return { ...state, error: payload }
+      return payload
     },
     [types.appendMember]: (state, { payload }) => {
-      return { ...state, members: [...state.members, payload] }
+      return [...state, payload]
     },
     [types.deleteMember]: (state, { payload }) => {
-      return { ...state, members: state.members.filter(member => member.id !== payload.id) }
+      return state.filter(member => member.id !== payload.id)
     },
   },
+  []
+)
+
+const freeUsers = handleAction(
+  types.setFreeUsers,
+  (state, { payload }) => {
+    return payload
+  },
+  []
+)
+
+const data = handleAction(
+  types.setData,
+  (state, { payload }) => {
+    return payload
+  },
+  null
+)
+
+const error = handleActions(
   {
-    members: [],
-    freeUsers: [],
-    data: null,
-    error: null,
-  }
+    [types.setError]: (state, { payload }) => {
+      return payload
+    },
+    [types.unsetError]: () => {
+      return null
+    },
+  },
+  null
 )
 
 export const selectors = {
@@ -38,4 +53,9 @@ export const selectors = {
   selectError: state => state.teams.error,
 }
 
-export default reducer
+export default combineReducers({
+  members,
+  freeUsers,
+  data,
+  error,
+})
