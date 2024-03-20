@@ -1,4 +1,4 @@
-import { configureStore } from '@reduxjs/toolkit'
+import { createStore, combineReducers, applyMiddleware } from 'redux'
 import createSagaMiddleware from 'redux-saga'
 import logger from 'redux-logger'
 
@@ -8,13 +8,16 @@ import reducerAuth from './slice-auth'
 
 const sagaMiddleware = createSagaMiddleware()
 
-const store = configureStore({
-  reducer: {
+const enhancer = applyMiddleware(logger, sagaMiddleware)
+
+const store = createStore(
+  combineReducers({
     teams: reducerTeam,
     todos: reducerTodo,
     auth: reducerAuth,
-  },
-  middleware: getDefaultMiddleware => [...getDefaultMiddleware(), logger, sagaMiddleware],
-})
+  }),
+  undefined,
+  enhancer
+)
 
 export { store, sagaMiddleware }
