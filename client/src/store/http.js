@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 // import { unauthorizedResponse as actionUnauthorizedResponse } from './actions/auth'
-import { signout as actionSignout } from './actions/auth'
+import { signout as actionSignout } from './actions/sagas/auth'
 import { store } from './store/store'
 import sliceAuth from './store/slice-auth'
 
