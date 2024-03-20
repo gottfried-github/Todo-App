@@ -10,8 +10,11 @@ import CircularProgress from '@mui/material/CircularProgress'
 import { DataGrid, useGridApiRef } from '@mui/x-data-grid'
 
 import { ITEM_STATUS } from '../../constants'
-import { updateStatus, updateName, deleteOne } from '../../store/actions/todo'
-import slice from '../../store/store/slice-todo'
+import { creators as actionCreatorsSaga } from '../../store/actions/sagas/todo'
+import { creators as actionCreatorsStore } from '../../store/actions/store/todo'
+import { selectors as selectorsTodo } from '../../store/store/slice-todo'
+// import { updateStatus, updateName, deleteOne } from '../../store/actions/todo'
+// import slice from '../../store/store/slice-todo'
 import sliceAuth from '../../store/store/slice-auth'
 import RowMenu from './RowMenu'
 
@@ -22,17 +25,17 @@ export default function Items() {
   const [editingId, setEditingId] = useState(null)
   const [name, setName] = useState('')
 
-  const filter = useSelector(state => slice.selectors.selectFilter(state))
-  const counters = useSelector(state => slice.selectors.selectCounters(state))
+  const filter = useSelector(state => selectorsTodo.selectFilter(state))
+  const counters = useSelector(state => selectorsTodo.selectCounters(state))
   const userData = useSelector(state => sliceAuth.selectors.selectUserData(state))
 
   const [paginationModel, setPaginationModel] = useState(filter.pagination)
 
   useEffect(() => {
-    dispatch(slice.actions.setFilter({ pagination: paginationModel }))
+    dispatch(actionCreatorsStore.setFilter({ pagination: paginationModel }))
   }, [dispatch, paginationModel])
 
-  const items = useSelector(state => slice.selectors.selectItems(state))
+  const items = useSelector(state => selectorsTodo.selectItems(state))
   const rowCount = useMemo(() => {
     if (filter.status === null) {
       return counters.all
@@ -59,7 +62,7 @@ export default function Items() {
     const status = data.status === ITEM_STATUS.DONE ? ITEM_STATUS.NOT_DONE : ITEM_STATUS.DONE
 
     dispatch(
-      updateStatus({
+      actionCreatorsSaga.updateStatus({
         id: data.id,
         userId: data.userId,
         status,
@@ -73,7 +76,7 @@ export default function Items() {
 
   const handleNameSubmit = userId => {
     dispatch(
-      updateName({
+      actionCreatorsSaga.updateName({
         id: editingId,
         userId,
         name,
@@ -82,7 +85,7 @@ export default function Items() {
   }
 
   const handleDelete = itemId => {
-    dispatch(deleteOne(itemId))
+    dispatch(actionCreatorsSaga.deleteOne(itemId))
   }
 
   const handleSortModelChange = sortModel => {
@@ -91,7 +94,7 @@ export default function Items() {
       order: sortModel[0].sort === 'desc' ? -1 : 1,
     }
 
-    dispatch(slice.actions.setFilter({ sort }))
+    dispatch(actionCreatorsStore.setFilter({ sort }))
   }
 
   const columns = [

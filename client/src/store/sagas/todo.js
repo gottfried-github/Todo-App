@@ -3,14 +3,8 @@ import axios from '../http'
 
 import sliceTodo from '../store/slice-todo'
 
-import {
-  create as actionCreate,
-  updateStatus as actionUpdateStatus,
-  updateName as actionUpdateName,
-  deleteOne as actionDeleteOne,
-  deleteDone as actionDeleteDone,
-  getItems as actionGetItems,
-} from '../actions/sagas/todo'
+import { types as actionTypesSaga } from '../actions/sagas/todo'
+import { types as actionTypesStore } from '../actions/store/todo'
 
 class Item {
   constructor(name) {
@@ -25,12 +19,12 @@ function* create(action) {
     const res = yield call(axios.post, '/todos', item)
 
     yield put({
-      type: sliceTodo.actions.append.type,
+      type: actionTypesStore.append,
       payload: res.data,
     })
   } catch (e) {
     yield put({
-      type: sliceTodo.actions.setError.type,
+      type: actionTypesStore.setError,
       payload: e,
     })
   }
@@ -46,12 +40,12 @@ function* updateStatus(action) {
     })
 
     yield put({
-      type: sliceTodo.actions.updateItem.type,
+      type: actionTypesStore.updateItem,
       payload: { id: action.payload.id, fields: { status: action.payload.status } },
     })
   } catch (e) {
     yield put({
-      type: sliceTodo.actions.setError.type,
+      type: actionTypesStore.setError,
       payload: e,
     })
   }
@@ -67,12 +61,12 @@ function* updateName(action) {
     })
 
     yield put({
-      type: sliceTodo.actions.updateItem.type,
+      type: actionTypesStore.updateItem,
       payload: { id: action.payload.id, fields: { name: action.payload.name } },
     })
   } catch (e) {
     yield put({
-      type: sliceTodo.actions.setError.type,
+      type: actionTypesStore.setError,
       payload: e,
     })
   }
@@ -85,7 +79,7 @@ function* deleteOne(action) {
     yield call(getItems)
   } catch (e) {
     yield put({
-      type: sliceTodo.actions.setError.type,
+      type: actionTypesStore.setError,
       payload: e,
     })
   }
@@ -98,7 +92,7 @@ function* deleteDone() {
     yield call(getItems)
   } catch (e) {
     yield put({
-      type: sliceTodo.actions.setError.type,
+      type: actionTypesStore.setError,
       payload: e,
     })
   }
@@ -124,24 +118,24 @@ function* getItems() {
     const res = yield call(axios.get, '/todos', config)
 
     yield put({
-      type: sliceTodo.actions.setItems.type,
+      type: actionTypesStore.setItems,
       payload: res.data,
     })
   } catch (e) {
     yield put({
-      type: sliceTodo.actions.setError.type,
+      type: actionTypesStore.setError,
       payload: e.response?.data || 'something went wrong',
     })
   }
 }
 
 function* todos() {
-  yield takeEvery(actionCreate.type, create)
-  yield takeLatest(actionUpdateStatus.type, updateStatus)
-  yield takeLatest(actionUpdateName.type, updateName)
-  yield takeLatest(actionDeleteOne.type, deleteOne)
-  yield takeLatest(actionDeleteDone.type, deleteDone)
-  yield takeEvery(actionGetItems.type, getItems)
+  yield takeEvery(actionTypesSaga.create, create)
+  yield takeLatest(actionTypesSaga.updateStatus, updateStatus)
+  yield takeLatest(actionTypesSaga.updateName, updateName)
+  yield takeLatest(actionTypesSaga.deleteOne, deleteOne)
+  yield takeLatest(actionTypesSaga.deleteDone, deleteDone)
+  yield takeEvery(actionTypesSaga.getItems, getItems)
 }
 
 export default todos

@@ -3,8 +3,8 @@ import { useSelector, useDispatch } from 'react-redux'
 import styled from '@emotion/styled'
 import Typography from '@mui/material/Typography'
 
-import { getItems } from '../../store/actions/todo'
-import slice from '../../store/store/slice-todo'
+import { creators as actionCreators } from '../../store/actions/sagas/todo'
+import { selectors } from '../../store/store/slice-todo'
 
 import Form from './Form'
 import Controls from './Controls'
@@ -13,14 +13,14 @@ import Items from './Items'
 export default function App() {
   const dispatch = useDispatch()
 
-  const filter = useSelector(state => slice.selectors.selectFilter(state))
-  const counters = useSelector(state => slice.selectors.selectCounters(state))
+  const filter = useSelector(state => selectors.selectFilter(state))
+  const counters = useSelector(state => selectors.selectCounters(state))
 
   useEffect(() => {
-    dispatch(getItems())
+    dispatch(actionCreators.getItems())
   }, [dispatch, filter])
 
-  const error = useSelector(state => slice.selectors.selectError({ [slice.reducerPath]: state }))
+  const error = useSelector(state => selectors.selectError(state))
 
   if (error) {
     alert(error.message)
