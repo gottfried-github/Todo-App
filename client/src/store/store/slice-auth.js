@@ -34,12 +34,6 @@ const reducer = handleActions(
     [types.setUserData]: (state, { payload }) => {
       return { ...state, userData: payload }
     },
-    [types.setHasSocketConnected]: state => {
-      return { ...state, hasSocketConnected: true }
-    },
-    [types.unsetHasSocketConnected]: state => {
-      return { ...state, hasSocketConnected: null }
-    },
     [types.setErrorSocket]: (state, { payload }) => {
       return { ...state, errorSocket: payload }
     },
@@ -54,7 +48,6 @@ const reducer = handleActions(
     errorSignin: null,
     isLoading: true,
     userData: null,
-    hasSocketConnected: null,
     errorSocket: null,
   }
 )

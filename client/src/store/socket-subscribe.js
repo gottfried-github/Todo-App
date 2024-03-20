@@ -34,7 +34,6 @@ export default function subscribe(socket) {
 
   socket.on('connect', () => {
     console.log('socket, connect')
-    store.dispatch(actionCreatorsStoreAuth.setHasSocketConnected())
   })
 
   socket.on('disconnect', () => {

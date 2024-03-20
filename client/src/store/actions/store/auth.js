@@ -11,8 +11,6 @@ export const types = {
   unsetErrorSignin: 'storeAuth/unsetErrorSignin',
   setIsLoading: 'storeAuth/setIsLoading',
   setUserData: 'storeAuth/setUserData',
-  setHasSocketConnected: 'storeAuth/setHasSocketConnected',
-  unsetHasSocketConnected: 'storeAuth/unsetHasSocketConnected',
   setErrorSocket: 'storeAuth/setErrorSocket',
   unsetErrorSocket: 'storeAuth/unsetErrorSocket',
 }
@@ -28,8 +26,6 @@ export const creators = {
   unsetErrorSignin: createAction(types.unsetErrorSignin),
   setIsLoading: createAction(types.setIsLoading),
   setUserData: createAction(types.setUserData),
-  setHasSocketConnected: createAction(types.setHasSocketConnected),
-  unsetHasSocketConnected: createAction(types.unsetHasSocketConnected),
   setErrorSocket: createAction(types.setErrorSocket),
   unsetErrorSocket: createAction(types.unsetErrorSocket),
 }
