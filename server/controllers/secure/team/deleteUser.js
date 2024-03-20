@@ -11,6 +11,8 @@ export default async function deleteUser(ctx) {
       ctx.throw(404, "the user doesn't belong to the given team")
     }
 
+    ctx.socketDisconnect([ctx.params.userId])
+
     ctx.send(200, null, 'successfully removed user from the team')
   } catch (e) {
     if (e.status) {

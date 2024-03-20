@@ -1,10 +1,114 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { handleActions } from 'redux-actions'
+
+import { types } from '../actions/store/todo'
 
 import { ITEM_STATUS } from '../../constants'
 
-const slice = createSlice({
-  name: 'todos',
-  initialState: {
+const reducer = handleActions(
+  {
+    [types.setItems]: (state, { payload }) => {
+      return {
+        ...state,
+        items: payload.items,
+        counters: payload.counters,
+      }
+    },
+    [types.setFilter]: (state, { payload }) => {
+      return {
+        ...state,
+        filter: {
+          ...state.filter,
+          ...payload,
+        },
+      }
+    },
+    [types.setError]: (state, { payload }) => {
+      return { ...state, error: payload }
+    },
+    [types.append]: (state, { payload }) => {
+      const stateNew = {
+        counters: { ...state.counters },
+        items: [...state.items],
+      }
+
+      stateNew.counters.all++
+
+      if (payload.status === ITEM_STATUS.DONE) {
+        stateNew.counters.done++
+      } else {
+        stateNew.counters.notDone++
+      }
+
+      const counter =
+        state.filter.status === null
+          ? stateNew.counters.all
+          : state.filter.status === ITEM_STATUS.DONE
+            ? stateNew.counters.done
+            : stateNew.counters.notDone
+
+      if (
+        ![0, counter].includes(
+          counter % ((state.filter.pagination.page + 1) * state.filter.pagination.pageSize)
+        )
+      )
+        return state
+
+      if (state.filter.status === null || payload.status === state.filter.status) {
+        stateNew.items.push(payload)
+      }
+
+      return { ...state, ...stateNew }
+    },
+    [types.updateItem]: (state, { payload }) => {
+      const stateNew = {}
+
+      stateNew.items = state.items.map(item => {
+        if (item.id === payload.id) {
+          return {
+            ...item,
+            ...payload.fields,
+          }
+        }
+
+        return item
+      })
+
+      if (state.filter.status) {
+        stateNew.items = stateNew.items.filter(item => item.status === state.filter.status)
+      }
+
+      if (payload.fields.status) {
+        stateNew.counters = { ...state.counters }
+
+        if (payload.fields.status === ITEM_STATUS.DONE) {
+          stateNew.counters.notDone--
+          stateNew.counters.done++
+        } else {
+          stateNew.counters.done--
+          stateNew.counters.notDone++
+        }
+      }
+
+      return { ...state, ...stateNew }
+    },
+    [types.deleteItem]: (state, { payload }) => {
+      const stateNew = {
+        counters: { ...state.counters },
+      }
+
+      stateNew.items = state.items.filter(item => item.id !== payload.id)
+      stateNew.counters.all--
+
+      if (payload.status === ITEM_STATUS.DONE) {
+        stateNew.counters.done--
+      } else {
+        stateNew.counters.notDone--
+      }
+
+      return { ...state, ...stateNew }
+    },
+  },
+  {
     items: [],
     counters: {
       all: 0,
@@ -23,96 +127,14 @@ const slice = createSlice({
       },
     },
     error: null,
-  },
-  reducers: {
-    setItems: (state, action) => {
-      state.items = action.payload.items
-      state.counters = action.payload.counters
-    },
-    setFilter: (state, action) => {
-      state.filter = {
-        ...state.filter,
-        ...action.payload,
-      }
-    },
-    setError: (state, action) => {
-      state.error = action.payload
-    },
-    append: (state, action) => {
-      state.counters.all++
+  }
+)
 
-      if (action.payload.status === ITEM_STATUS.DONE) {
-        state.counters.done++
-      } else {
-        state.counters.notDone++
-      }
+export const selectors = {
+  selectItems: state => state.todos.items,
+  selectCounters: state => state.todos.counters,
+  selectFilter: state => state.todos.filter,
+  selectError: state => state.todos.error,
+}
 
-      const counter =
-        state.filter.status === null
-          ? state.counters.all
-          : state.filter.status === ITEM_STATUS.DONE
-            ? state.counters.done
-            : state.counters.notDone
-
-      if (
-        ![0, counter].includes(
-          counter % ((state.filter.pagination.page + 1) * state.filter.pagination.pageSize)
-        )
-      )
-        return
-
-      if (state.filter.status === null || action.payload.status === state.filter.status) {
-        state.items.push(action.payload)
-      }
-    },
-    updateItem: (state, action) => {
-      state.items = state.items.map(item => {
-        if (item.id === action.payload.id) {
-          return {
-            ...item,
-            ...action.payload.fields,
-          }
-        }
-
-        return item
-      })
-
-      if (state.filter.status) {
-        state.items = state.items.filter(item => item.status === state.filter.status)
-      }
-
-      if (action.payload.fields.status) {
-        if (action.payload.fields.status === ITEM_STATUS.DONE) {
-          state.counters.notDone--
-          state.counters.done++
-        } else {
-          state.counters.done--
-          state.counters.notDone++
-        }
-      }
-    },
-    deleteItem: (state, action) => {
-      state.items = state.items.filter(item => item.id !== action.payload.id)
-
-      state.counters.all--
-
-      if (action.payload.status === ITEM_STATUS.DONE) {
-        state.counters.done--
-      } else {
-        state.counters.notDone--
-      }
-    },
-  },
-  selectors: {
-    selectItems: state => {
-      return state.items
-    },
-    selectCounters: state => {
-      return state.counters
-    },
-    selectFilter: state => state.filter,
-    selectError: state => state.error,
-  },
-})
-
-export default slice
+export default reducer

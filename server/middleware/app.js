@@ -72,5 +72,15 @@ export const utils = async (ctx, next) => {
       })
   }
 
+  ctx.socketDisconnect = async userIds => {
+    const socketsAll = await io.fetchSockets()
+
+    socketsAll.forEach(socket => {
+      if (!userIds.includes(socket.data.userId)) return
+
+      socket.disconnect(true)
+    })
+  }
+
   await next()
 }

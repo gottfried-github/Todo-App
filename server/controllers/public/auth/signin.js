@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken'
+import env from '../../../config.js'
 
 import UserService from '../../../services/user.js'
 
@@ -20,12 +21,12 @@ export default async function signin(ctx) {
     ctx.throw(400, null, { errors: { password: { message: 'incorrect password' } } })
   }
 
-  const accessToken = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_ACCESS_SECRET, {
-    expiresIn: parseInt(process.env.JWT_ACCESS_EXPIRE),
+  const accessToken = jwt.sign({ id: user._id, email: user.email }, env.JWT_ACCESS_SECRET, {
+    expiresIn: parseInt(env.JWT_ACCESS_EXPIRE),
   })
 
-  const refreshToken = jwt.sign({ id: user._id }, process.env.JWT_REFRESH_SECRET, {
-    expiresIn: parseInt(process.env.JWT_REFRESH_EXPIRE),
+  const refreshToken = jwt.sign({ id: user._id }, env.JWT_REFRESH_SECRET, {
+    expiresIn: parseInt(env.JWT_REFRESH_EXPIRE),
   })
 
   user.refreshToken = {
@@ -43,7 +44,7 @@ export default async function signin(ctx) {
     httpOnly: true,
     // secure: true,
     // sameSite: 'none',
-    maxAge: parseInt(process.env.JWT_REFRESH_EXPIRE) * 1000,
+    maxAge: parseInt(env.JWT_REFRESH_EXPIRE) * 1000,
   })
 
   ctx.send(200, {

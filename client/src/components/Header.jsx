@@ -6,12 +6,12 @@ import ToolBar from '@mui/material/Toolbar'
 import Button from '@mui/material/Button'
 import Chip from '@mui/material/Chip'
 
-import { signout as actionSignout } from '../store/actions/auth'
-import sliceAuth from '../store/store/slice-auth'
+import { creators as actionCreatorsSagaAuth } from '../store/actions/sagas/auth'
+import { selectors as selectorsAuth } from '../store/store/slice-auth'
 
 export default function Header() {
   const dispatch = useDispatch()
-  const userData = useSelector(state => sliceAuth.selectors.selectUserData(state))
+  const userData = useSelector(state => selectorsAuth.selectUserData(state))
 
   return (
     <AppBarStyled>
@@ -24,7 +24,7 @@ export default function Header() {
         <Button
           variant="app-bar"
           onClick={() => {
-            dispatch(actionSignout())
+            dispatch(actionCreatorsSagaAuth.signout({ server: true }))
           }}
         >
           sign out

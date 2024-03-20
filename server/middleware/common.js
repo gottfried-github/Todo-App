@@ -1,6 +1,5 @@
 import jwt from 'jsonwebtoken'
-
-import User from '../models/user.js'
+import env from '../config.js'
 
 export const authorize = async (ctx, next) => {
   if (!ctx.headers?.authorization?.startsWith('Bearer ')) {
@@ -11,7 +10,7 @@ export const authorize = async (ctx, next) => {
 
   try {
     const tokenDecoded = await new Promise((resolve, reject) => {
-      jwt.verify(token, process.env.JWT_ACCESS_SECRET, async (err, token) => {
+      jwt.verify(token, env.JWT_ACCESS_SECRET, async (err, token) => {
         if (err) {
           reject(err)
         }

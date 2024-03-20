@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken'
+import env from '../../../config.js'
 
 import User from '../../../models/user.js'
 
@@ -12,7 +13,7 @@ export default async function refresh(ctx) {
 
   try {
     tokenDecoded = await new Promise((resolve, reject) => {
-      jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, async (e, token) => {
+      jwt.verify(refreshToken, env.JWT_REFRESH_SECRET, async (e, token) => {
         if (e) {
           reject(e)
         }
@@ -31,24 +32,24 @@ export default async function refresh(ctx) {
 
   if (
     Date.now() - user.refreshToken.createdAt.getTime() >=
-    parseInt(process.env.JWT_REFRESH_EXPIRE) * 1000
+    parseInt(env.JWT_REFRESH_EXPIRE) * 1000
   ) {
     ctx.throw(401, 'refresh token has expired')
   }
 
-  const accessToken = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_ACCESS_SECRET, {
-    expiresIn: parseInt(process.env.JWT_ACCESS_EXPIRE),
+  const accessToken = jwt.sign({ id: user._id, email: user.email }, env.JWT_ACCESS_SECRET, {
+    expiresIn: parseInt(env.JWT_ACCESS_EXPIRE),
   })
 
-  const refreshTokenNew = jwt.sign({ id: user._id }, process.env.JWT_REFRESH_SECRET, {
-    expiresIn: parseInt(process.env.JWT_REFRESH_EXPIRE),
+  const refreshTokenNew = jwt.sign({ id: user._id }, env.JWT_REFRESH_SECRET, {
+    expiresIn: parseInt(env.JWT_REFRESH_EXPIRE),
   })
 
   ctx.cookies.set('jwt', refreshTokenNew, {
     httpOnly: true,
     // secure: true,
     // sameSite: 'none',
-    maxAge: parseInt(process.env.JWT_REFRESH_EXPIRE) * 1000,
+    maxAge: parseInt(env.JWT_REFRESH_EXPIRE) * 1000,
   })
 
   ctx.send(200, {

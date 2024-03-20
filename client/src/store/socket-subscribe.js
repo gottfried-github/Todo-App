@@ -1,22 +1,24 @@
 import { ITEM_CREATE, ITEM_UPDATE, ITEM_DELETE } from './events/index'
 import { store } from './store/store'
-import sliceTodo from './store/slice-todo'
-import sliceAuth from './store/slice-auth'
+
+import { creators as actionCreatorsStoreAuth } from './actions/store/auth'
+import { creators as actionCreatorsSagaTodo } from './actions/sagas/todo'
+import { creators as actionCreatorsStoreTodo } from './actions/store/todo'
 
 const actions = {
   [ITEM_CREATE]: data => {
-    store.dispatch(sliceTodo.actions.append(data))
+    store.dispatch(actionCreatorsStoreTodo.append(data))
   },
   [ITEM_UPDATE]: data => {
     store.dispatch(
-      sliceTodo.actions.updateItem({
+      actionCreatorsStoreTodo.updateItem({
         id: data.id,
         fields: data,
       })
     )
   },
   [ITEM_DELETE]: data => {
-    store.dispatch(sliceTodo.actions.deleteItem(data))
+    store.dispatch(actionCreatorsStoreTodo.deleteItem(data))
   },
 }
 
@@ -24,7 +26,7 @@ export default function subscribe(socket) {
   socket.on('connect_error', e => {
     console.log('socket, connect_error, e:', e)
     store.dispatch(
-      sliceAuth.actions.setErrorSocket(
+      actionCreatorsStoreAuth.setErrorSocket(
         e.message || 'something went wrong while connecting to the socket server'
       )
     )
@@ -32,11 +34,16 @@ export default function subscribe(socket) {
 
   socket.on('connect', () => {
     console.log('socket, connect')
-    store.dispatch(sliceAuth.actions.setHasSocketConnected())
+    store.dispatch(actionCreatorsStoreAuth.setHasSocketConnected())
   })
 
   socket.on('disconnect', () => {
     console.log('socket, disconnect')
+    const state = store.getState()
+
+    if (!state.auth.token) return
+
+    store.dispatch(actionCreatorsSagaTodo.getItems())
   })
 
   socket.on('event', ev => {

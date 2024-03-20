@@ -1,9 +1,8 @@
 import axios from 'axios'
 
-import { unauthorizedResponse as actionUnauthorizedResponse } from './actions/auth'
-import { tokenSet as actionTokenSet } from './actions/auth'
+import { creators as actionCreatorsSagaAuth } from './actions/sagas/auth'
+import { creators as actionCreatorsStoreAuth } from './actions/store/auth'
 import { store } from './store/store'
-import sliceAuth from './store/slice-auth'
 
 const instance = axios.create({
   baseURL: 'http://localhost:3000',
@@ -43,10 +42,8 @@ instance.interceptors.response.use(
       return Promise.reject(e)
     }
 
-    store.dispatch(actionUnauthorizedResponse())
-
     if (e.config.url === '/auth/refresh') {
-      store.dispatch(sliceAuth.actions.unsetToken())
+      store.dispatch(actionCreatorsSagaAuth.signout())
 
       return Promise.reject(e)
     }
@@ -60,44 +57,27 @@ instance.interceptors.response.use(
         return Promise.reject(e)
       }
 
-      store.dispatch(sliceAuth.actions.unsetToken())
+      store.dispatch(actionCreatorsSagaAuth.signout())
+      return Promise.reject(e)
     }
 
-    store.dispatch(sliceAuth.actions.setToken(resRefresh.data.accessToken))
+    store.dispatch(actionCreatorsStoreAuth.setToken(resRefresh.data.accessToken))
 
-    // hasSocketConnected is set by the previous successful socket connection
-    store.dispatch(sliceAuth.actions.unsetHasSocketConnected())
-    store.dispatch(sliceAuth.actions.unsetErrorSocket())
+    // make the HTTP request
+    try {
+      const resOriginal = await instance({
+        ...e.config,
+        transformRequest: null,
+        headers: {
+          ...e.config.headers,
+          Authorization: `Bearer ${resRefresh.data.accessToken}`,
+        },
+      })
 
-    const unsubscribe = store.subscribe(async () => {
-      const state = store.getState()
-
-      if (state.auth.errorSocket) {
-        return Promise.reject(state.auth.errorSocket)
-      }
-
-      if (!state.auth.hasSocketConnected) return
-
-      // make the HTTP request
-      try {
-        const resOriginal = await instance({
-          ...e.config,
-          transformRequest: null,
-          headers: {
-            ...e.config.headers,
-            Authorization: `Bearer ${resRefresh.data.accessToken}`,
-          },
-        })
-
-        Promise.resolve(resOriginal)
-      } catch (e) {
-        Promise.reject(e)
-      } finally {
-        unsubscribe()
-      }
-    })
-
-    store.dispatch(actionTokenSet())
+      return Promise.resolve(resOriginal)
+    } catch (e) {
+      return Promise.reject(e)
+    }
   }
 )
 

@@ -6,7 +6,7 @@ import Paper from '@mui/material/Paper'
 import Modal from '@mui/material/Modal'
 import { TextField } from '../todo/Form'
 
-import { create as actionCreate } from '../../store/actions/team'
+import { creators as actionCreatorsSaga } from '../../store/actions/sagas/team'
 
 export default function CreateTeam() {
   const dispatch = useDispatch()
@@ -22,7 +22,7 @@ export default function CreateTeam() {
     console.log('handleSubmit, teamName:', teamName)
 
     dispatch(
-      actionCreate({
+      actionCreatorsSaga.create({
         name: teamName,
       })
     )

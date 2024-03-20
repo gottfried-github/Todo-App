@@ -1,4 +1,6 @@
 import jwt from 'jsonwebtoken'
+import env from '../../../config.js'
+
 import User from '../../../models/user.js'
 
 export default async function signout(ctx) {
@@ -10,7 +12,7 @@ export default async function signout(ctx) {
 
   try {
     const tokenDecoded = await new Promise((resolve, reject) => {
-      jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, async (e, token) => {
+      jwt.verify(refreshToken, env.JWT_REFRESH_SECRET, async (e, token) => {
         if (e) {
           reject(e)
         }

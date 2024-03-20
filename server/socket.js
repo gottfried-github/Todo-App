@@ -2,6 +2,7 @@ import { createServer } from 'http'
 import createError from 'http-errors'
 import { Server } from 'socket.io'
 import jwt from 'jsonwebtoken'
+import env from './config.js'
 
 import User from './models/user.js'
 import app from './app.js'
@@ -24,7 +25,7 @@ io.use(async (socket, next) => {
 
   try {
     const tokenDecoded = await new Promise((resolve, reject) => {
-      jwt.verify(token, process.env.JWT_ACCESS_SECRET, async (err, token) => {
+      jwt.verify(token, env.JWT_ACCESS_SECRET, async (err, token) => {
         if (err) {
           reject(err)
         }

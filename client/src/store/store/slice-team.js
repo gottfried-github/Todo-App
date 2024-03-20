@@ -1,39 +1,41 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { handleActions } from 'redux-actions'
 
-const slice = createSlice({
-  name: 'teams',
-  initialState: {
+import { types } from '../actions/store/team'
+
+const reducer = handleActions(
+  {
+    [types.setMembers]: (state, { payload }) => {
+      return { ...state, members: payload }
+    },
+    [types.setFreeUsers]: (state, { payload }) => {
+      return { ...state, freeUsers: payload }
+    },
+    [types.setData]: (state, { payload }) => {
+      return { ...state, data: payload }
+    },
+    [types.setError]: (state, { payload }) => {
+      return { ...state, error: payload }
+    },
+    [types.appendMember]: (state, { payload }) => {
+      return { ...state, members: [...state.members, payload] }
+    },
+    [types.deleteMember]: (state, { payload }) => {
+      return { ...state, members: state.members.filter(member => member.id !== payload.id) }
+    },
+  },
+  {
     members: [],
     freeUsers: [],
     data: null,
     error: null,
-  },
-  reducers: {
-    setMembers: (state, action) => {
-      state.members = action.payload
-    },
-    setFreeUsers: (state, action) => {
-      state.freeUsers = action.payload
-    },
-    setData: (state, action) => {
-      state.data = action.payload
-    },
-    setError: (state, action) => {
-      state.error = action.payload
-    },
-    appendMember: (state, action) => {
-      state.members.push(action.payload)
-    },
-    deleteMember: (state, action) => {
-      state.members = state.members.filter(member => member.id !== action.payload.id)
-    },
-  },
-  selectors: {
-    selectMembers: state => state.members,
-    selectFreeUsers: state => state.freeUsers,
-    selectData: state => state.data,
-    selectError: state => state.error,
-  },
-})
+  }
+)
 
-export default slice
+export const selectors = {
+  selectMembers: state => state.teams.members,
+  selectFreeUsers: state => state.teams.freeUsers,
+  selectData: state => state.teams.data,
+  selectError: state => state.teams.error,
+}
+
+export default reducer

@@ -9,28 +9,24 @@ import IconButton from '@mui/material/IconButton'
 import IconDelete from '@mui/icons-material/Delete'
 import AddUsers from './AddUsers'
 
-import { getTeam as actionGetTeam } from '../../store/actions/team'
-import { deleteUser as actionDeleteUser } from '../../store/actions/team'
-import { getFreeUsers as actionGetFreeUsers } from '../../store/actions/team'
-import { deleteTeam as actionDeleteTeam } from '../../store/actions/team'
-
-import sliceTeam from '../../store/store/slice-team'
+import { creators as actionCreatorsSaga } from '../../store/actions/sagas/team'
+import { selectors } from '../../store/store/slice-team'
 
 export default function Team() {
   const dispatch = useDispatch()
 
   const [isAddUsersOpen, setIsAddUsersOpen] = useState(false)
 
-  const data = useSelector(state => sliceTeam.selectors.selectData(state))
-  const members = useSelector(state => sliceTeam.selectors.selectMembers(state))
-  const users = useSelector(state => sliceTeam.selectors.selectFreeUsers(state))
+  const data = useSelector(state => selectors.selectData(state))
+  const members = useSelector(state => selectors.selectMembers(state))
+  const users = useSelector(state => selectors.selectFreeUsers(state))
 
   useEffect(() => {
-    dispatch(actionGetTeam())
+    dispatch(actionCreatorsSaga.getTeam())
   }, [dispatch])
 
   const handleAddUsersOpen = () => {
-    dispatch(actionGetFreeUsers())
+    dispatch(actionCreatorsSaga.getFreeUsers())
     setIsAddUsersOpen(true)
   }
 
@@ -39,11 +35,11 @@ export default function Team() {
   }
 
   const handleDeleteUser = user => {
-    dispatch(actionDeleteUser(user))
+    dispatch(actionCreatorsSaga.deleteUser(user))
   }
 
   const handleDeleteTeam = () => {
-    dispatch(actionDeleteTeam())
+    dispatch(actionCreatorsSaga.deleteTeam())
   }
 
   return (

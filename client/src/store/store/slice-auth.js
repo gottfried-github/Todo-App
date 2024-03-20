@@ -1,8 +1,53 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { handleActions } from 'redux-actions'
 
-const slice = createSlice({
-  name: 'auth',
-  initialState: {
+import { types } from '../actions/store/auth'
+
+const reducer = handleActions(
+  {
+    [types.setToken]: (state, { payload }) => {
+      return { ...state, token: payload }
+    },
+    [types.unsetToken]: state => {
+      return { ...state, token: '' }
+    },
+    [types.setError]: (state, { payload }) => {
+      return { ...state, error: payload }
+    },
+    [types.unsetError]: state => {
+      return { ...state, error: null }
+    },
+    [types.setErrorSignup]: (state, { payload }) => {
+      return { ...state, errorSignup: payload }
+    },
+    [types.unsetErrorSignup]: state => {
+      return { ...state, errorSignup: null }
+    },
+    [types.setErrorSignin]: (state, { payload }) => {
+      return { ...state, errorSignin: payload }
+    },
+    [types.unsetErrorSignin]: state => {
+      return { ...state, errorSignin: null }
+    },
+    [types.setIsLoading]: (state, { payload }) => {
+      return { ...state, isLoading: payload }
+    },
+    [types.setUserData]: (state, { payload }) => {
+      return { ...state, userData: payload }
+    },
+    [types.setHasSocketConnected]: state => {
+      return { ...state, hasSocketConnected: true }
+    },
+    [types.unsetHasSocketConnected]: state => {
+      return { ...state, hasSocketConnected: null }
+    },
+    [types.setErrorSocket]: (state, { payload }) => {
+      return { ...state, errorSocket: payload }
+    },
+    [types.unsetErrorSocket]: state => {
+      return { ...state, errorSocket: null }
+    },
+  },
+  {
     token: '',
     error: null,
     errorSignup: null,
@@ -11,59 +56,16 @@ const slice = createSlice({
     userData: null,
     hasSocketConnected: null,
     errorSocket: null,
-  },
-  reducers: {
-    setToken: (state, action) => {
-      state.token = action.payload
-    },
-    unsetToken: state => {
-      state.token = ''
-    },
-    setError: (state, action) => {
-      state.error = action.payload
-    },
-    unsetError: state => {
-      state.error = null
-    },
-    setErrorSignup: (state, action) => {
-      state.errorSignup = action.payload
-    },
-    unsetErrorSignup: state => {
-      state.errorSignup = null
-    },
-    setErrorSignin: (state, action) => {
-      state.errorSignin = action.payload
-    },
-    unsetErrorSignin: state => {
-      state.errorSignin = null
-    },
-    setIsLoading: (state, action) => {
-      state.isLoading = action.payload
-    },
-    setUserData: (state, action) => {
-      state.userData = action.payload
-    },
-    setHasSocketConnected: state => {
-      state.hasSocketConnected = true
-    },
-    unsetHasSocketConnected: state => {
-      state.hasSocketConnected = null
-    },
-    setErrorSocket: (state, action) => {
-      state.errorSocket = action.payload
-    },
-    unsetErrorSocket: state => {
-      state.errorSocket = null
-    },
-  },
-  selectors: {
-    selectToken: state => state.token,
-    selectError: state => state.error,
-    selectErrorSignup: state => state.errorSignup,
-    selectErrorSignin: state => state.errorSignin,
-    selectIsLoading: state => state.isLoading,
-    selectUserData: state => state.userData,
-  },
-})
+  }
+)
 
-export default slice
+export const selectors = {
+  selectToken: state => state.auth.token,
+  selectError: state => state.auth.error,
+  selectErrorSignup: state => state.auth.errorSignup,
+  selectErrorSignin: state => state.auth.errorSignin,
+  selectIsLoading: state => state.auth.isLoading,
+  selectUserData: state => state.auth.userData,
+}
+
+export default reducer
