@@ -6,7 +6,7 @@ import Todo from '../../../models/todo.js'
 export default async function update(ctx) {
   try {
     const _res = await Todo.updateOne(
-      { _id: ctx.params.id, userId: ctx.request.body.userId },
+      { _id: ctx.params.id, user: ctx.request.body.userId },
       ctx.request.body.body,
       {
         runValidators: true,
@@ -17,7 +17,13 @@ export default async function update(ctx) {
       ctx.throw(404, 'no item with given id for the current user')
     }
 
-    const item = await Todo.findOne({ _id: ctx.params.id, userId: ctx.request.body.userId })
+    const item = await Todo.findOne({ _id: ctx.params.id, user: ctx.request.body.userId }).populate(
+      'user',
+      {
+        id: 1,
+        userName: 1,
+      }
+    )
     ctx.socketSend(ITEM_UPDATE, item)
 
     ctx.send(200, null, 'successfully updated')

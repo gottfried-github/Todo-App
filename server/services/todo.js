@@ -9,9 +9,9 @@ export default {
 
     if (user.teamId) {
       const users = await User.find({ teamId: user.teamId })
-      filter.userId = { $in: users }
+      filter.user = { $in: users }
     } else {
-      filter.userId = userId
+      filter.user = userId
     }
 
     if (status) {
@@ -21,23 +21,23 @@ export default {
     let items = null
 
     if (!pagination) {
-      items = await Todo.find(filter).sort(sort).populate('userId', {
-        password: 0,
-        refreshToken: 0,
+      items = await Todo.find(filter).sort(sort).populate('user', {
+        id: 1,
+        userName: 1,
       })
     } else {
       items = await Todo.find(filter)
         .sort(sort)
         .skip(pagination.page * pagination.pageSize)
         .limit(pagination.pageSize)
-        .populate('userId', {
-          password: 0,
-          refreshToken: 0,
+        .populate('user', {
+          id: 1,
+          userName: 1,
         })
     }
 
     const counters = {
-      all: await Todo.countDocuments({ userId: filter.userId }),
+      all: await Todo.countDocuments({ user: filter.user }),
       done: await Todo.countDocuments({ ...filter, status: 1 }),
       notDone: await Todo.countDocuments({ ...filter, status: 2 }),
     }
@@ -45,6 +45,6 @@ export default {
     return { items, counters }
   },
   deleteDone: async userId => {
-    return Todo.deleteMany({ status: 1, userId })
+    return Todo.deleteMany({ status: 1, user: userId })
   },
 }
