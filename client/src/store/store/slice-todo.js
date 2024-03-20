@@ -51,7 +51,7 @@ const reducer = handleActions(
           counter % ((state.filter.pagination.page + 1) * state.filter.pagination.pageSize)
         )
       )
-        return state
+        return { ...state, ...stateNew }
 
       if (state.filter.status === null || payload.status === state.filter.status) {
         stateNew.items.push(payload)
