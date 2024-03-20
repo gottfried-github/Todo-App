@@ -110,7 +110,7 @@ export default function Items() {
             onClick={ev => {
               handleStatusChange(ev, {
                 id: params.row.id,
-                userId: params.row.userId,
+                userId: params.row.user.id,
                 status: params.value,
               })
             }}
@@ -145,7 +145,7 @@ export default function Items() {
                 // for .isComposing see https://developer.mozilla.org/en-US/docs/Web/API/Element/keyup_event
                 if (ev.isComposing || ev.code !== 'Enter') return
 
-                handleNameSubmit(params.row.userId)
+                handleNameSubmit(params.row.user.id)
                 handleEdit(params.row.id)
               }}
               onKeyDown={ev => {
@@ -167,7 +167,7 @@ export default function Items() {
       headerName: 'Created By',
       sortable: false,
       valueGetter: params => {
-        return params.row.userId.userName
+        return params.row.user.userName
       },
     },
     {
@@ -179,7 +179,7 @@ export default function Items() {
         if (params.row.id !== editingId) {
           return (
             <RowMenu
-              own={params.row.userId.id === userData.id}
+              own={params.row.user.id === userData.id}
               handleEdit={() => {
                 handleNameChange(params.row.name)
                 handleEdit(params.row.id)
@@ -196,7 +196,7 @@ export default function Items() {
             <Button
               variant="ordinary"
               onClick={() => {
-                handleNameSubmit(params.row.userId)
+                handleNameSubmit(params.row.user.id)
                 handleEdit(params.row.id)
               }}
             >
