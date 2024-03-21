@@ -21,7 +21,7 @@ instance.interceptors.request.use(
 
     if (!token) return config
 
-    config.headers = { ...config.headers, authorization: `Bearer ${token}` }
+    config.headers.authorization = `Bearer ${token}`
 
     return config
   },
@@ -52,7 +52,7 @@ instance.interceptors.response.use(
 
     try {
       resRefresh = await instance.get('/auth/refresh')
-    } catch (e) {
+    } catch (e: any) {
       if (![401, 403].includes(e.response.status)) {
         return Promise.reject(e)
       }
