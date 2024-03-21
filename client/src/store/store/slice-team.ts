@@ -5,7 +5,7 @@ import { types } from '../actions/store/team'
 
 const members = handleActions(
   {
-    [types.setMembers]: (state, { payload }) => {
+    [types.setMembers]: (state: object[], { payload }) => {
       return payload
     },
     [types.appendMember]: (state, { payload }) => {
