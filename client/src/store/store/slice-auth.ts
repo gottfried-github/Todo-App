@@ -2,21 +2,17 @@ import { combineReducers } from 'redux'
 import { handleAction, handleActions } from 'redux-actions'
 
 import { types } from '../actions/store/auth'
+import {
+  type Token,
+  type ErrorPayload,
+  type ErrorSocket as ErrorSocketPayload,
+  type UserData as UserDataPayload,
+} from '../actions/store/auth'
 
-export type Token = string
-export type ErrorPayload = object | string
 export type ErrorState = null | ErrorPayload
-export type ErrorSocketPayload = string
-export type ErrorSocketState = null | ErrorSocketPayload
-export type IsLoading = boolean
-export type UserDataPayload = {
-  id: string
-  userName: string
-  firstName: string
-  lastName: string
-  teamId: string | null
-}
-export type UserDataState = null | UserDataPayload
+export type ErrorSocket = null | ErrorSocketPayload
+export type UserData = null | UserDataPayload
+export { type Token, type IsLoading } from '../actions/store/auth'
 
 const token = handleActions(
   {
@@ -68,10 +64,7 @@ const errorSignin = handleActions(
 
 const errorSocket = handleActions(
   {
-    [types.setErrorSocket]: (
-      state: ErrorSocketState,
-      { payload }: { payload: ErrorSocketPayload }
-    ) => {
+    [types.setErrorSocket]: (state: ErrorSocket, { payload }: { payload: ErrorSocketPayload }) => {
       return payload
     },
     [types.unsetErrorSocket]: () => {
@@ -95,7 +88,7 @@ const isLoading = handleActions(
 
 const userData = handleAction(
   types.setUserData,
-  (state: UserDataState, { payload }: { payload: UserDataPayload }) => {
+  (state: UserData, { payload }: { payload: UserDataPayload }) => {
     return payload
   },
   null
