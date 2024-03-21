@@ -13,3 +13,20 @@ export const creators = {
   signout: createAction(types.signout),
   signedIn: createAction(types.signedIn),
 }
+
+export type Signup = {
+  userName: string
+  email: string
+  firstName: string
+  lastName: string,
+  password: string
+}
+
+export type Signin = {
+  identifier: string
+  password: string
+}
+
+export type Signout = {
+  server?: boolean
+}

@@ -4,12 +4,12 @@ import axios from '../http'
 import socketSubscribe from '../socket-subscribe'
 
 import selectors from '../store/selectors-auth'
-import { types as actionTypesSaga } from '../actions/sagas/auth'
+import { types as actionTypesSaga, type Signup, type Signin, type Signout } from '../actions/sagas/auth'
 import { types as actionTypesStore } from '../actions/store/auth'
 
 let socket = null
 
-function* signup(action): Generator<any, any, any> {
+function* signup(action: { type: string, payload: Signup }): Generator<any, any, any> {
   try {
     const res = yield call(axios.post, '/auth/signup', action.payload)
 
@@ -36,7 +36,7 @@ function* signup(action): Generator<any, any, any> {
   }
 }
 
-function* signin(action): Generator<any, any, any> {
+function* signin(action: { type: string, payload: Signin }): Generator<any, any, any> {
   try {
     const res = yield call(axios.post, '/auth/signin', action.payload)
 
@@ -63,7 +63,7 @@ function* signin(action): Generator<any, any, any> {
   }
 }
 
-function* signout(action): Generator<any, any, any> {
+function* signout(action: { type: string, payload?: Signout }): Generator<any, any, any> {
   try {
     if (action.payload?.server) {
       yield call(axios.delete, '/auth')
