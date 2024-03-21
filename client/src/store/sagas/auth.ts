@@ -1,5 +1,5 @@
 import { call, put, takeLatest, select } from 'redux-saga/effects'
-import { io } from 'socket.io-client'
+import { io, type Socket } from 'socket.io-client'
 import axios from '../http'
 import socketSubscribe from '../socket-subscribe'
 
@@ -7,7 +7,7 @@ import selectors from '../store/selectors-auth'
 import { types as actionTypesSaga, type Signup, type Signin, type Signout } from '../actions/sagas/auth'
 import { types as actionTypesStore } from '../actions/store/auth'
 
-let socket = null
+let socket: null | Socket = null
 
 function* signup(action: { type: string, payload: Signup }): Generator<any, any, any> {
   try {
