@@ -26,6 +26,7 @@
   "author": "gottfried",
   "license": "MIT",
   "devDependencies": {
+    "@types/redux-actions": "^2.6.5",
     "@vitejs/plugin-react": "^4.2.1",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",

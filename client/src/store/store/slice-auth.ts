@@ -77,7 +77,7 @@ const isLoading = handleActions(
 
 const userData = handleAction(
   types.setUserData,
-  (state, { payload }) => {
+  (state: null | object, { payload }: { payload: object }) => {
     return payload
   },
   null
