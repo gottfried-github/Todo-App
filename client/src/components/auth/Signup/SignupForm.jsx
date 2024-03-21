@@ -8,7 +8,7 @@ import Button from '@mui/material/Button'
 
 import { creators as actionCreatorsSaga } from '../../../store/actions/sagas/auth'
 import { creators as actionCreatorsStore } from '../../../store/actions/store/auth'
-import { selectors as selectorsAuth } from '../../../store/store/slice-auth'
+import selectorsAuth from '../../../store/store/selectors-auth'
 import { validate } from '../../../utils'
 
 const schema = object({

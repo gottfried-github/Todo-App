@@ -4,7 +4,7 @@ import axios from '../http'
 import { types as actionTypesSaga } from '../actions/sagas/team'
 import { types as actionTypesStore } from '../actions/store/team'
 import { types as actionTypesStoreAuth } from '../actions/store/auth'
-import { selectors as selectorsAuth } from '../store/slice-auth'
+import selectorsAuth from '../store/selectors-auth'
 
 function* create(action) {
   const userData = yield select(state => selectorsAuth.selectUserData(state))

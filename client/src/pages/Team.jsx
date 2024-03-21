@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux'
-import { selectors as selectorsAuth } from '../store/store/slice-auth'
+import selectorsAuth from '../store/store/selectors-auth'
 
 import CreateTeam from '../components/team/CreateTeam'
 import Team from '../components/team/Team'

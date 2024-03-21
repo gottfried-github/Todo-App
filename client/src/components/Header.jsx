@@ -7,7 +7,7 @@ import Button from '@mui/material/Button'
 import Chip from '@mui/material/Chip'
 
 import { creators as actionCreatorsSagaAuth } from '../store/actions/sagas/auth'
-import { selectors as selectorsAuth } from '../store/store/slice-auth'
+import selectorsAuth from '../store/store/selectors-auth'
 
 export default function Header() {
   const dispatch = useDispatch()

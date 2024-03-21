@@ -10,7 +10,7 @@ import IconDelete from '@mui/icons-material/Delete'
 import AddUsers from './AddUsers'
 
 import { creators as actionCreatorsSaga } from '../../store/actions/sagas/team'
-import { selectors } from '../../store/store/slice-team'
+import selectors from '../../store/store/selectors-team'
 
 export default function Team() {
   const dispatch = useDispatch()

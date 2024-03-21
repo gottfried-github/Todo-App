@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux'
 import { RouterProvider, createBrowserRouter, Navigate } from 'react-router-dom'
 
-import { selectors as selectorsAuth } from './store/store/slice-auth'
+import selectorsAuth from './store/store/selectors-auth'
 
 import Signup from './pages/Signup'
 import Signin from './pages/Signin'

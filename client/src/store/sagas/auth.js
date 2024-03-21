@@ -3,7 +3,7 @@ import { io } from 'socket.io-client'
 import axios from '../http'
 import socketSubscribe from '../socket-subscribe'
 
-import { selectors } from '../store/slice-auth'
+import selectors from '../store/selectors-auth'
 import { types as actionTypesSaga } from '../actions/sagas/auth'
 import { types as actionTypesStore } from '../actions/store/auth'
 

@@ -13,7 +13,7 @@ import { ITEM_STATUS } from '../../constants'
 import { creators as actionCreatorsSaga } from '../../store/actions/sagas/todo'
 import { creators as actionCreatorsStore } from '../../store/actions/store/todo'
 import selectorsTodo from '../../store/store/selectors-todo'
-import { selectors as selectorsAuth } from '../../store/store/slice-auth'
+import selectorsAuth from '../../store/store/selectors-auth'
 import RowMenu from './RowMenu'
 
 export default function Items() {

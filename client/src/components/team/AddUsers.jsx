@@ -10,7 +10,7 @@ import ListItemText from '@mui/material/ListItemText'
 import Checkbox from '@mui/material/Checkbox'
 
 import { creators as actionCreatorsSaga } from '../../store/actions/sagas/team'
-import { selectors } from '../../store/store/slice-team'
+import selectors from '../../store/store/selectors-team'
 
 export default function AddUsers({ users, isModalOpen, modalCloseCb }) {
   const dispatch = useDispatch()
