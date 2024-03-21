@@ -12,7 +12,7 @@ import { DataGrid, useGridApiRef } from '@mui/x-data-grid'
 import { ITEM_STATUS } from '../../constants'
 import { creators as actionCreatorsSaga } from '../../store/actions/sagas/todo'
 import { creators as actionCreatorsStore } from '../../store/actions/store/todo'
-import { selectors as selectorsTodo } from '../../store/store/slice-todo'
+import selectorsTodo from '../../store/store/selectors-todo'
 import { selectors as selectorsAuth } from '../../store/store/slice-auth'
 import RowMenu from './RowMenu'
 

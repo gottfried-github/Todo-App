@@ -4,7 +4,7 @@ import styled from '@emotion/styled'
 import Typography from '@mui/material/Typography'
 
 import { creators as actionCreators } from '../../store/actions/sagas/todo'
-import { selectors } from '../../store/store/slice-todo'
+import selectors from '../../store/store/selectors-todo'
 
 import Form from './Form'
 import Controls from './Controls'
