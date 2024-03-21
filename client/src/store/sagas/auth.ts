@@ -9,7 +9,7 @@ import { types as actionTypesStore } from '../actions/store/auth'
 
 let socket = null
 
-function* signup(action) {
+function* signup(action): Generator<any, any, any> {
   try {
     const res = yield call(axios.post, '/auth/signup', action.payload)
 
@@ -26,7 +26,7 @@ function* signup(action) {
     yield put({
       type: actionTypesSaga.signedIn,
     })
-  } catch (e) {
+  } catch (e: any) {
     console.log('saga, auth, signup, axios errored, e:', e)
 
     yield put({
@@ -36,7 +36,7 @@ function* signup(action) {
   }
 }
 
-function* signin(action) {
+function* signin(action): Generator<any, any, any> {
   try {
     const res = yield call(axios.post, '/auth/signin', action.payload)
 
@@ -53,7 +53,7 @@ function* signin(action) {
     yield put({
       type: actionTypesSaga.signedIn,
     })
-  } catch (e) {
+  } catch (e: any) {
     console.log('saga, auth, signin, axios errored, e:', e)
 
     yield put({
@@ -63,7 +63,7 @@ function* signin(action) {
   }
 }
 
-function* signout(action) {
+function* signout(action): Generator<any, any, any> {
   try {
     if (action.payload?.server) {
       yield call(axios.delete, '/auth')
@@ -76,7 +76,7 @@ function* signout(action) {
     if (socket?.connected) {
       yield call(socket.disconnect.bind(socket))
     }
-  } catch (e) {
+  } catch (e: any) {
     console.log('saga, signout, e:', e)
     yield put({
       type: actionTypesStore.setError,
@@ -85,7 +85,7 @@ function* signout(action) {
   }
 }
 
-function* authorizeSocket() {
+function* authorizeSocket(): Generator<any, any, any> {
   const token = yield select(state => selectors.selectToken(state))
 
   if (socket?.connected) {
@@ -106,7 +106,7 @@ function* authorizeSocket() {
   yield call(socketSubscribe, socket)
 }
 
-function* refresh() {
+function* refresh(): Generator<any, any, any> {
   const token = yield select(state => selectors.selectToken(state))
 
   if (token) return
@@ -131,7 +131,7 @@ function* refresh() {
     yield put({
       type: actionTypesSaga.signedIn,
     })
-  } catch (e) {
+  } catch (e: any) {
     yield put({
       type: actionTypesStore.setError,
       payload: e.response?.data || 'something went wrong',
