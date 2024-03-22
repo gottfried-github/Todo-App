@@ -17,3 +17,17 @@ export const creators = {
   deleteDone: createAction(types.deleteDone),
   getItems: createAction(types.getItems),
 }
+
+export type CreatePayload = string
+
+type Update = { id: string; userId: string }
+
+export type UpdateStatusPayload = Update & {
+  status: number
+}
+
+export type UpdateNamePayload = Update & {
+  name: string
+}
+
+export type DeleteOnePayload = string

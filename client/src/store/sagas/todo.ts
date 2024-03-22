@@ -1,18 +1,27 @@
 import { call, put, takeEvery, takeLatest, select } from 'redux-saga/effects'
+import { type Action } from 'redux-actions'
 import axios from '../http'
 
 import selectorsTodo from '../store/selectors-todo'
 
-import { types as actionTypesSaga } from '../actions/sagas/todo'
+import {
+  types as actionTypesSaga,
+  type CreatePayload,
+  type UpdateStatusPayload,
+  type UpdateNamePayload,
+  type DeleteOnePayload,
+} from '../actions/sagas/todo'
 import { types as actionTypesStore } from '../actions/store/todo'
 
 class Item {
-  constructor(name) {
+  name: string
+
+  constructor(name: string) {
     this.name = name
   }
 }
 
-function* create(action) {
+function* create(action: Action<CreatePayload>): Generator<any, any, any> {
   const item = new Item(action.payload)
 
   try {
@@ -22,15 +31,15 @@ function* create(action) {
       type: actionTypesStore.append,
       payload: res.data,
     })
-  } catch (e) {
+  } catch (e: any) {
     yield put({
       type: actionTypesStore.setError,
-      payload: e,
+      payload: e.response?.data || 'something went wrong',
     })
   }
 }
 
-function* updateStatus(action) {
+function* updateStatus(action: Action<UpdateStatusPayload>): Generator<any, any, any> {
   try {
     yield call(axios.patch, `/todos/${action.payload.id}`, {
       userId: action.payload.userId,
@@ -43,15 +52,15 @@ function* updateStatus(action) {
       type: actionTypesStore.updateItem,
       payload: { id: action.payload.id, fields: { status: action.payload.status } },
     })
-  } catch (e) {
+  } catch (e: any) {
     yield put({
       type: actionTypesStore.setError,
-      payload: e,
+      payload: e.response?.data || 'something went wrong',
     })
   }
 }
 
-function* updateName(action) {
+function* updateName(action: Action<UpdateNamePayload>): Generator<any, any, any> {
   try {
     yield call(axios.patch, `/todos/${action.payload.id}`, {
       userId: action.payload.userId,
@@ -64,42 +73,50 @@ function* updateName(action) {
       type: actionTypesStore.updateItem,
       payload: { id: action.payload.id, fields: { name: action.payload.name } },
     })
-  } catch (e) {
+  } catch (e: any) {
     yield put({
       type: actionTypesStore.setError,
-      payload: e,
+      payload: e.response?.data || 'something went wrong',
     })
   }
 }
 
-function* deleteOne(action) {
+function* deleteOne(action: Action<DeleteOnePayload>): Generator<any, any, any> {
   try {
     yield call(axios.delete, `/todos/${action.payload}`)
 
     yield call(getItems)
-  } catch (e) {
+  } catch (e: any) {
     yield put({
       type: actionTypesStore.setError,
-      payload: e,
+      payload: e.response?.data || 'something went wrong',
     })
   }
 }
 
-function* deleteDone() {
+function* deleteDone(): Generator<any, any, any> {
   try {
     yield call(axios.delete, '/todos')
 
     yield call(getItems)
-  } catch (e) {
+  } catch (e: any) {
     yield put({
       type: actionTypesStore.setError,
-      payload: e,
+      payload: e.response?.data || 'something went wrong',
     })
   }
 }
 
-function* getItems() {
-  const config = {}
+function* getItems(): Generator<any, any, any> {
+  const config: {
+    params?: {
+      sortField: string
+      sortOrder: number
+      page: number
+      pageSize: number
+      status?: number
+    }
+  } = {}
 
   const filter = yield select(state => selectorsTodo.selectFilter(state))
 
@@ -121,7 +138,7 @@ function* getItems() {
       type: actionTypesStore.setItems,
       payload: res.data,
     })
-  } catch (e) {
+  } catch (e: any) {
     yield put({
       type: actionTypesStore.setError,
       payload: e.response?.data || 'something went wrong',
