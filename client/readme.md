@@ -7,6 +7,24 @@ As specified in [the docs](https://mui.com/material-ui/api/text-field/#text-fiel
 
 Otherwise, it throws [an error](https://github.com/mui/material-ui/issues/31204).
 
+# Typescript with `redux-saga` `call`
+In `authorizeSocket` in `./src/store/sagas/auth`, the following code produces a Typescript error:
+
+```typescript
+yield call(socketSubscribe, socket)
+```
+
+So I replate it with the following:
+
+```typescript
+yield call<any>(socketSubscribe, socket)
+```
+
+The hack is inspired by ideas, suggested here: [`1`]
+
+## Refs
+1. https://stackoverflow.com/a/62359968/11053968
+
 # Typescript with `redux-actions`'s `handleActions`
 When payload in different reducers is of different types, the thing renders invalid.
 

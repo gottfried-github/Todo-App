@@ -110,7 +110,7 @@ function* authorizeSocket(): Generator<any, any, any> {
     },
   })
 
-  yield call(socketSubscribe, socket)
+  yield call<any>(socketSubscribe, socket)
 }
 
 function* refresh(): Generator<any, any, any> {
