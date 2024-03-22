@@ -2,11 +2,10 @@ import { combineReducers } from 'redux'
 import { handleAction, handleActions } from 'redux-actions'
 
 import { types } from '../actions/store/auth'
+import { type UserData as UserDataPayload, type ErrorPayload } from '../actions/types'
 import {
   type Token,
-  type ErrorPayload,
   type ErrorSocket as ErrorSocketPayload,
-  type UserData as UserDataPayload,
   type IsLoading,
 } from '../actions/store/auth'
 
@@ -14,7 +13,7 @@ type ErrorState = null | ErrorPayload
 type ErrorSocket = null | ErrorSocketPayload
 type UserData = null | UserDataPayload
 
-export type Auth = {
+export type AuthSlice = {
   token: Token
   error: ErrorState
   errorSignup: ErrorState

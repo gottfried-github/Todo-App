@@ -33,13 +33,5 @@ export const creators = {
 }
 
 export type Token = string
-export type ErrorPayload = object | string
 export type ErrorSocket = string
 export type IsLoading = boolean
-export type UserData = {
-  id: string
-  userName: string
-  firstName: string
-  lastName: string
-  teamId: string | null
-}
