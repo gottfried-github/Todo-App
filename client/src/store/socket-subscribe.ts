@@ -1,15 +1,17 @@
+import { type Socket } from 'socket.io-client'
+
+import { type Item } from './actions/store/todo'
 import { ITEM_CREATE, ITEM_UPDATE, ITEM_DELETE } from './events/index'
 import { store } from './store/store'
-
 import { creators as actionCreatorsStoreAuth } from './actions/store/auth'
 import { creators as actionCreatorsSagaTodo } from './actions/sagas/todo'
 import { creators as actionCreatorsStoreTodo } from './actions/store/todo'
 
-const actions = {
-  [ITEM_CREATE]: data => {
+const actions: { [actionName: string]: (data: Item) => void } = {
+  [ITEM_CREATE]: (data: Item) => {
     store.dispatch(actionCreatorsStoreTodo.append(data))
   },
-  [ITEM_UPDATE]: data => {
+  [ITEM_UPDATE]: (data: Item) => {
     store.dispatch(
       actionCreatorsStoreTodo.updateItem({
         id: data.id,
@@ -17,12 +19,12 @@ const actions = {
       })
     )
   },
-  [ITEM_DELETE]: data => {
+  [ITEM_DELETE]: (data: Item) => {
     store.dispatch(actionCreatorsStoreTodo.deleteItem(data))
   },
 }
 
-export default function subscribe(socket) {
+export default function subscribe(socket: Socket) {
   socket.on('connect_error', e => {
     console.log('socket, connect_error, e:', e)
     store.dispatch(
