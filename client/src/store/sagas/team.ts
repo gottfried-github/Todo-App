@@ -24,7 +24,7 @@ function* create(action: Action<Team>): Generator<any, any, any> {
   } catch (e: any) {
     yield put({
       type: actionTypesStore.setError,
-      payload: e.response.data || 'something went wrong',
+      payload: e.response?.data || 'something went wrong',
     })
   }
 }
@@ -50,7 +50,7 @@ function* getTeam(): Generator<any, any, any> {
   } catch (e: any) {
     yield put({
       type: actionTypesStore.setError,
-      payload: e.response.data || 'something went wrong',
+      payload: e.response?.data || 'something went wrong',
     })
   }
 }
@@ -66,7 +66,7 @@ function* getFreeUsers(): Generator<any, any, any> {
   } catch (e: any) {
     yield put({
       type: actionTypesStore.setError,
-      payload: e.response.data || 'something went wrong',
+      payload: e.response?.data || 'something went wrong',
     })
   }
 }
@@ -84,7 +84,7 @@ function* addUser(action: Action<UserData>): Generator<any, any, any> {
   } catch (e: any) {
     yield put({
       type: actionTypesStore.setError,
-      payload: e.response.data || 'something went wrong',
+      payload: e.response?.data || 'something went wrong',
     })
   }
 }
@@ -102,7 +102,7 @@ function* deleteUser(action: Action<UserData>): Generator<any, any, any> {
   } catch (e: any) {
     yield put({
       type: actionTypesStore.setError,
-      payload: e.response.data || 'something went wrong',
+      payload: e.response?.data || 'something went wrong',
     })
   }
 }
@@ -121,7 +121,7 @@ function* deleteTeam(): Generator<any, any, any> {
   } catch (e: any) {
     yield put({
       type: actionTypesStore.setError,
-      payload: e.response.data || 'something went wrong',
+      payload: e.response?.data || 'something went wrong',
     })
   }
 }
