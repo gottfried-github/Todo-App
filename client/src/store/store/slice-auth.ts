@@ -7,12 +7,22 @@ import {
   type ErrorPayload,
   type ErrorSocket as ErrorSocketPayload,
   type UserData as UserDataPayload,
+  type IsLoading,
 } from '../actions/store/auth'
 
-export type ErrorState = null | ErrorPayload
-export type ErrorSocket = null | ErrorSocketPayload
-export type UserData = null | UserDataPayload
-export { type Token, type IsLoading } from '../actions/store/auth'
+type ErrorState = null | ErrorPayload
+type ErrorSocket = null | ErrorSocketPayload
+type UserData = null | UserDataPayload
+
+export type Auth = {
+  token: Token
+  error: ErrorState
+  errorSignup: ErrorState
+  errorSignin: ErrorState
+  errorSocket: ErrorSocket
+  isLoading: IsLoading
+  userData: UserData
+}
 
 const token = handleActions(
   {
