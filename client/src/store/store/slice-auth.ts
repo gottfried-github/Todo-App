@@ -13,7 +13,7 @@ type ErrorState = null | ErrorPayload
 type ErrorSocket = null | ErrorSocketPayload
 type UserData = null | UserDataPayload
 
-export type AuthSlice = {
+export type SliceAuth = {
   token: Token
   error: ErrorState
   errorSignup: ErrorState
