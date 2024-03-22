@@ -17,3 +17,7 @@ export const creators = {
   getFreeUsers: createAction(types.getFreeUsers),
   deleteTeam: createAction(types.deleteTeam),
 }
+
+export type Team = {
+  name: string
+}

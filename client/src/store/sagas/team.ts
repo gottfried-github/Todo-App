@@ -1,12 +1,15 @@
 import { call, put, takeEvery, takeLatest, select } from 'redux-saga/effects'
 import axios from '../http'
 
+import { type UserData } from '../actions/types'
+import { type Team } from '../actions/sagas/team'
+
 import { types as actionTypesSaga } from '../actions/sagas/team'
 import { types as actionTypesStore } from '../actions/store/team'
 import { types as actionTypesStoreAuth } from '../actions/store/auth'
 import selectorsAuth from '../store/selectors-auth'
 
-function* create(action) {
+function* create(action: { type: string; payload: Team }): Generator<any, any, any> {
   const userData = yield select(state => selectorsAuth.selectUserData(state))
 
   try {
@@ -17,15 +20,15 @@ function* create(action) {
       type: actionTypesStoreAuth.setUserData,
       payload: { ...userData, teamId: res.data.id },
     })
-  } catch (e) {
+  } catch (e: any) {
     yield put({
       type: actionTypesStore.setError,
-      payload: e,
+      payload: e.response.data || 'something went wrong',
     })
   }
 }
 
-function* getTeam() {
+function* getTeam(): Generator<any, any, any> {
   const userData = yield select(state => selectorsAuth.selectUserData(state))
 
   try {
@@ -43,15 +46,15 @@ function* getTeam() {
       type: actionTypesStore.setMembers,
       payload: res.data.members,
     })
-  } catch (e) {
+  } catch (e: any) {
     yield put({
       type: actionTypesStore.setError,
-      payload: e,
+      payload: e.response.data || 'something went wrong',
     })
   }
 }
 
-function* getFreeUsers() {
+function* getFreeUsers(): Generator<any, any, any> {
   try {
     const res = yield call(axios.get, '/teams/users')
 
@@ -59,15 +62,15 @@ function* getFreeUsers() {
       type: actionTypesStore.setFreeUsers,
       payload: res.data,
     })
-  } catch (e) {
+  } catch (e: any) {
     yield put({
       type: actionTypesStore.setError,
-      payload: e,
+      payload: e.response.data || 'something went wrong',
     })
   }
 }
 
-function* addUser(action) {
+function* addUser(action: { type: string; payload: UserData }): Generator<any, any, any> {
   const userData = yield select(state => selectorsAuth.selectUserData(state))
 
   try {
@@ -77,15 +80,15 @@ function* addUser(action) {
       type: actionTypesStore.appendMember,
       payload: action.payload,
     })
-  } catch (e) {
+  } catch (e: any) {
     yield put({
       type: actionTypesStore.setError,
-      payload: e,
+      payload: e.response.data || 'something went wrong',
     })
   }
 }
 
-function* deleteUser(action) {
+function* deleteUser(action: { type: string; payload: UserData }): Generator<any, any, any> {
   const userData = yield select(state => selectorsAuth.selectUserData(state))
 
   try {
@@ -95,15 +98,15 @@ function* deleteUser(action) {
       type: actionTypesStore.deleteMember,
       payload: action.payload,
     })
-  } catch (e) {
+  } catch (e: any) {
     yield put({
       type: actionTypesStore.setError,
-      payload: e,
+      payload: e.response.data || 'something went wrong',
     })
   }
 }
 
-function* deleteTeam() {
+function* deleteTeam(): Generator<any, any, any> {
   const userData = yield select(state => selectorsAuth.selectUserData(state))
 
   try {
@@ -114,10 +117,10 @@ function* deleteTeam() {
       type: actionTypesStoreAuth.setUserData,
       payload: { ...userData, teamId: null },
     })
-  } catch (e) {
+  } catch (e: any) {
     yield put({
       type: actionTypesStore.setError,
-      payload: e,
+      payload: e.response.data || 'something went wrong',
     })
   }
 }
