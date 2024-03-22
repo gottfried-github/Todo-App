@@ -1,17 +1,28 @@
 import { combineReducers } from 'redux'
 import { handleAction, handleActions } from 'redux-actions'
 
-import { types } from '../actions/store/team'
+import { type UserData, type ErrorPayload } from '../actions/types'
+import { types, type Users, type Team as TeamPayload } from '../actions/store/team'
 
-const members = handleActions(
+type Team = null | TeamPayload
+type ErrorState = null | ErrorPayload
+
+export type TeamSlice = {
+  members: Users
+  freeUsers: Users
+  data: Team
+  error: ErrorState
+}
+
+const members = handleActions<Users, any>(
   {
-    [types.setMembers]: (state: object[], { payload }) => {
+    [types.setMembers]: (state: Users, { payload }: { payload: Users }) => {
       return payload
     },
-    [types.appendMember]: (state, { payload }) => {
+    [types.appendMember]: (state: Users, { payload }: { payload: UserData }) => {
       return [...state, payload]
     },
-    [types.deleteMember]: (state, { payload }) => {
+    [types.deleteMember]: (state: Users, { payload }: { payload: UserData }) => {
       return state.filter(member => member.id !== payload.id)
     },
   },
@@ -20,7 +31,7 @@ const members = handleActions(
 
 const freeUsers = handleAction(
   types.setFreeUsers,
-  (state, { payload }) => {
+  (state: Users, { payload }: { payload: Users }) => {
     return payload
   },
   []
@@ -28,7 +39,7 @@ const freeUsers = handleAction(
 
 const data = handleAction(
   types.setData,
-  (state, { payload }) => {
+  (state: Team, { payload }: { payload: Team }) => {
     return payload
   },
   null
@@ -36,7 +47,7 @@ const data = handleAction(
 
 const error = handleActions(
   {
-    [types.setError]: (state, { payload }) => {
+    [types.setError]: (state: ErrorState, { payload }: { payload: ErrorState }) => {
       return payload
     },
     [types.unsetError]: () => {
