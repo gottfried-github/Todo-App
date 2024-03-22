@@ -1,4 +1,5 @@
 import { call, put, takeEvery, takeLatest, select } from 'redux-saga/effects'
+import { type Action } from 'redux-actions'
 import axios from '../http'
 
 import { type UserData } from '../actions/types'
@@ -9,7 +10,7 @@ import { types as actionTypesStore } from '../actions/store/team'
 import { types as actionTypesStoreAuth } from '../actions/store/auth'
 import selectorsAuth from '../store/selectors-auth'
 
-function* create(action: { type: string; payload: Team }): Generator<any, any, any> {
+function* create(action: Action<Team>): Generator<any, any, any> {
   const userData = yield select(state => selectorsAuth.selectUserData(state))
 
   try {
@@ -70,7 +71,7 @@ function* getFreeUsers(): Generator<any, any, any> {
   }
 }
 
-function* addUser(action: { type: string; payload: UserData }): Generator<any, any, any> {
+function* addUser(action: Action<UserData>): Generator<any, any, any> {
   const userData = yield select(state => selectorsAuth.selectUserData(state))
 
   try {
@@ -88,7 +89,7 @@ function* addUser(action: { type: string; payload: UserData }): Generator<any, a
   }
 }
 
-function* deleteUser(action: { type: string; payload: UserData }): Generator<any, any, any> {
+function* deleteUser(action: Action<UserData>): Generator<any, any, any> {
   const userData = yield select(state => selectorsAuth.selectUserData(state))
 
   try {
