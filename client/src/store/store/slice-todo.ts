@@ -1,19 +1,41 @@
 import { handleActions } from 'redux-actions'
 
-import { types } from '../actions/store/todo'
+import { type ErrorPayload } from '../actions/types'
+import { types, type Item, type ItemUpdate, type Items, type Filter } from '../actions/store/todo'
 
 import { ITEM_STATUS } from '../../constants'
 
-const reducer = handleActions(
+export type SliceTodo = {
+  items: Item[]
+  counters: {
+    all: number
+    done: number
+    notDone: number
+  }
+  filter: {
+    status: null | number
+    sort: {
+      field: string
+      order: number
+    }
+    pagination: {
+      page: number
+      pageSize: number
+    }
+  }
+  error: null | ErrorPayload
+}
+
+const reducer = handleActions<SliceTodo, any>(
   {
-    [types.setItems]: (state, { payload }) => {
+    [types.setItems]: (state: SliceTodo, { payload }: { payload: Items }) => {
       return {
         ...state,
         items: payload.items,
         counters: payload.counters,
       }
     },
-    [types.setFilter]: (state, { payload }) => {
+    [types.setFilter]: (state: SliceTodo, { payload }: { payload: Filter }) => {
       return {
         ...state,
         filter: {
@@ -22,10 +44,10 @@ const reducer = handleActions(
         },
       }
     },
-    [types.setError]: (state, { payload }) => {
+    [types.setError]: (state: SliceTodo, { payload }: { payload: ErrorPayload }) => {
       return { ...state, error: payload }
     },
-    [types.append]: (state, { payload }) => {
+    [types.append]: (state: SliceTodo, { payload }: { payload: Item }) => {
       const stateNew = {
         counters: { ...state.counters },
         items: [...state.items],
@@ -63,8 +85,15 @@ const reducer = handleActions(
 
       return { ...state, ...stateNew }
     },
-    [types.updateItem]: (state, { payload }) => {
-      const stateNew = {}
+    [types.updateItem]: (state: SliceTodo, { payload }: { payload: ItemUpdate }) => {
+      const stateNew: {
+        items?: Item[]
+        counters?: {
+          all: number
+          done: number
+          notDone: number
+        }
+      } = {}
 
       stateNew.items = state.items.map(item => {
         if (item.id === payload.id) {
@@ -95,8 +124,15 @@ const reducer = handleActions(
 
       return { ...state, ...stateNew }
     },
-    [types.deleteItem]: (state, { payload }) => {
-      const stateNew = {
+    [types.deleteItem]: (state: SliceTodo, { payload }: { payload: Item }) => {
+      const stateNew: {
+        items?: Item[]
+        counters: {
+          all: number
+          done: number
+          notDone: number
+        }
+      } = {
         counters: { ...state.counters },
       }
 
