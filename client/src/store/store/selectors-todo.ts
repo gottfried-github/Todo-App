@@ -1,6 +1,8 @@
+import { type State } from './store'
+
 export default {
-  selectItems: state => state.todos.items,
-  selectCounters: state => state.todos.counters,
-  selectFilter: state => state.todos.filter,
-  selectError: state => state.todos.error,
+  selectItems: (state: State) => state.todos.items,
+  selectCounters: (state: State) => state.todos.counters,
+  selectFilter: (state: State) => state.todos.filter,
+  selectError: (state: State) => state.todos.error,
 }
