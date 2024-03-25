@@ -7,13 +7,6 @@ import { types, type Users, type Team as TeamPayload } from '../actions/store/te
 type Team = null | TeamPayload
 type ErrorState = null | ErrorPayload
 
-export type SliceTeam = {
-  members: Users
-  freeUsers: Users
-  data: Team
-  error: ErrorState
-}
-
 const members = handleActions<Users, any>(
   {
     [types.setMembers]: (state: Users, { payload }: { payload: Users }) => {

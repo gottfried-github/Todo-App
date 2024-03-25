@@ -3,25 +3,11 @@ import { handleAction, handleActions } from 'redux-actions'
 
 import { types } from '../actions/store/auth'
 import { type UserData as UserDataPayload, type ErrorPayload } from '../actions/types'
-import {
-  type Token,
-  type ErrorSocket as ErrorSocketPayload,
-  type IsLoading,
-} from '../actions/store/auth'
+import { type Token, type ErrorSocket as ErrorSocketPayload } from '../actions/store/auth'
 
 type ErrorState = null | ErrorPayload
 type ErrorSocket = null | ErrorSocketPayload
 type UserData = null | UserDataPayload
-
-export type SliceAuth = {
-  token: Token
-  error: ErrorState
-  errorSignup: ErrorState
-  errorSignin: ErrorState
-  errorSocket: ErrorSocket
-  isLoading: IsLoading
-  userData: UserData
-}
 
 const token = handleActions(
   {

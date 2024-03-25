@@ -2,15 +2,9 @@ import { createStore, combineReducers, applyMiddleware } from 'redux'
 import createSagaMiddleware from 'redux-saga'
 import logger from 'redux-logger'
 
-import reducerTeam, { type SliceTeam } from './slice-team'
-import reducerTodo, { type SliceTodo } from './slice-todo'
-import reducerAuth, { type SliceAuth } from './slice-auth'
-
-export type State = {
-  teams: SliceTeam
-  todos: SliceTodo
-  auth: SliceAuth
-}
+import reducerTeam from './slice-team'
+import reducerTodo from './slice-todo'
+import reducerAuth from './slice-auth'
 
 const sagaMiddleware = createSagaMiddleware()
 
@@ -25,5 +19,7 @@ const store = createStore(
   undefined,
   enhancer
 )
+
+export type RootState = ReturnType<typeof store.getState>
 
 export { store, sagaMiddleware }

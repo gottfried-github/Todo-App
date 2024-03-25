@@ -5,7 +5,7 @@ import { types, type Item, type ItemUpdate, type Items, type Filter } from '../a
 
 import { ITEM_STATUS } from '../../constants'
 
-export type SliceTodo = {
+type SliceTodo = {
   items: Item[]
   counters: {
     all: number
