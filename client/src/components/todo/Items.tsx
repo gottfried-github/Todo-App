@@ -7,7 +7,7 @@ import TextField from '@mui/material/TextField'
 import Checkbox from '@mui/material/Checkbox'
 import CircularProgress from '@mui/material/CircularProgress'
 import { DataGrid, useGridApiRef } from '@mui/x-data-grid'
-import { GridRenderCellParams } from '@mui/x-data-grid'
+import { GridValueFormatterParams, GridRenderCellParams, GridColDef } from '@mui/x-data-grid'
 import { useAppDispatch, useAppSelector } from '../../hooks/react-redux'
 
 import { ITEM_STATUS } from '../../constants'
@@ -16,6 +16,11 @@ import { creators as actionCreatorsStore } from '../../store/actions/store/todo'
 import selectorsTodo from '../../store/store/selectors-todo'
 import selectorsAuth from '../../store/store/selectors-auth'
 import RowMenu from './RowMenu'
+
+type PaginationModel = {
+  page: number
+  pageSize: number
+}
 
 export default function Items() {
   const dispatch = useAppDispatch()
@@ -43,7 +48,7 @@ export default function Items() {
     return filter.status === ITEM_STATUS.DONE ? counters.done : counters.notDone
   }, [filter, counters])
 
-  const handlePaginationModelChange = paginationModel => {
+  const handlePaginationModelChange = (paginationModel: PaginationModel) => {
     setPaginationModel(modelPrev => {
       if (paginationModel.pageSize !== modelPrev.pageSize) {
         return { ...paginationModel, page: 0 }
@@ -90,7 +95,9 @@ export default function Items() {
     dispatch(actionCreatorsSaga.deleteOne(itemId))
   }
 
-  const handleSortModelChange = sortModel => {
+  const handleSortModelChange = (
+    sortModel: { field: string; sort: string | null | undefined }[]
+  ) => {
     const sort = {
       field: sortModel[0].field,
       order: sortModel[0].sort === 'desc' ? -1 : 1,
@@ -99,7 +106,7 @@ export default function Items() {
     dispatch(actionCreatorsStore.setFilter({ sort }))
   }
 
-  const columns = [
+  const columns: GridColDef[] = [
     {
       field: 'status',
       headerName: 'Status',
@@ -126,7 +133,7 @@ export default function Items() {
       field: 'createdAt',
       headerName: 'Created At',
       width: 120,
-      valueFormatter: (params: GridRenderCellParams) => {
+      valueFormatter: (params: GridValueFormatterParams) => {
         return format(params.value, 'MMM d, y')
       },
     },
