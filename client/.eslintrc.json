@@ -11,7 +11,8 @@
   ],
   "rules": {
     "no-undef": 0,
-    "react/prop-types": 0
+    "react/prop-types": 0,
+    "@typescript-eslint/no-explicit-any": "warn"
   },
   "parserOptions": {
     "sourceType": "module",
