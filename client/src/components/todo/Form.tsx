@@ -1,5 +1,5 @@
 import { ChangeEvent, FormEvent, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useAppDispatch } from '../../hooks/react-redux'
 import styled from '@emotion/styled'
 
 import TextField from '@mui/material/TextField'
@@ -8,7 +8,7 @@ import Button from '@mui/material/Button'
 import { creators as actionCreators } from '../../store/actions/sagas/todo'
 
 export default function Form() {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
 
   const [name, setName] = useState('')
 
