@@ -7,6 +7,7 @@ import TextField from '@mui/material/TextField'
 import Checkbox from '@mui/material/Checkbox'
 import CircularProgress from '@mui/material/CircularProgress'
 import { DataGrid, useGridApiRef } from '@mui/x-data-grid'
+import { GridRenderCellParams } from '@mui/x-data-grid'
 import { useAppDispatch, useAppSelector } from '../../hooks/react-redux'
 
 import { ITEM_STATUS } from '../../constants'
@@ -105,7 +106,7 @@ export default function Items() {
       type: 'number',
       width: 80,
       sortable: false,
-      renderCell: params => {
+      renderCell: (params: GridRenderCellParams) => {
         return (
           <Checkbox
             id={params.row.id}
@@ -125,7 +126,7 @@ export default function Items() {
       field: 'createdAt',
       headerName: 'Created At',
       width: 120,
-      valueFormatter: params => {
+      valueFormatter: (params: GridRenderCellParams) => {
         return format(params.value, 'MMM d, y')
       },
     },
@@ -133,7 +134,7 @@ export default function Items() {
       field: 'name',
       headerName: 'Name',
       flex: 1,
-      renderCell: params => {
+      renderCell: (params: GridRenderCellParams) => {
         if (params.row.id === editingId) {
           return (
             <TextFieldStyled
@@ -146,7 +147,7 @@ export default function Items() {
               }}
               onKeyUp={ev => {
                 // for .isComposing see https://developer.mozilla.org/en-US/docs/Web/API/Element/keyup_event
-                if (ev.isComposing || ev.code !== 'Enter') return
+                if ((ev as unknown as KeyboardEvent).isComposing || ev.code !== 'Enter') return
 
                 handleNameSubmit(params.row.user.id)
                 handleEdit(params.row.id)
@@ -169,7 +170,7 @@ export default function Items() {
       field: 'createdBy',
       headerName: 'Created By',
       sortable: false,
-      valueGetter: params => {
+      valueGetter: (params: GridRenderCellParams) => {
         return params.row.user.userName
       },
     },
@@ -178,11 +179,11 @@ export default function Items() {
       headerName: 'Options',
       sortable: false,
       width: 180,
-      renderCell: params => {
+      renderCell: (params: GridRenderCellParams) => {
         if (params.row.id !== editingId) {
           return (
             <RowMenu
-              own={params.row.user.id === userData.id}
+              own={params.row.user.id === userData?.id || null}
               handleEdit={() => {
                 handleNameChange(params.row.name)
                 handleEdit(params.row.id)
@@ -265,7 +266,7 @@ const DataGridStyled = styled(DataGrid)`
   }
 `
 
-const Label = styled.label(props => {
+const Label = styled.label((props: { checked: boolean }) => {
   const styles = {
     flexGrow: 1,
   }
