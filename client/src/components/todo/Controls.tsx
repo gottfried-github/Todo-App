@@ -1,4 +1,4 @@
-import { useSelector, useDispatch } from 'react-redux'
+import { useAppDispatch, useAppSelector } from '../../hooks/react-redux'
 import styled from '@emotion/styled'
 import Typography from '@mui/material/Typography'
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
@@ -12,10 +12,10 @@ import selectors from '../../store/store/selectors-todo'
 import { ITEM_STATUS } from '../../constants'
 
 export default function Controls() {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
 
-  const filter = useSelector(state => selectors.selectFilter(state))
-  const counters = useSelector(state => selectors.selectCounters(state))
+  const filter = useAppSelector(state => selectors.selectFilter(state))
+  const counters = useAppSelector(state => selectors.selectCounters(state))
 
   const handleDeleteDone = () => {
     dispatch(actionCreatorsSaga.deleteDone())
