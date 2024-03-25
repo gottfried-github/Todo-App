@@ -20,7 +20,7 @@ export default function Items() {
   const dispatch = useAppDispatch()
   const gridApiRef = useGridApiRef()
 
-  const [editingId, setEditingId] = useState(null)
+  const [editingId, setEditingId] = useState<null | string>(null)
   const [name, setName] = useState('')
 
   const filter = useAppSelector(state => selectorsTodo.selectFilter(state))
@@ -52,11 +52,14 @@ export default function Items() {
     })
   }
 
-  const handleEdit = itemId => {
+  const handleEdit = (itemId: string) => {
     setEditingId(!editingId || editingId !== itemId ? itemId : null)
   }
 
-  const handleStatusChange = (ev, data) => {
+  const handleStatusChange = (
+    ev: React.MouseEvent,
+    data: { id: string; userId: string; status: number }
+  ) => {
     const status = data.status === ITEM_STATUS.DONE ? ITEM_STATUS.NOT_DONE : ITEM_STATUS.DONE
 
     dispatch(
@@ -68,11 +71,11 @@ export default function Items() {
     )
   }
 
-  const handleNameChange = name => {
+  const handleNameChange = (name: string) => {
     setName(name)
   }
 
-  const handleNameSubmit = userId => {
+  const handleNameSubmit = (userId: string) => {
     dispatch(
       actionCreatorsSaga.updateName({
         id: editingId,
@@ -82,7 +85,7 @@ export default function Items() {
     )
   }
 
-  const handleDelete = itemId => {
+  const handleDelete = (itemId: string) => {
     dispatch(actionCreatorsSaga.deleteOne(itemId))
   }
 
