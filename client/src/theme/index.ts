@@ -145,3 +145,12 @@ export default createTheme({
     },
   },
 })
+
+declare module '@mui/material/Button' {
+  interface ButtonPropsVariantOverrides {
+    main: true
+    'app-bar': true
+    ordinary: true
+    danger: true
+  }
+}
