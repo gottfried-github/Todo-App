@@ -1,9 +1,9 @@
-import { useAppDispatch, useAppSelector } from '../../hooks/react-redux'
 import styled from '@emotion/styled'
 import Typography from '@mui/material/Typography'
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
 import ToggleButton from '@mui/material/ToggleButton'
 import Button from '@mui/material/Button'
+import { useAppDispatch, useAppSelector } from '../../hooks/react-redux'
 
 import { creators as actionCreatorsStore } from '../../store/actions/store/todo'
 import { creators as actionCreatorsSaga } from '../../store/actions/sagas/todo'
@@ -21,7 +21,7 @@ export default function Controls() {
     dispatch(actionCreatorsSaga.deleteDone())
   }
 
-  const handleSetFilter = (ev, _filter) => {
+  const handleSetFilter = (ev: React.MouseEvent, _filter: null | boolean | number) => {
     if (_filter === null) return
 
     dispatch(
