@@ -1,5 +1,4 @@
 import { useState, useEffect, useMemo } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
 import styled from '@emotion/styled'
 import { format } from 'date-fns'
 
@@ -8,6 +7,7 @@ import TextField from '@mui/material/TextField'
 import Checkbox from '@mui/material/Checkbox'
 import CircularProgress from '@mui/material/CircularProgress'
 import { DataGrid, useGridApiRef } from '@mui/x-data-grid'
+import { useAppDispatch, useAppSelector } from '../../hooks/react-redux'
 
 import { ITEM_STATUS } from '../../constants'
 import { creators as actionCreatorsSaga } from '../../store/actions/sagas/todo'
@@ -17,15 +17,15 @@ import selectorsAuth from '../../store/store/selectors-auth'
 import RowMenu from './RowMenu'
 
 export default function Items() {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const gridApiRef = useGridApiRef()
 
   const [editingId, setEditingId] = useState(null)
   const [name, setName] = useState('')
 
-  const filter = useSelector(state => selectorsTodo.selectFilter(state))
-  const counters = useSelector(state => selectorsTodo.selectCounters(state))
-  const userData = useSelector(state => selectorsAuth.selectUserData(state))
+  const filter = useAppSelector(state => selectorsTodo.selectFilter(state))
+  const counters = useAppSelector(state => selectorsTodo.selectCounters(state))
+  const userData = useAppSelector(state => selectorsAuth.selectUserData(state))
 
   const [paginationModel, setPaginationModel] = useState(filter.pagination)
 
@@ -33,7 +33,7 @@ export default function Items() {
     dispatch(actionCreatorsStore.setFilter({ pagination: paginationModel }))
   }, [dispatch, paginationModel])
 
-  const items = useSelector(state => selectorsTodo.selectItems(state))
+  const items = useAppSelector(state => selectorsTodo.selectItems(state))
   const rowCount = useMemo(() => {
     if (filter.status === null) {
       return counters.all
