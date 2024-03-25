@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { ChangeEvent, FormEvent, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from '@emotion/styled'
 
@@ -12,11 +12,11 @@ export default function Form() {
 
   const [name, setName] = useState('')
 
-  const handleInputChange = ev => {
-    setName(ev.target.value)
+  const handleInputChange = (ev: ChangeEvent) => {
+    setName((ev.target as HTMLInputElement).value)
   }
 
-  const handleSubmit = ev => {
+  const handleSubmit = (ev: FormEvent) => {
     ev.preventDefault()
 
     dispatch(actionCreators.create(name))
