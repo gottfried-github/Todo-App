@@ -4,5 +4,5 @@ declare module '../../store/actions/types' {
   }
 }
 
-// must export something, otherwise it becomes an ambient module
+// must export something, otherwise it becomes an ambient module: https://www.typescriptlang.org/docs/handbook/modules/reference.html#ambient-modules
 export const a = 0

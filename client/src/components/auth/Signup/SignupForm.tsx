@@ -1,11 +1,11 @@
 import { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { object, string } from 'yup'
+import { object, string, type InferType } from 'yup'
 import { Form, Field } from 'react-final-form'
 import styled from '@emotion/styled'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 
+import { useAppDispatch, useAppSelector } from '../../../hooks/react-redux'
 import { creators as actionCreatorsSaga } from '../../../store/actions/sagas/auth'
 import { creators as actionCreatorsStore } from '../../../store/actions/store/auth'
 import selectorsAuth from '../../../store/store/selectors-auth'
@@ -19,9 +19,11 @@ const schema = object({
   password: string().trim().required().min(8).max(300),
 })
 
+interface SignupValues extends InferType<typeof schema> {}
+
 export default function Signup() {
-  const dispatch = useDispatch()
-  const error = useSelector(state => selectorsAuth.selectErrorSignup(state))
+  const dispatch = useAppDispatch()
+  const error = useAppSelector(state => selectorsAuth.selectErrorSignup(state))
 
   useEffect(() => {
     return () => {
@@ -31,7 +33,7 @@ export default function Signup() {
     }
   }, [error, dispatch])
 
-  const submitCb = values => {
+  const submitCb = (values: SignupValues) => {
     dispatch(actionCreatorsSaga.signup(values))
   }
 
