@@ -1,6 +1,6 @@
-import { useSelector } from 'react-redux'
 import { RouterProvider, createBrowserRouter, Navigate } from 'react-router-dom'
 
+import { useAppSelector } from './hooks/react-redux'
 import selectorsAuth from './store/store/selectors-auth'
 
 import Signup from './pages/Signup'
@@ -60,8 +60,8 @@ const routerProtected = createBrowserRouter([
 ])
 
 export default function Router() {
-  const token = useSelector(state => selectorsAuth.selectToken(state))
-  const isLoading = useSelector(state => selectorsAuth.selectIsLoading(state))
+  const token = useAppSelector(state => selectorsAuth.selectToken(state))
+  const isLoading = useAppSelector(state => selectorsAuth.selectIsLoading(state))
 
   const component = isLoading ? (
     <LoadingScreen />
