@@ -1,4 +1,3 @@
-import { useDispatch, useSelector } from 'react-redux'
 import { NavLink } from 'react-router-dom'
 import styled from '@emotion/styled'
 import AppBar from '@mui/material/AppBar'
@@ -6,12 +5,13 @@ import ToolBar from '@mui/material/Toolbar'
 import Button from '@mui/material/Button'
 import Chip from '@mui/material/Chip'
 
+import { useAppDispatch, useAppSelector } from '../hooks/react-redux'
 import { creators as actionCreatorsSagaAuth } from '../store/actions/sagas/auth'
 import selectorsAuth from '../store/store/selectors-auth'
 
 export default function Header() {
-  const dispatch = useDispatch()
-  const userData = useSelector(state => selectorsAuth.selectUserData(state))
+  const dispatch = useAppDispatch()
+  const userData = useAppSelector(state => selectorsAuth.selectUserData(state))
 
   return (
     <AppBarStyled>
@@ -20,7 +20,7 @@ export default function Header() {
           <LinkStyled to="/">Tasks</LinkStyled>
           <LinkStyled to="/teams">Team</LinkStyled>
         </Nav>
-        <Chip label={userData.firstName} />
+        <Chip label={userData?.firstName || ''} />
         <Button
           variant="app-bar"
           onClick={() => {
