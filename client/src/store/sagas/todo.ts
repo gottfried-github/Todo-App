@@ -34,7 +34,7 @@ function* create(action: Action<CreatePayload>): Generator<any, any, any> {
   } catch (e: any) {
     yield put({
       type: actionTypesStore.setError,
-      payload: e.response?.data || 'something went wrong',
+      payload: e.response?.data || { message: 'something went wrong' },
     })
   }
 }
@@ -55,7 +55,7 @@ function* updateStatus(action: Action<UpdateStatusPayload>): Generator<any, any,
   } catch (e: any) {
     yield put({
       type: actionTypesStore.setError,
-      payload: e.response?.data || 'something went wrong',
+      payload: e.response?.data || { message: 'something went wrong' },
     })
   }
 }
@@ -76,7 +76,7 @@ function* updateName(action: Action<UpdateNamePayload>): Generator<any, any, any
   } catch (e: any) {
     yield put({
       type: actionTypesStore.setError,
-      payload: e.response?.data || 'something went wrong',
+      payload: e.response?.data || { message: 'something went wrong' },
     })
   }
 }
@@ -89,7 +89,7 @@ function* deleteOne(action: Action<DeleteOnePayload>): Generator<any, any, any> 
   } catch (e: any) {
     yield put({
       type: actionTypesStore.setError,
-      payload: e.response?.data || 'something went wrong',
+      payload: e.response?.data || { message: 'something went wrong' },
     })
   }
 }
@@ -102,7 +102,7 @@ function* deleteDone(): Generator<any, any, any> {
   } catch (e: any) {
     yield put({
       type: actionTypesStore.setError,
-      payload: e.response?.data || 'something went wrong',
+      payload: e.response?.data || { message: 'something went wrong' },
     })
   }
 }
@@ -141,7 +141,7 @@ function* getItems(): Generator<any, any, any> {
   } catch (e: any) {
     yield put({
       type: actionTypesStore.setError,
-      payload: e.response?.data || 'something went wrong',
+      payload: e.response?.data || { message: 'something went wrong' },
     })
   }
 }

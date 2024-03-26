@@ -38,7 +38,7 @@ function* signup(action: Action<Signup>): Generator<any, any, any> {
 
     yield put({
       type: actionTypesStore.setErrorSignup,
-      payload: e.response?.data || 'something went wrong',
+      payload: e.response?.data || { message: 'something went wrong' },
     })
   }
 }
@@ -65,7 +65,7 @@ function* signin(action: Action<Signin>): Generator<any, any, any> {
 
     yield put({
       type: actionTypesStore.setErrorSignin,
-      payload: e.response?.data || 'something went wrong',
+      payload: e.response?.data || { message: 'something went wrong' },
     })
   }
 }
@@ -87,7 +87,7 @@ function* signout(action: Action<Signout>): Generator<any, any, any> {
     console.log('saga, signout, e:', e)
     yield put({
       type: actionTypesStore.setError,
-      payload: e.response?.data || 'something went wrong',
+      payload: e.response?.data || { message: 'something went wrong' },
     })
   }
 }
@@ -141,7 +141,7 @@ function* refresh(): Generator<any, any, any> {
   } catch (e: any) {
     yield put({
       type: actionTypesStore.setError,
-      payload: e.response?.data || 'something went wrong',
+      payload: e.response?.data || { message: 'something went wrong' },
     })
   } finally {
     yield put({
