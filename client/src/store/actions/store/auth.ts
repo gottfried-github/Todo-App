@@ -31,3 +31,7 @@ export const creators = {
   setErrorSocket: createAction(types.setErrorSocket),
   unsetErrorSocket: createAction(types.unsetErrorSocket),
 }
+
+export type Token = string
+export type ErrorSocket = string
+export type IsLoading = boolean

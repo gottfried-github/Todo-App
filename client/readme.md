@@ -7,21 +7,67 @@ As specified in [the docs](https://mui.com/material-ui/api/text-field/#text-fiel
 
 Otherwise, it throws [an error](https://github.com/mui/material-ui/issues/31204).
 
-# `signup`, `signin`, `signout`: omitting sagas
-For `signup`, I don't need to store the operation status and error globally. 
+# Typescript with `redux-saga` `call`
+In `authorizeSocket` in `./src/store/sagas/auth`, the following code produces a Typescript error:
 
-Let's consider a problematic case if doing that. Let's suppose, we have a single `error` field in our slice.
+```typescript
+yield call(socketSubscribe, socket)
+```
 
-The user sends invalid signup information and the server responds with an error which gets stored in the `error` field in the slice. Then, the user navigates to `signin` for some reason.
+So I replate it with the following:
 
-Now, `signin` will display the errors, associated with the previous `signup` attempt.
+```typescript
+yield call<any>(socketSubscribe, socket)
+```
 
-To mitigate this, one thing I could do is unset the `error` by dispatching an action on component unmount. But if I wanted to display both `signup` and `signin` components simultaneously, this wouldn't solve the problem. Another way would be to have separate fields in the slice for `signup` error and for `signin` error.
+The hack is inspired by ideas, suggested here: [`1`]
 
-Both solutions don't seem elegant or scalable.
+## Refs
+1. https://stackoverflow.com/a/62359968/11053968
 
-Likewise, I need feedback from the server to explicitly know when the operation succeeded, because I need to navigate to a different route in such a case.
+# Typescript with `redux-actions`'s `handleActions`
+When payload in different reducers is of different types, the thing renders invalid.
 
-So I will additionally need fields in the slice for that, e.g., a `status` field for `signup` and `signin`. And I will have to manually unset them too, from my components, if I want them to work properly, because, for example, if I sign up successfully and then refresh the page and will sign up successfully as another user, `useEffect` won't fire on the selected `status` field, because it will have the same value as previously. So I will need to manually reset the value to, e.g., `'idle'`, right after the effect on `'success'` has been fired.
+The first argument to `handleActions` has this type: 
 
-So the solution is to use hooks and keep the status and error info locally in the hooks while only keeping the token in the slice.
+```typescript
+interface ReducerMap<State, Payload> {
+    [actionType: string]: (state: State, action: Action<Payload>) => State;
+}
+```
+
+This means that `Payload` must be the same in all the reducers.
+
+`State` and `Payload` from above can be passed to `ReducerMap` via this:
+
+```typescript
+handleActions<State, Payload>({
+  // my reducers
+})
+```
+
+Let's say, I have two reducers in my slice, each having a different type of `Payload`.
+
+I can try this:
+
+```typescript
+handleActions<State, Payload1 | Payload2>({
+  ['ACTION1']: (state: State, { payload }: { payload: Payload1 }) => {
+    return { ...state, field1: payload }
+  },
+  ['ACTION2']: (state: State, { payload }: { payload: Payload2 }) => {
+    return { ...state, field2: payload }
+  }
+})
+```
+
+This will give the error that *`Action<Payload1 | Payload2>` doesn't match type `Payload1`*.
+
+The solution is to pass this:
+
+```typescript
+handleActions<State, any>(
+  // my reducers here
+)
+```
+

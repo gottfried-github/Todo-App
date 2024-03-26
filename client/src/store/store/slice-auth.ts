@@ -2,10 +2,20 @@ import { combineReducers } from 'redux'
 import { handleAction, handleActions } from 'redux-actions'
 
 import { types } from '../actions/store/auth'
+import { type UserData as UserDataPayload, type ErrorPayload } from '../actions/types'
+import { type Token, type ErrorSocket as ErrorSocketPayload } from '../actions/store/auth'
+
+type ErrorAuthPayload = ErrorPayload & {
+  errors?: { [key: string]: { message?: string } }
+}
+
+type ErrorState = null | ErrorAuthPayload
+type ErrorSocket = null | ErrorSocketPayload
+type UserData = null | UserDataPayload
 
 const token = handleActions(
   {
-    [types.setToken]: (state, { payload }) => {
+    [types.setToken]: (state: Token, { payload }: { payload: Token }) => {
       return payload
     },
     [types.unsetToken]: () => {
@@ -17,7 +27,7 @@ const token = handleActions(
 
 const errorAuth = handleActions(
   {
-    [types.setError]: (state, { payload }) => {
+    [types.setError]: (state: ErrorState, { payload }: { payload: ErrorPayload }) => {
       return payload
     },
     [types.unsetError]: () => {
@@ -29,7 +39,7 @@ const errorAuth = handleActions(
 
 const errorSignup = handleActions(
   {
-    [types.setErrorSignup]: (state, { payload }) => {
+    [types.setErrorSignup]: (state: ErrorState, { payload }: { payload: ErrorPayload }) => {
       return payload
     },
     [types.unsetErrorSignup]: () => {
@@ -41,7 +51,7 @@ const errorSignup = handleActions(
 
 const errorSignin = handleActions(
   {
-    [types.setErrorSignin]: (state, { payload }) => {
+    [types.setErrorSignin]: (state: ErrorState, { payload }: { payload: ErrorPayload }) => {
       return payload
     },
     [types.unsetErrorSignin]: () => {
@@ -53,7 +63,7 @@ const errorSignin = handleActions(
 
 const errorSocket = handleActions(
   {
-    [types.setErrorSocket]: (state, { payload }) => {
+    [types.setErrorSocket]: (state: ErrorSocket, { payload }: { payload: ErrorSocketPayload }) => {
       return payload
     },
     [types.unsetErrorSocket]: () => {
@@ -77,7 +87,7 @@ const isLoading = handleActions(
 
 const userData = handleAction(
   types.setUserData,
-  (state: null | object, { payload }: { payload: object }) => {
+  (state: UserData, { payload }: { payload: UserDataPayload }) => {
     return payload
   },
   null
