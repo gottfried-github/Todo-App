@@ -6,6 +6,48 @@ declare module '@emotion/react' {
   export interface Theme extends MuiTheme {}
 }
 
+// https://mui.com/material-ui/customization/palette/#typescript
+declare module '@mui/material/styles' {
+  interface Palette {
+    custom: Palette['primary']
+    util: Palette['primary']
+  }
+
+  interface PaletteOptions {
+    custom?: PaletteOptions['primary']
+    util?: Palette['primary']
+  }
+}
+
+// https://mui.com/material-ui/customization/palette/#typescript-2
+declare module '@mui/material/styles' {
+  interface PaletteColor {
+    lightDark?: string
+    darker?: string
+    darkest?: string
+    darkTransparent?: string
+    green?: string
+    red?: string
+    redTransparent?: string
+    textMain?: string
+    textDark?: string
+    shadow?: string
+  }
+
+  interface SimplePaletteColorOptions {
+    lightDark?: string
+    darker?: string
+    darkest?: string
+    darkTransparent?: string
+    green?: string
+    red?: string
+    redTransparent?: string
+    textMain?: string
+    textDark?: string
+    shadow?: string
+  }
+}
+
 const palette = {
   custom: {
     main: '#c8e0fc',
@@ -25,6 +67,7 @@ const palette = {
     green: '#589054',
     red: '#d34463',
     redTransparent: 'rgba(211, 68, 99, 0.3)',
+    contrastText: 'rgb(0, 0, 0)',
   },
 }
 
