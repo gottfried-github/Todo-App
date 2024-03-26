@@ -10,12 +10,6 @@ import { creators as actionCreatorsStore } from '../../../store/actions/store/au
 import selectorsAuth from '../../../store/store/selectors-auth'
 import { validate } from '../../../utils'
 
-declare module '../../../store/actions/types' {
-  interface ErrorPayload {
-    errors: { [key: string]: { message?: string } }
-  }
-}
-
 const schema = object({
   identifier: string()
     .trim()
