@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import styled from '@emotion/styled'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
@@ -9,17 +8,19 @@ import IconButton from '@mui/material/IconButton'
 import IconDelete from '@mui/icons-material/Delete'
 import AddUsers from './AddUsers'
 
+import type { UserData } from '../../store/actions/types'
+import { useAppDispatch, useAppSelector } from '../../hooks/react-redux'
 import { creators as actionCreatorsSaga } from '../../store/actions/sagas/team'
 import selectors from '../../store/store/selectors-team'
 
 export default function Team() {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
 
   const [isAddUsersOpen, setIsAddUsersOpen] = useState(false)
 
-  const data = useSelector(state => selectors.selectData(state))
-  const members = useSelector(state => selectors.selectMembers(state))
-  const users = useSelector(state => selectors.selectFreeUsers(state))
+  const data = useAppSelector(state => selectors.selectData(state))
+  const members = useAppSelector(state => selectors.selectMembers(state))
+  const users = useAppSelector(state => selectors.selectFreeUsers(state))
 
   useEffect(() => {
     dispatch(actionCreatorsSaga.getTeam())
@@ -34,7 +35,7 @@ export default function Team() {
     setIsAddUsersOpen(false)
   }
 
-  const handleDeleteUser = user => {
+  const handleDeleteUser = (user: UserData) => {
     dispatch(actionCreatorsSaga.deleteUser(user))
   }
 
