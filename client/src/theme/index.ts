@@ -192,7 +192,15 @@ export default createTheme({
               width: '500px',
               padding: '35px 40px',
               paddingTop: '50px',
-              boxShadow: data.theme.shadows[data.ownerState.elevation.toString()],
+              boxShadow:
+                data.theme.shadows[
+                  (
+                    data as {
+                      theme: Omit<MuiTheme, 'components'>
+                      ownerState: { elevation: number }
+                    }
+                  ).ownerState.elevation
+                ],
             }
           },
         },
