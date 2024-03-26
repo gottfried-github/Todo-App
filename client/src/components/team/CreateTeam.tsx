@@ -1,23 +1,23 @@
-import { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import React, { useState } from 'react'
 import styled from '@emotion/styled'
 import Button from '@mui/material/Button'
 import Paper from '@mui/material/Paper'
 import Modal from '@mui/material/Modal'
 import { TextField } from '../todo/Form'
 
+import { useAppDispatch } from '../../hooks/react-redux'
 import { creators as actionCreatorsSaga } from '../../store/actions/sagas/team'
 
 export default function CreateTeam() {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const [teamName, setTeamName] = useState('')
   const [modalOpen, setModalOpen] = useState(false)
 
-  const handleTeamNameChange = ev => {
-    setTeamName(ev.target.value)
+  const handleTeamNameChange = (ev: React.ChangeEvent) => {
+    setTeamName((ev.target as HTMLInputElement).value)
   }
 
-  const handleSubmit = ev => {
+  const handleSubmit = (ev: React.FormEvent) => {
     ev.preventDefault()
     console.log('handleSubmit, teamName:', teamName)
 
