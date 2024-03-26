@@ -6,4 +6,4 @@ export type UserData = {
   teamId: string | null
 }
 
-export type ErrorPayload = { message?: string } | string
+export type ErrorPayload = { [key: string]: unknown; message?: string } | string
