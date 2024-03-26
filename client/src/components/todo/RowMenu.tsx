@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import styled from '@emotion/styled'
 import ButtonBase from '@mui/material/ButtonBase'
 import Menu from '@mui/material/Menu'
@@ -7,12 +7,20 @@ import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 
-export default function RowMenu({ handleEdit, handleDelete, own }) {
-  const [anchorEl, setAnchorEl] = useState(null)
+export default function RowMenu({
+  handleEdit,
+  handleDelete,
+  own,
+}: {
+  handleEdit: () => void
+  handleDelete: () => void
+  own: boolean | null
+}) {
+  const [anchorEl, setAnchorEl] = useState<Element | null>(null)
 
   const open = Boolean(anchorEl)
 
-  const handleClick = event => {
+  const handleClick = (event: React.MouseEvent) => {
     setAnchorEl(event.currentTarget)
   }
 
