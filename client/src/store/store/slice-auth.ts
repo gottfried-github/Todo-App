@@ -5,7 +5,11 @@ import { types } from '../actions/store/auth'
 import { type UserData as UserDataPayload, type ErrorPayload } from '../actions/types'
 import { type Token, type ErrorSocket as ErrorSocketPayload } from '../actions/store/auth'
 
-type ErrorState = null | ErrorPayload
+type ErrorAuthPayload = ErrorPayload & {
+  errors?: { [key: string]: { message?: string } }
+}
+
+type ErrorState = null | ErrorAuthPayload
 type ErrorSocket = null | ErrorSocketPayload
 type UserData = null | UserDataPayload
 
