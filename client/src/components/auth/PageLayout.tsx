@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-export default function Layout({ children }) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   return <Container>{children}</Container>
 }
 
