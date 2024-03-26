@@ -1,14 +1,20 @@
 import { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { object, string } from 'yup'
+import { object, string, type InferType } from 'yup'
 import { Form, Field } from 'react-final-form'
 import TextField from '@mui/material/TextField'
 import { Button, AuthForm } from '../Signup/SignupForm'
 
+import { useAppDispatch, useAppSelector } from '../../../hooks/react-redux'
 import { creators as actionCreatorsSaga } from '../../../store/actions/sagas/auth'
 import { creators as actionCreatorsStore } from '../../../store/actions/store/auth'
 import selectorsAuth from '../../../store/store/selectors-auth'
 import { validate } from '../../../utils'
+
+declare module '../../../store/actions/types' {
+  interface ErrorPayload {
+    errors: { [key: string]: { message?: string } }
+  }
+}
 
 const schema = object({
   identifier: string()
@@ -19,9 +25,11 @@ const schema = object({
   password: string().trim().required().min(8).max(300),
 })
 
+interface SigninValues extends InferType<typeof schema> {}
+
 export default function Signin() {
-  const dispatch = useDispatch()
-  const error = useSelector(state => selectorsAuth.selectErrorSignin(state))
+  const dispatch = useAppDispatch()
+  const error = useAppSelector(state => selectorsAuth.selectErrorSignin(state))
 
   useEffect(() => {
     return () => {
@@ -31,7 +39,7 @@ export default function Signin() {
     }
   }, [error, dispatch])
 
-  const submitCb = values => {
+  const submitCb = (values: SigninValues) => {
     dispatch(actionCreatorsSaga.signin(values))
   }
 
@@ -57,7 +65,10 @@ export default function Signin() {
                     placeholder={'ed@mail'}
                     name={input.name}
                     value={input.value}
-                    error={!!error?.errors?.identifier || (meta.touched && !!meta.error)}
+                    error={
+                      typeof error !== 'string' &&
+                      (!!error?.errors?.identifier || (meta.touched && !!meta.error))
+                    }
                     helperText={
                       error?.errors?.identifier?.message || (meta.touched && meta.error) || null
                     }
