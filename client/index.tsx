@@ -13,6 +13,9 @@ sagaMiddleware.run(saga)
 
 document.addEventListener('DOMContentLoaded', () => {
   const container = document.querySelector('main')
+
+  if (!container) return
+
   const root = createRoot(container)
 
   root.render(
