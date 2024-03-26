@@ -48,6 +48,28 @@ declare module '@mui/material/styles' {
   }
 }
 
+// https://mui.com/material-ui/customization/theme-components/#creating-new-component-variants
+declare module '@mui/material/Button' {
+  interface ButtonPropsVariantOverrides {
+    main: true
+    'app-bar': true
+    ordinary: true
+    danger: true
+  }
+}
+
+declare module '@mui/material/Paper' {
+  interface PaperPropsVariantOverrides {
+    auth: true
+  }
+}
+
+declare module '@mui/material/Typography' {
+  interface TypographyPropsVariantOverrides {
+    title1: true
+  }
+}
+
 const palette = {
   custom: {
     main: '#c8e0fc',
@@ -194,12 +216,3 @@ export default createTheme({
     },
   },
 })
-
-declare module '@mui/material/Button' {
-  interface ButtonPropsVariantOverrides {
-    main: true
-    'app-bar': true
-    ordinary: true
-    danger: true
-  }
-}
