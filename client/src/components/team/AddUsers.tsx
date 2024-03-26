@@ -1,4 +1,3 @@
-import { useDispatch, useSelector } from 'react-redux'
 import styled from '@emotion/styled'
 import Paper from '@mui/material/Paper'
 import Modal from '@mui/material/Modal'
@@ -9,15 +8,25 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import Checkbox from '@mui/material/Checkbox'
 
+import type { UserData } from '../../store/actions/types'
+import { useAppDispatch, useAppSelector } from '../../hooks/react-redux'
 import { creators as actionCreatorsSaga } from '../../store/actions/sagas/team'
 import selectors from '../../store/store/selectors-team'
 
-export default function AddUsers({ users, isModalOpen, modalCloseCb }) {
-  const dispatch = useDispatch()
+export default function AddUsers({
+  users,
+  isModalOpen,
+  modalCloseCb,
+}: {
+  users: UserData[]
+  isModalOpen: boolean
+  modalCloseCb: () => void
+}) {
+  const dispatch = useAppDispatch()
 
-  const members = useSelector(state => selectors.selectMembers(state))
+  const members = useAppSelector(state => selectors.selectMembers(state))
 
-  const handleToggleUser = (user, checked) => {
+  const handleToggleUser = (user: UserData, checked: boolean) => {
     if (!checked) {
       return dispatch(actionCreatorsSaga.deleteUser(user))
     }
