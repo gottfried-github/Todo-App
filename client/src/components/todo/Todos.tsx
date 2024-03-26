@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
 import styled from '@emotion/styled'
 import Typography from '@mui/material/Typography'
 
+import { useAppDispatch, useAppSelector } from '../../hooks/react-redux'
 import { creators as actionCreators } from '../../store/actions/sagas/todo'
 import selectors from '../../store/store/selectors-todo'
 
@@ -11,23 +11,26 @@ import Controls from './Controls'
 import Items from './Items'
 
 export default function App() {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
 
-  const filter = useSelector(state => selectors.selectFilter(state))
-  const counters = useSelector(state => selectors.selectCounters(state))
+  const filter = useAppSelector(state => selectors.selectFilter(state))
 
   useEffect(() => {
     dispatch(actionCreators.getItems())
   }, [dispatch, filter])
 
-  const error = useSelector(state => selectors.selectError(state))
+  const error = useAppSelector(state => selectors.selectError(state))
 
   if (error) {
-    alert(error.message)
+    if (typeof error === 'string') {
+      alert(error)
+    } else {
+      alert(error.message)
+    }
   }
 
   return (
-    <Container empty={!counters.all}>
+    <Container>
       <Typography variant="title1">todo list</Typography>
       <Form />
       <Controls />
