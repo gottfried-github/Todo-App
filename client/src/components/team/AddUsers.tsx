@@ -13,15 +13,13 @@ import { useAppDispatch, useAppSelector } from '../../hooks/react-redux'
 import { creators as actionCreators } from '../../store/actions/team'
 import selectors from '../../store/selectors/team'
 
-export default function AddUsers({
-  users,
-  isModalOpen,
-  modalCloseCb,
-}: {
+interface Props {
   users: UserData[]
   isModalOpen: boolean
   modalCloseCb: () => void
-}) {
+}
+
+export default function AddUsers({ users, isModalOpen, modalCloseCb }: Props) {
   const dispatch = useAppDispatch()
 
   const members = useAppSelector(state => selectors.selectMembers(state))
