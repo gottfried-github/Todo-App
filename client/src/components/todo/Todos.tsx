@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 import Typography from '@mui/material/Typography'
 
 import { useAppDispatch, useAppSelector } from '../../hooks/react-redux'
-import { creators as actionCreators } from '../../store/actions/sagas/todo'
+import { creators as actionCreators } from '../../store/actions/todo'
 import selectors from '../../store/selectors/todo'
 
 import Form from './Form'
@@ -16,7 +16,7 @@ export default function App() {
   const filter = useAppSelector(state => selectors.selectFilter(state))
 
   useEffect(() => {
-    dispatch(actionCreators.getItems())
+    dispatch(actionCreators.sagaGetItems())
   }, [dispatch, filter])
 
   const error = useAppSelector(state => selectors.selectError(state))

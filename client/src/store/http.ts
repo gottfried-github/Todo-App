@@ -1,7 +1,6 @@
 import axios from 'axios'
 
-import { creators as actionCreatorsSagaAuth } from './actions/sagas/auth'
-import { creators as actionCreatorsStoreAuth } from './actions/store/auth'
+import { creators as actionCreatorsAuth } from './actions/auth'
 import { store } from './store'
 
 const instance = axios.create({
@@ -43,7 +42,7 @@ instance.interceptors.response.use(
     }
 
     if (e.config.url === '/auth/refresh') {
-      store.dispatch(actionCreatorsSagaAuth.signout())
+      store.dispatch(actionCreatorsAuth.sagaSignout())
 
       return Promise.reject(e)
     }
@@ -57,11 +56,11 @@ instance.interceptors.response.use(
         return Promise.reject(e)
       }
 
-      store.dispatch(actionCreatorsSagaAuth.signout())
+      store.dispatch(actionCreatorsAuth.sagaSignout())
       return Promise.reject(e)
     }
 
-    store.dispatch(actionCreatorsStoreAuth.setToken(resRefresh.data.accessToken))
+    store.dispatch(actionCreatorsAuth.storeSetToken(resRefresh.data.accessToken))
 
     // make the HTTP request
     try {

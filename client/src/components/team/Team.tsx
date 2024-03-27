@@ -8,9 +8,9 @@ import IconButton from '@mui/material/IconButton'
 import IconDelete from '@mui/icons-material/Delete'
 import AddUsers from './AddUsers'
 
-import type { UserData } from '../../store/actions/types'
+import type { UserData } from '../../store/types/common'
 import { useAppDispatch, useAppSelector } from '../../hooks/react-redux'
-import { creators as actionCreatorsSaga } from '../../store/actions/sagas/team'
+import { creators as actionCreators } from '../../store/actions/team'
 import selectors from '../../store/selectors/team'
 
 export default function Team() {
@@ -23,11 +23,11 @@ export default function Team() {
   const users = useAppSelector(state => selectors.selectFreeUsers(state))
 
   useEffect(() => {
-    dispatch(actionCreatorsSaga.getTeam())
+    dispatch(actionCreators.sagaGetTeam())
   }, [dispatch])
 
   const handleAddUsersOpen = () => {
-    dispatch(actionCreatorsSaga.getFreeUsers())
+    dispatch(actionCreators.sagaGetFreeUsers())
     setIsAddUsersOpen(true)
   }
 
@@ -36,11 +36,11 @@ export default function Team() {
   }
 
   const handleDeleteUser = (user: UserData) => {
-    dispatch(actionCreatorsSaga.deleteUser(user))
+    dispatch(actionCreators.sagaDeleteUser(user))
   }
 
   const handleDeleteTeam = () => {
-    dispatch(actionCreatorsSaga.deleteTeam())
+    dispatch(actionCreators.sagaDeleteTeam())
   }
 
   return (

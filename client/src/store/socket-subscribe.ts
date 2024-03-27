@@ -1,26 +1,25 @@
 import { type Socket } from 'socket.io-client'
 
-import { type Item } from './actions/store/todo'
+import { type StorePayloadItem } from './types/todo'
 import { ITEM_CREATE, ITEM_UPDATE, ITEM_DELETE } from './events/index'
 import { store } from './store'
-import { creators as actionCreatorsStoreAuth } from './actions/store/auth'
-import { creators as actionCreatorsSagaTodo } from './actions/sagas/todo'
-import { creators as actionCreatorsStoreTodo } from './actions/store/todo'
+import { creators as actionCreatorsAuth } from './actions/auth'
+import { creators as actionCreatorsTodo } from './actions/todo'
 
-const actions: { [actionName: string]: (data: Item) => void } = {
-  [ITEM_CREATE]: (data: Item) => {
-    store.dispatch(actionCreatorsStoreTodo.append(data))
+const actions: { [actionName: string]: (data: StorePayloadItem) => void } = {
+  [ITEM_CREATE]: (data: StorePayloadItem) => {
+    store.dispatch(actionCreatorsTodo.storeAppend(data))
   },
-  [ITEM_UPDATE]: (data: Item) => {
+  [ITEM_UPDATE]: (data: StorePayloadItem) => {
     store.dispatch(
-      actionCreatorsStoreTodo.updateItem({
+      actionCreatorsTodo.storeUpdateItem({
         id: data.id,
         fields: data,
       })
     )
   },
-  [ITEM_DELETE]: (data: Item) => {
-    store.dispatch(actionCreatorsStoreTodo.deleteItem(data))
+  [ITEM_DELETE]: (data: StorePayloadItem) => {
+    store.dispatch(actionCreatorsTodo.storeDeleteItem(data))
   },
 }
 
@@ -28,7 +27,7 @@ export default function subscribe(socket: Socket) {
   socket.on('connect_error', e => {
     console.log('socket, connect_error, e:', e)
     store.dispatch(
-      actionCreatorsStoreAuth.setErrorSocket(
+      actionCreatorsAuth.storeSetErrorSocket(
         e.message || 'something went wrong while connecting to the socket server'
       )
     )
@@ -44,7 +43,7 @@ export default function subscribe(socket: Socket) {
 
     if (!state.auth.token) return
 
-    store.dispatch(actionCreatorsSagaTodo.getItems())
+    store.dispatch(actionCreatorsTodo.sagaGetItems())
   })
 
   socket.on('event', ev => {

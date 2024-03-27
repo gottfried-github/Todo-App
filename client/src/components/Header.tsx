@@ -6,7 +6,7 @@ import Button from '@mui/material/Button'
 import Chip from '@mui/material/Chip'
 
 import { useAppDispatch, useAppSelector } from '../hooks/react-redux'
-import { creators as actionCreatorsSagaAuth } from '../store/actions/sagas/auth'
+import { creators as actionCreatorsAuth } from '../store/actions/auth'
 import selectorsAuth from '../store/selectors/auth'
 
 export default function Header() {
@@ -24,7 +24,7 @@ export default function Header() {
         <Button
           variant="app-bar"
           onClick={() => {
-            dispatch(actionCreatorsSagaAuth.signout({ server: true }))
+            dispatch(actionCreatorsAuth.sagaSignout({ server: true }))
           }}
         >
           sign out

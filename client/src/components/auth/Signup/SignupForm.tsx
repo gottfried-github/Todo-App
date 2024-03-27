@@ -6,8 +6,7 @@ import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 
 import { useAppDispatch, useAppSelector } from '../../../hooks/react-redux'
-import { creators as actionCreatorsSaga } from '../../../store/actions/sagas/auth'
-import { creators as actionCreatorsStore } from '../../../store/actions/store/auth'
+import { creators as actionCreators } from '../../../store/actions/auth'
 import selectorsAuth from '../../../store/selectors/auth'
 import { validate } from '../../../utils'
 
@@ -28,13 +27,13 @@ export default function Signup() {
   useEffect(() => {
     return () => {
       if (error) {
-        dispatch(actionCreatorsStore.unsetErrorSignup())
+        dispatch(actionCreators.storeUnsetErrorSignup())
       }
     }
   }, [error, dispatch])
 
   const submitCb = (values: SignupValues) => {
-    dispatch(actionCreatorsSaga.signup(values))
+    dispatch(actionCreators.sagaSignup(values))
   }
 
   return (
@@ -61,7 +60,7 @@ export default function Signup() {
                     }
                     onChange={ev => {
                       if (error) {
-                        dispatch(actionCreatorsStore.unsetErrorSignup())
+                        dispatch(actionCreators.storeUnsetErrorSignup())
                       }
 
                       input.onChange(ev)
@@ -89,7 +88,7 @@ export default function Signup() {
                     }
                     onChange={ev => {
                       if (error) {
-                        dispatch(actionCreatorsStore.unsetErrorSignup())
+                        dispatch(actionCreators.storeUnsetErrorSignup())
                       }
 
                       input.onChange(ev)
@@ -117,7 +116,7 @@ export default function Signup() {
                     }
                     onChange={ev => {
                       if (error) {
-                        dispatch(actionCreatorsStore.unsetErrorSignup())
+                        dispatch(actionCreators.storeUnsetErrorSignup())
                       }
 
                       input.onChange(ev)
@@ -145,7 +144,7 @@ export default function Signup() {
                     }
                     onChange={ev => {
                       if (error) {
-                        dispatch(actionCreatorsStore.unsetErrorSignup())
+                        dispatch(actionCreators.storeUnsetErrorSignup())
                       }
 
                       input.onChange(ev)
@@ -173,7 +172,7 @@ export default function Signup() {
                     }
                     onChange={ev => {
                       if (error) {
-                        dispatch(actionCreatorsStore.unsetErrorSignup())
+                        dispatch(actionCreators.storeUnsetErrorSignup())
                       }
 
                       input.onChange(ev)
