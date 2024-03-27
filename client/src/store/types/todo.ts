@@ -86,26 +86,3 @@ export type StateItems = Item[]
 export type StateFilter = Filter
 export type StateCounters = StorePayloadCounters
 export type StateError = null | ErrorPayload
-
-/*
-export type StateTodo = {
-  items: StorePayloadItem[]
-  counters: {
-    all: number
-    done: number
-    notDone: number
-  }
-  filter: {
-    status: null | number
-    sort: {
-      field: string
-      order: number
-    }
-    pagination: {
-      page: number
-      pageSize: number
-    }
-  }
-  error: null | ErrorPayload
-}
-*/
