@@ -11,10 +11,9 @@ import { GridValueFormatterParams, GridRenderCellParams, GridColDef } from '@mui
 import { useAppDispatch, useAppSelector } from '../../hooks/react-redux'
 
 import { ITEM_STATUS } from '../../constants'
-import { creators as actionCreatorsSaga } from '../../store/actions/sagas/todo'
-import { creators as actionCreatorsStore } from '../../store/actions/store/todo'
-import selectorsTodo from '../../store/store/selectors-todo'
-import selectorsAuth from '../../store/store/selectors-auth'
+import { creators as actionCreators } from '../../store/actions/todo'
+import selectorsTodo from '../../store/selectors/todo'
+import selectorsAuth from '../../store/selectors/auth'
 import RowMenu from './RowMenu'
 
 type PaginationModel = {
@@ -36,7 +35,7 @@ export default function Items() {
   const [paginationModel, setPaginationModel] = useState(filter.pagination)
 
   useEffect(() => {
-    dispatch(actionCreatorsStore.setFilter({ pagination: paginationModel }))
+    dispatch(actionCreators.storeSetFilter({ pagination: paginationModel }))
   }, [dispatch, paginationModel])
 
   const items = useAppSelector(state => selectorsTodo.selectItems(state))
@@ -69,7 +68,7 @@ export default function Items() {
     const status = data.status === ITEM_STATUS.DONE ? ITEM_STATUS.NOT_DONE : ITEM_STATUS.DONE
 
     dispatch(
-      actionCreatorsSaga.updateStatus({
+      actionCreators.sagaUpdateStatus({
         id: data.id,
         userId: data.userId,
         status,
@@ -83,7 +82,7 @@ export default function Items() {
 
   const handleNameSubmit = (userId: string) => {
     dispatch(
-      actionCreatorsSaga.updateName({
+      actionCreators.sagaUpdateName({
         id: editingId,
         userId,
         name,
@@ -92,7 +91,7 @@ export default function Items() {
   }
 
   const handleDelete = (itemId: string) => {
-    dispatch(actionCreatorsSaga.deleteOne(itemId))
+    dispatch(actionCreators.sagaDeleteOne(itemId))
   }
 
   const handleSortModelChange = (
@@ -103,7 +102,7 @@ export default function Items() {
       order: sortModel[0].sort === 'desc' ? -1 : 1,
     }
 
-    dispatch(actionCreatorsStore.setFilter({ sort }))
+    dispatch(actionCreators.storeSetFilter({ sort }))
   }
 
   const columns: GridColDef[] = [

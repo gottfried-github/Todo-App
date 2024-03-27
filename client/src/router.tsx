@@ -1,7 +1,7 @@
 import { RouterProvider, createBrowserRouter, Navigate } from 'react-router-dom'
 
 import { useAppSelector } from './hooks/react-redux'
-import selectorsAuth from './store/store/selectors-auth'
+import selectorsAuth from './store/selectors/auth'
 
 import Signup from './pages/Signup'
 import Signin from './pages/Signin'

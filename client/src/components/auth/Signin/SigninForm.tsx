@@ -5,9 +5,8 @@ import TextField from '@mui/material/TextField'
 import { Button, AuthForm } from '../Signup/SignupForm'
 
 import { useAppDispatch, useAppSelector } from '../../../hooks/react-redux'
-import { creators as actionCreatorsSaga } from '../../../store/actions/sagas/auth'
-import { creators as actionCreatorsStore } from '../../../store/actions/store/auth'
-import selectorsAuth from '../../../store/store/selectors-auth'
+import { creators as actionCreators } from '../../../store/actions/auth'
+import selectorsAuth from '../../../store/selectors/auth'
 import { validate } from '../../../utils'
 
 const schema = object({
@@ -28,13 +27,13 @@ export default function Signin() {
   useEffect(() => {
     return () => {
       if (error) {
-        dispatch(actionCreatorsStore.unsetErrorSignin())
+        dispatch(actionCreators.storeUnsetErrorSignin())
       }
     }
   }, [error, dispatch])
 
   const submitCb = (values: SigninValues) => {
-    dispatch(actionCreatorsSaga.signin(values))
+    dispatch(actionCreators.sagaSignin(values))
   }
 
   return (
@@ -68,7 +67,7 @@ export default function Signin() {
                     }
                     onChange={ev => {
                       if (error) {
-                        dispatch(actionCreatorsStore.unsetErrorSignin())
+                        dispatch(actionCreators.storeUnsetErrorSignin())
                       }
 
                       input.onChange(ev)
@@ -96,7 +95,7 @@ export default function Signin() {
                     }
                     onChange={ev => {
                       if (error) {
-                        dispatch(actionCreatorsStore.unsetErrorSignin())
+                        dispatch(actionCreators.storeUnsetErrorSignin())
                       }
 
                       input.onChange(ev)

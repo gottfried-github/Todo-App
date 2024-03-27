@@ -2,15 +2,14 @@ import { call, put, takeEvery, takeLatest, select } from 'redux-saga/effects'
 import { type Action } from 'redux-actions'
 import axios from '../http'
 
-import { type UserData } from '../actions/types'
-import { type Team } from '../actions/sagas/team'
+import { type UserData } from '../types/common'
+import { type SagaPayloadTeam } from '../types/team'
 
-import { types as actionTypesSaga } from '../actions/sagas/team'
-import { types as actionTypesStore } from '../actions/store/team'
-import { types as actionTypesStoreAuth } from '../actions/store/auth'
-import selectorsAuth from '../store/selectors-auth'
+import { types as actionTypesTeam } from '../actions/team'
+import { types as actionTypesAuth } from '../actions/auth'
+import selectorsAuth from '../selectors/auth'
 
-function* create(action: Action<Team>): Generator<any, any, any> {
+function* create(action: Action<SagaPayloadTeam>): Generator<any, any, any> {
   const userData = yield select(state => selectorsAuth.selectUserData(state))
 
   try {
@@ -18,12 +17,12 @@ function* create(action: Action<Team>): Generator<any, any, any> {
 
     // auth slice: set teamId
     yield put({
-      type: actionTypesStoreAuth.setUserData,
+      type: actionTypesAuth.storeSetUserData,
       payload: { ...userData, teamId: res.data.id },
     })
   } catch (e: any) {
     yield put({
-      type: actionTypesStore.setError,
+      type: actionTypesTeam.storeSetError,
       payload: e.response?.data || { message: 'something went wrong' },
     })
   }
@@ -39,17 +38,17 @@ function* getTeam(): Generator<any, any, any> {
       set team data
     */
     yield put({
-      type: actionTypesStore.setData,
+      type: actionTypesTeam.storeSetData,
       payload: res.data.data,
     })
 
     yield put({
-      type: actionTypesStore.setMembers,
+      type: actionTypesTeam.storeSetMembers,
       payload: res.data.members,
     })
   } catch (e: any) {
     yield put({
-      type: actionTypesStore.setError,
+      type: actionTypesTeam.storeSetError,
       payload: e.response?.data || { message: 'something went wrong' },
     })
   }
@@ -60,12 +59,12 @@ function* getFreeUsers(): Generator<any, any, any> {
     const res = yield call(axios.get, '/teams/users')
 
     yield put({
-      type: actionTypesStore.setFreeUsers,
+      type: actionTypesTeam.storeSetFreeUsers,
       payload: res.data,
     })
   } catch (e: any) {
     yield put({
-      type: actionTypesStore.setError,
+      type: actionTypesTeam.storeSetError,
       payload: e.response?.data || { message: 'something went wrong' },
     })
   }
@@ -78,12 +77,12 @@ function* addUser(action: Action<UserData>): Generator<any, any, any> {
     yield call(axios.post, `/teams/${userData.teamId}/users/${action.payload.id}`)
 
     yield put({
-      type: actionTypesStore.appendMember,
+      type: actionTypesTeam.storeAppendMember,
       payload: action.payload,
     })
   } catch (e: any) {
     yield put({
-      type: actionTypesStore.setError,
+      type: actionTypesTeam.storeSetError,
       payload: e.response?.data || { message: 'something went wrong' },
     })
   }
@@ -96,12 +95,12 @@ function* deleteUser(action: Action<UserData>): Generator<any, any, any> {
     yield call(axios.delete, `/teams/${userData.teamId}/users/${action.payload.id}`)
 
     yield put({
-      type: actionTypesStore.deleteMember,
+      type: actionTypesTeam.storeDeleteMember,
       payload: action.payload,
     })
   } catch (e: any) {
     yield put({
-      type: actionTypesStore.setError,
+      type: actionTypesTeam.storeSetError,
       payload: e.response?.data || { message: 'something went wrong' },
     })
   }
@@ -115,24 +114,24 @@ function* deleteTeam(): Generator<any, any, any> {
 
     // auth slice: set teamId
     yield put({
-      type: actionTypesStoreAuth.setUserData,
+      type: actionTypesAuth.storeSetUserData,
       payload: { ...userData, teamId: null },
     })
   } catch (e: any) {
     yield put({
-      type: actionTypesStore.setError,
+      type: actionTypesTeam.storeSetError,
       payload: e.response?.data || { message: 'something went wrong' },
     })
   }
 }
 
 function* team() {
-  yield takeEvery(actionTypesSaga.create, create)
-  yield takeEvery(actionTypesSaga.getTeam, getTeam)
-  yield takeEvery(actionTypesSaga.getFreeUsers, getFreeUsers)
-  yield takeLatest(actionTypesSaga.addUser, addUser)
-  yield takeLatest(actionTypesSaga.deleteUser, deleteUser)
-  yield takeLatest(actionTypesSaga.deleteTeam, deleteTeam)
+  yield takeEvery(actionTypesTeam.sagaCreate, create)
+  yield takeEvery(actionTypesTeam.sagaGetTeam, getTeam)
+  yield takeEvery(actionTypesTeam.sagaGetFreeUsers, getFreeUsers)
+  yield takeLatest(actionTypesTeam.sagaAddUser, addUser)
+  yield takeLatest(actionTypesTeam.sagaDeleteUser, deleteUser)
+  yield takeLatest(actionTypesTeam.sagaDeleteTeam, deleteTeam)
 }
 
 export default team

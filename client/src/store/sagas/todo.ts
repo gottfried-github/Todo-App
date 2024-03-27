@@ -2,16 +2,15 @@ import { call, put, takeEvery, takeLatest, select } from 'redux-saga/effects'
 import { type Action } from 'redux-actions'
 import axios from '../http'
 
-import selectorsTodo from '../store/selectors-todo'
+import selectorsTodo from '../selectors/todo'
 
+import { types as actionTypes } from '../actions/todo'
 import {
-  types as actionTypesSaga,
-  type CreatePayload,
-  type UpdateStatusPayload,
-  type UpdateNamePayload,
-  type DeleteOnePayload,
-} from '../actions/sagas/todo'
-import { types as actionTypesStore } from '../actions/store/todo'
+  type SagaPayloadCreate,
+  type SagaPayloadUpdateStatus,
+  type SagaPayloadUpdateName,
+  type SagaPayloadDeleteOne,
+} from '../types/todo'
 
 class Item {
   name: string
@@ -21,27 +20,37 @@ class Item {
   }
 }
 
-function* create(action: Action<CreatePayload>): Generator<any, any, any> {
+function* create(action: Action<SagaPayloadCreate>): Generator<any, any, any> {
+  const counters = yield select(state => selectorsTodo.selectCounters(state))
+  const filter = yield select(state => selectorsTodo.selectFilter(state))
+
   const item = new Item(action.payload)
 
   try {
     const res = yield call(axios.post, '/todos', item)
 
     yield put({
-      type: actionTypesStore.append,
-      payload: res.data,
+      type: actionTypes.storeAppend,
+      payload: {
+        item: res.data,
+        counters,
+        filter,
+      },
     })
   } catch (e: any) {
     yield put({
-      type: actionTypesStore.setError,
+      type: actionTypes.storeSetError,
       payload: e.response?.data || { message: 'something went wrong' },
     })
   }
 }
 
-function* updateStatus(action: Action<UpdateStatusPayload>): Generator<any, any, any> {
+function* updateStatus(action: Action<SagaPayloadUpdateStatus>): Generator<any, any, any> {
+  const items = yield select(state => selectorsTodo.selectItems(state))
+  const filter = yield select(state => selectorsTodo.selectFilter(state))
+
   try {
-    yield call(axios.patch, `/todos/${action.payload.id}`, {
+    const res = yield call(axios.patch, `/todos/${action.payload.id}`, {
       userId: action.payload.userId,
       body: {
         status: action.payload.status,
@@ -49,20 +58,27 @@ function* updateStatus(action: Action<UpdateStatusPayload>): Generator<any, any,
     })
 
     yield put({
-      type: actionTypesStore.updateItem,
-      payload: { id: action.payload.id, fields: { status: action.payload.status } },
+      type: actionTypes.storeUpdateItem,
+      payload: {
+        item: res.data,
+        itemsPrev: items,
+        filter,
+      },
     })
   } catch (e: any) {
     yield put({
-      type: actionTypesStore.setError,
+      type: actionTypes.storeSetError,
       payload: e.response?.data || { message: 'something went wrong' },
     })
   }
 }
 
-function* updateName(action: Action<UpdateNamePayload>): Generator<any, any, any> {
+function* updateName(action: Action<SagaPayloadUpdateName>): Generator<any, any, any> {
+  const items = yield select(state => selectorsTodo.selectItems(state))
+  const filter = yield select(state => selectorsTodo.selectFilter(state))
+
   try {
-    yield call(axios.patch, `/todos/${action.payload.id}`, {
+    const res = yield call(axios.patch, `/todos/${action.payload.id}`, {
       userId: action.payload.userId,
       body: {
         name: action.payload.name,
@@ -70,25 +86,32 @@ function* updateName(action: Action<UpdateNamePayload>): Generator<any, any, any
     })
 
     yield put({
-      type: actionTypesStore.updateItem,
-      payload: { id: action.payload.id, fields: { name: action.payload.name } },
+      type: actionTypes.storeUpdateItem,
+      payload: {
+        item: res.data,
+        itemsPrev: items,
+        filter,
+      },
     })
   } catch (e: any) {
     yield put({
-      type: actionTypesStore.setError,
+      type: actionTypes.storeSetError,
       payload: e.response?.data || { message: 'something went wrong' },
     })
   }
 }
 
-function* deleteOne(action: Action<DeleteOnePayload>): Generator<any, any, any> {
+function* deleteOne(action: Action<SagaPayloadDeleteOne>): Generator<any, any, any> {
   try {
-    yield call(axios.delete, `/todos/${action.payload}`)
+    const res = yield call(axios.delete, `/todos/${action.payload}`)
 
-    yield call(getItems)
+    yield put({
+      type: actionTypes.storeDeleteItem,
+      payload: { item: res.data },
+    })
   } catch (e: any) {
     yield put({
-      type: actionTypesStore.setError,
+      type: actionTypes.storeSetError,
       payload: e.response?.data || { message: 'something went wrong' },
     })
   }
@@ -101,7 +124,7 @@ function* deleteDone(): Generator<any, any, any> {
     yield call(getItems)
   } catch (e: any) {
     yield put({
-      type: actionTypesStore.setError,
+      type: actionTypes.storeSetError,
       payload: e.response?.data || { message: 'something went wrong' },
     })
   }
@@ -135,24 +158,29 @@ function* getItems(): Generator<any, any, any> {
     const res = yield call(axios.get, '/todos', config)
 
     yield put({
-      type: actionTypesStore.setItems,
-      payload: res.data,
+      type: actionTypes.storeSetItems,
+      payload: res.data.items,
+    })
+
+    yield put({
+      type: actionTypes.storeSetCounters,
+      payload: res.data.counters,
     })
   } catch (e: any) {
     yield put({
-      type: actionTypesStore.setError,
+      type: actionTypes.storeSetError,
       payload: e.response?.data || { message: 'something went wrong' },
     })
   }
 }
 
 function* todos() {
-  yield takeEvery(actionTypesSaga.create, create)
-  yield takeLatest(actionTypesSaga.updateStatus, updateStatus)
-  yield takeLatest(actionTypesSaga.updateName, updateName)
-  yield takeLatest(actionTypesSaga.deleteOne, deleteOne)
-  yield takeLatest(actionTypesSaga.deleteDone, deleteDone)
-  yield takeEvery(actionTypesSaga.getItems, getItems)
+  yield takeEvery(actionTypes.sagaCreate, create)
+  yield takeLatest(actionTypes.sagaUpdateStatus, updateStatus)
+  yield takeLatest(actionTypes.sagaUpdateName, updateName)
+  yield takeLatest(actionTypes.sagaDeleteOne, deleteOne)
+  yield takeLatest(actionTypes.sagaDeleteDone, deleteDone)
+  yield takeEvery(actionTypes.sagaGetItems, getItems)
 }
 
 export default todos

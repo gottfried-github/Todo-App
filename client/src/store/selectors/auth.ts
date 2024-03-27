@@ -1,4 +1,4 @@
-import { type RootState } from './store'
+import { type RootState } from '../store'
 
 export default {
   selectToken: (state: RootState) => state.auth.token,

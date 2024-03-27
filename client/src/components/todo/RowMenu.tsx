@@ -7,15 +7,13 @@ import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 
-export default function RowMenu({
-  handleEdit,
-  handleDelete,
-  own,
-}: {
+interface Props {
   handleEdit: () => void
   handleDelete: () => void
   own: boolean | null
-}) {
+}
+
+export default function RowMenu({ handleEdit, handleDelete, own }: Props) {
   const [anchorEl, setAnchorEl] = useState<Element | null>(null)
 
   const open = Boolean(anchorEl)

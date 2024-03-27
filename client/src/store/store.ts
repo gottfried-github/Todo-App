@@ -2,9 +2,9 @@ import { createStore, combineReducers, applyMiddleware } from 'redux'
 import createSagaMiddleware from 'redux-saga'
 import logger from 'redux-logger'
 
-import reducerTeam from './slice-team'
-import reducerTodo from './slice-todo'
-import reducerAuth from './slice-auth'
+import reducerTeam from './reducers/team'
+import reducerTodo from './reducers/todo'
+import reducerAuth from './reducers/auth'
 
 const sagaMiddleware = createSagaMiddleware()
 

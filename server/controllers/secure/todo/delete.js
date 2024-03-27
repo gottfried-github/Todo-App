@@ -23,7 +23,7 @@ export default async function deleteById(ctx) {
 
     ctx.socketSend(ITEM_DELETE, item)
 
-    ctx.send(200, { deletedCount: _res.deletedCount })
+    ctx.send(200, item)
   } catch (e) {
     if (e instanceof mongoose.Error.CastError) {
       ctx.throw(400, 'validation error', e)

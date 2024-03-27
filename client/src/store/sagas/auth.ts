@@ -5,79 +5,78 @@ import { type Action } from 'redux-actions'
 import axios from '../http'
 import socketSubscribe from '../socket-subscribe'
 
-import selectors from '../store/selectors-auth'
+import selectors from '../selectors/auth'
+import { types as actionTypes } from '../actions/auth'
 import {
-  types as actionTypesSaga,
-  type Signup,
-  type Signin,
-  type Signout,
-} from '../actions/sagas/auth'
-import { types as actionTypesStore } from '../actions/store/auth'
+  type SagaPayloadSignup,
+  type SagaPayloadSignin,
+  type SagaPayloadSignout,
+} from '../types/auth'
 
 let socket: null | Socket = null
 
-function* signup(action: Action<Signup>): Generator<any, any, any> {
+function* signup(action: Action<SagaPayloadSignup>): Generator<any, any, any> {
   try {
     const res = yield call(axios.post, '/auth/signup', action.payload)
 
     yield put({
-      type: actionTypesStore.setToken,
+      type: actionTypes.storeSetToken,
       payload: res.data.accessToken,
     })
 
     yield put({
-      type: actionTypesStore.setUserData,
+      type: actionTypes.storeSetUserData,
       payload: res.data.user,
     })
 
     yield put({
-      type: actionTypesSaga.signedIn,
+      type: actionTypes.sagaSignedIn,
     })
   } catch (e: any) {
     console.log('saga, auth, signup, axios errored, e:', e)
 
     yield put({
-      type: actionTypesStore.setErrorSignup,
+      type: actionTypes.storeSetErrorSignup,
       payload: e.response?.data || { message: 'something went wrong' },
     })
   }
 }
 
-function* signin(action: Action<Signin>): Generator<any, any, any> {
+function* signin(action: Action<SagaPayloadSignin>): Generator<any, any, any> {
   try {
     const res = yield call(axios.post, '/auth/signin', action.payload)
 
     yield put({
-      type: actionTypesStore.setToken,
+      type: actionTypes.storeSetToken,
       payload: res.data.accessToken,
     })
 
     yield put({
-      type: actionTypesStore.setUserData,
+      type: actionTypes.storeSetUserData,
       payload: res.data.user,
     })
 
     yield put({
-      type: actionTypesSaga.signedIn,
+      type: actionTypes.sagaSignedIn,
     })
   } catch (e: any) {
     console.log('saga, auth, signin, axios errored, e:', e)
 
     yield put({
-      type: actionTypesStore.setErrorSignin,
+      type: actionTypes.storeSetErrorSignin,
       payload: e.response?.data || { message: 'something went wrong' },
     })
   }
 }
 
-function* signout(action: Action<Signout>): Generator<any, any, any> {
+function* signout(action: Action<SagaPayloadSignout>): Generator<any, any, any> {
   try {
     if (action.payload?.server) {
       yield call(axios.delete, '/auth')
     }
 
     yield put({
-      type: actionTypesStore.unsetToken,
+      type: actionTypes.storeUnsetToken,
     })
 
     if (socket?.connected) {
@@ -86,7 +85,7 @@ function* signout(action: Action<Signout>): Generator<any, any, any> {
   } catch (e: any) {
     console.log('saga, signout, e:', e)
     yield put({
-      type: actionTypesStore.setError,
+      type: actionTypes.storeSetError,
       payload: e.response?.data || { message: 'something went wrong' },
     })
   }
@@ -97,7 +96,7 @@ function* authorizeSocket(): Generator<any, any, any> {
 
   if (socket?.connected) {
     return put({
-      type: actionTypesStore.setError,
+      type: actionTypes.storeSetError,
       payload: {
         message: 'attempted to connect to the socket server, but socket is already connected',
       },
@@ -120,41 +119,41 @@ function* refresh(): Generator<any, any, any> {
 
   try {
     yield put({
-      type: actionTypesStore.setIsLoading,
+      type: actionTypes.storeSetIsLoading,
     })
 
     const res = yield call(axios.get, '/auth/refresh')
 
     yield put({
-      type: actionTypesStore.setToken,
+      type: actionTypes.storeSetToken,
       payload: res.data.accessToken,
     })
 
     yield put({
-      type: actionTypesStore.setUserData,
+      type: actionTypes.storeSetUserData,
       payload: res.data.user,
     })
 
     yield put({
-      type: actionTypesSaga.signedIn,
+      type: actionTypes.sagaSignedIn,
     })
   } catch (e: any) {
     yield put({
-      type: actionTypesStore.setError,
+      type: actionTypes.storeSetError,
       payload: e.response?.data || { message: 'something went wrong' },
     })
   } finally {
     yield put({
-      type: actionTypesStore.unsetIsLoading,
+      type: actionTypes.storeUnsetIsLoading,
     })
   }
 }
 
 function* auth() {
-  yield takeLatest(actionTypesSaga.signup, signup)
-  yield takeLatest(actionTypesSaga.signin, signin)
-  yield takeLatest(actionTypesSaga.signout, signout)
-  yield takeLatest(actionTypesSaga.signedIn, authorizeSocket)
+  yield takeLatest(actionTypes.sagaSignup, signup)
+  yield takeLatest(actionTypes.sagaSignin, signin)
+  yield takeLatest(actionTypes.sagaSignout, signout)
+  yield takeLatest(actionTypes.sagaSignedIn, authorizeSocket)
 
   yield refresh()
 }

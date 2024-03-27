@@ -6,7 +6,7 @@ import Modal from '@mui/material/Modal'
 import { TextField } from '../todo/Form'
 
 import { useAppDispatch } from '../../hooks/react-redux'
-import { creators as actionCreatorsSaga } from '../../store/actions/sagas/team'
+import { creators as actionCreators } from '../../store/actions/team'
 
 export default function CreateTeam() {
   const dispatch = useAppDispatch()
@@ -22,7 +22,7 @@ export default function CreateTeam() {
     console.log('handleSubmit, teamName:', teamName)
 
     dispatch(
-      actionCreatorsSaga.create({
+      actionCreators.sagaCreate({
         name: teamName,
       })
     )

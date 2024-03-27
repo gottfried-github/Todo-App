@@ -5,9 +5,8 @@ import ToggleButton from '@mui/material/ToggleButton'
 import Button from '@mui/material/Button'
 import { useAppDispatch, useAppSelector } from '../../hooks/react-redux'
 
-import { creators as actionCreatorsStore } from '../../store/actions/store/todo'
-import { creators as actionCreatorsSaga } from '../../store/actions/sagas/todo'
-import selectors from '../../store/store/selectors-todo'
+import { creators as actionCreators } from '../../store/actions/todo'
+import selectors from '../../store/selectors/todo'
 
 import { ITEM_STATUS } from '../../constants'
 
@@ -18,14 +17,14 @@ export default function Controls() {
   const counters = useAppSelector(state => selectors.selectCounters(state))
 
   const handleDeleteDone = () => {
-    dispatch(actionCreatorsSaga.deleteDone())
+    dispatch(actionCreators.sagaDeleteDone())
   }
 
   const handleSetFilter = (ev: React.MouseEvent, _filter: null | boolean | number) => {
     if (_filter === null) return
 
     dispatch(
-      actionCreatorsStore.setFilter({
+      actionCreators.storeSetFilter({
         status: _filter === false ? null : _filter,
         pagination: { ...filter.pagination, page: 0 },
       })

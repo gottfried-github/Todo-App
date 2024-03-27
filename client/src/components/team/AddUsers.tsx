@@ -8,30 +8,28 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import Checkbox from '@mui/material/Checkbox'
 
-import type { UserData } from '../../store/actions/types'
+import type { UserData } from '../../store/types/common'
 import { useAppDispatch, useAppSelector } from '../../hooks/react-redux'
-import { creators as actionCreatorsSaga } from '../../store/actions/sagas/team'
-import selectors from '../../store/store/selectors-team'
+import { creators as actionCreators } from '../../store/actions/team'
+import selectors from '../../store/selectors/team'
 
-export default function AddUsers({
-  users,
-  isModalOpen,
-  modalCloseCb,
-}: {
+interface Props {
   users: UserData[]
   isModalOpen: boolean
   modalCloseCb: () => void
-}) {
+}
+
+export default function AddUsers({ users, isModalOpen, modalCloseCb }: Props) {
   const dispatch = useAppDispatch()
 
   const members = useAppSelector(state => selectors.selectMembers(state))
 
   const handleToggleUser = (user: UserData, checked: boolean) => {
     if (!checked) {
-      return dispatch(actionCreatorsSaga.deleteUser(user))
+      return dispatch(actionCreators.sagaDeleteUser(user))
     }
 
-    dispatch(actionCreatorsSaga.addUser(user))
+    dispatch(actionCreators.sagaAddUser(user))
   }
 
   return (

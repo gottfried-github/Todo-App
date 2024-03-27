@@ -26,7 +26,7 @@ export default async function update(ctx) {
     )
     ctx.socketSend(ITEM_UPDATE, item)
 
-    ctx.send(200, null, 'successfully updated')
+    ctx.send(200, item, 'successfully updated')
   } catch (e) {
     if (e instanceof mongoose.Error.CastError || e instanceof mongoose.Error.ValidationError) {
       ctx.throw(400, 'validation failed', e)

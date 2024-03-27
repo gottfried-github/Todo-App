@@ -5,7 +5,7 @@ import styled from '@emotion/styled'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 
-import { creators as actionCreators } from '../../store/actions/sagas/todo'
+import { creators as actionCreators } from '../../store/actions/todo'
 
 export default function Form() {
   const dispatch = useAppDispatch()
@@ -19,7 +19,7 @@ export default function Form() {
   const handleSubmit = (ev: FormEvent) => {
     ev.preventDefault()
 
-    dispatch(actionCreators.create(name))
+    dispatch(actionCreators.sagaCreate(name))
 
     setName('')
   }
