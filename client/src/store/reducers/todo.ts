@@ -26,22 +26,24 @@ const items = handleActions<StateItems, any>(
         return state
       }
 
-      payload.counters.all++
+      const counters = { ...payload.counters }
+
+      counters.all++
 
       if (payload.item.status === ITEM_STATUS.DONE) {
-        payload.counters.done++
+        counters.done++
       } else {
-        payload.counters.notDone++
+        counters.notDone++
       }
 
       let counter = null
 
       if (payload.filter.status === null) {
-        counter = payload.counters.all
+        counter = counters.all
       } else if (payload.filter.status === ITEM_STATUS.DONE) {
-        counter = payload.counters.done
+        counter = counters.done
       } else {
-        counter = payload.counters.notDone
+        counter = counters.notDone
       }
 
       // whether the new item fits into the current page
