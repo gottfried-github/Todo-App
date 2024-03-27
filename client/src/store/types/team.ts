@@ -1,14 +1,14 @@
-import { type UserData } from './common'
+import { type UserData, type ErrorPayload } from './common'
 
 /*
-  saga
+  actions, saga
 */
 export type SagaPayloadTeam = {
   name: string
 }
 
 /*
-  store
+  actions, store
 */
 export type StorePayloadUsers = UserData[]
 
@@ -19,3 +19,9 @@ export type StorePayloadTeam = {
   createdAt: Date
   updatedAt: Date
 }
+
+/*
+  store state
+*/
+export type StateTeam = null | StorePayloadTeam
+export type StateError = null | ErrorPayload

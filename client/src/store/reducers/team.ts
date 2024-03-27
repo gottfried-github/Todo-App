@@ -3,10 +3,12 @@ import { handleAction, handleActions } from 'redux-actions'
 
 import { type UserData, type ErrorPayload } from '../types/common'
 import { types } from '../actions/team'
-import { type StorePayloadUsers, type StorePayloadTeam } from '../types/team'
-
-type Team = null | StorePayloadTeam
-type ErrorState = null | ErrorPayload
+import {
+  type StateTeam,
+  type StateError,
+  type StorePayloadUsers,
+  type StorePayloadTeam,
+} from '../types/team'
 
 const members = handleActions<StorePayloadUsers, any>(
   {
@@ -36,7 +38,7 @@ const freeUsers = handleAction(
 
 const data = handleAction(
   types.storeSetData,
-  (state: Team, { payload }: { payload: Team }) => {
+  (state: StateTeam, { payload }: { payload: StorePayloadTeam }) => {
     return payload
   },
   null
@@ -44,7 +46,7 @@ const data = handleAction(
 
 const error = handleActions(
   {
-    [types.storeSetError]: (state: ErrorState, { payload }: { payload: ErrorState }) => {
+    [types.storeSetError]: (state: StateError, { payload }: { payload: ErrorPayload }) => {
       return payload
     },
     [types.storeUnsetError]: () => {
