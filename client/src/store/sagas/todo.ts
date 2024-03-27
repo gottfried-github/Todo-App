@@ -21,8 +21,8 @@ class Item {
 }
 
 function* create(action: Action<SagaPayloadCreate>): Generator<any, any, any> {
-  const counters = select(state => selectorsTodo.selectCounters(state))
-  const filter = select(state => selectorsTodo.selectFilter(state))
+  const counters = yield select(state => selectorsTodo.selectCounters(state))
+  const filter = yield select(state => selectorsTodo.selectFilter(state))
 
   const item = new Item(action.payload)
 
@@ -46,8 +46,8 @@ function* create(action: Action<SagaPayloadCreate>): Generator<any, any, any> {
 }
 
 function* updateStatus(action: Action<SagaPayloadUpdateStatus>): Generator<any, any, any> {
-  const items = select(state => selectorsTodo.selectItems(state))
-  const filter = select(state => selectorsTodo.selectFilter(state))
+  const items = yield select(state => selectorsTodo.selectItems(state))
+  const filter = yield select(state => selectorsTodo.selectFilter(state))
 
   try {
     const res = yield call(axios.patch, `/todos/${action.payload.id}`, {
@@ -74,8 +74,8 @@ function* updateStatus(action: Action<SagaPayloadUpdateStatus>): Generator<any, 
 }
 
 function* updateName(action: Action<SagaPayloadUpdateName>): Generator<any, any, any> {
-  const items = select(state => selectorsTodo.selectItems(state))
-  const filter = select(state => selectorsTodo.selectFilter(state))
+  const items = yield select(state => selectorsTodo.selectItems(state))
+  const filter = yield select(state => selectorsTodo.selectFilter(state))
 
   try {
     const res = yield call(axios.patch, `/todos/${action.payload.id}`, {
