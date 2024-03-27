@@ -12,6 +12,7 @@ export const types = {
   // store
   storeSetItems: 'storeTodo/setItems',
   storeSetFilter: 'storeTodo/setFilter',
+  storeSetCounters: 'storeTodo/setCounters',
   storeSetError: 'storeTodo/setError',
   storeAppend: 'storeTodo/append',
   storeUpdateItem: 'storeTodo/updateItem',
@@ -30,6 +31,7 @@ export const creators = {
   // store
   storeSetItems: createAction(types.storeSetItems),
   storeSetFilter: createAction(types.storeSetFilter),
+  storeSetCounters: createAction(types.storeSetCounters),
   storeSetError: createAction(types.storeSetError),
   storeAppend: createAction(types.storeAppend),
   storeUpdateItem: createAction(types.storeUpdateItem),

@@ -1,5 +1,29 @@
 import { ErrorPayload } from './common'
 
+type Filter = {
+  status: null | number
+  sort: {
+    field: string
+    order: number
+  }
+  pagination: {
+    page: number
+    pageSize: number
+  }
+}
+
+type Item = {
+  id: string
+  name: string
+  status: number
+  user: {
+    id: string
+    userName: string
+  }
+  createdAt: Date
+  updatedAt: Date
+}
+
 /*
   actions, saga
 */
@@ -20,18 +44,6 @@ export type SagaPayloadDeleteOne = string
 /*
   actions, store
 */
-export type StorePayloadItem = {
-  id: string
-  name: string
-  status: number
-  user: {
-    id: string
-    userName: string
-  }
-  createdAt: Date
-  updatedAt: Date
-}
-
 export type StorePayloadItemUpdate = {
   id: string
   fields: {
@@ -40,14 +52,7 @@ export type StorePayloadItemUpdate = {
   }
 }
 
-export type StorePayloadItems = {
-  counters: {
-    all: number
-    done: number
-    notDone: number
-  }
-  items: StorePayloadItem[]
-}
+export type StorePayloadItems = Item[]
 
 export type StorePayloadFilter = {
   status?: null | number
@@ -61,9 +66,28 @@ export type StorePayloadFilter = {
   }
 }
 
+export type StorePayloadCounters = {
+  all: number
+  done: number
+  notDone: number
+}
+
+export type StorePayloadItem = {
+  item: Item
+  itemsPrev?: Item[]
+  counters?: StorePayloadCounters
+  filter?: Filter
+}
+
 /*
   store state
 */
+export type StateItems = Item[]
+export type StateFilter = Filter
+export type StateCounters = StorePayloadCounters
+export type StateError = null | ErrorPayload
+
+/*
 export type StateTodo = {
   items: StorePayloadItem[]
   counters: {
@@ -84,3 +108,4 @@ export type StateTodo = {
   }
   error: null | ErrorPayload
 }
+*/
