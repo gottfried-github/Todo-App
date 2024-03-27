@@ -1,5 +1,7 @@
+import { ErrorPayload } from './common'
+
 /*
-  saga
+  actions, saga
 */
 type Update = { id: string; userId: string }
 
@@ -16,7 +18,7 @@ export type SagaPayloadUpdateName = Update & {
 export type SagaPayloadDeleteOne = string
 
 /*
-  store
+  actions, store
 */
 export type StorePayloadItem = {
   id: string
@@ -57,4 +59,28 @@ export type StorePayloadFilter = {
     page: number
     pageSize: number
   }
+}
+
+/*
+  store state
+*/
+export type StateTodo = {
+  items: StorePayloadItem[]
+  counters: {
+    all: number
+    done: number
+    notDone: number
+  }
+  filter: {
+    status: null | number
+    sort: {
+      field: string
+      order: number
+    }
+    pagination: {
+      page: number
+      pageSize: number
+    }
+  }
+  error: null | ErrorPayload
 }
