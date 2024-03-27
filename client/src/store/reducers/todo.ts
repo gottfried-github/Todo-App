@@ -88,28 +88,6 @@ const items = handleActions<StateItems, any>(
   []
 )
 
-const filter = handleActions(
-  {
-    [types.storeSetFilter]: (state: StateFilter, { payload }: { payload: StorePayloadFilter }) => {
-      return {
-        ...state,
-        ...payload,
-      }
-    },
-  },
-  {
-    status: null,
-    sort: {
-      field: 'createdAt',
-      order: 1,
-    },
-    pagination: {
-      page: 0,
-      pageSize: 10,
-    },
-  }
-)
-
 const counters = handleActions<StateCounters, any>(
   {
     [types.storeSetCounters]: (
@@ -165,6 +143,28 @@ const counters = handleActions<StateCounters, any>(
     all: 0,
     done: 0,
     notDone: 0,
+  }
+)
+
+const filter = handleActions(
+  {
+    [types.storeSetFilter]: (state: StateFilter, { payload }: { payload: StorePayloadFilter }) => {
+      return {
+        ...state,
+        ...payload,
+      }
+    },
+  },
+  {
+    status: null,
+    sort: {
+      field: 'createdAt',
+      order: 1,
+    },
+    pagination: {
+      page: 0,
+      pageSize: 10,
+    },
   }
 )
 
