@@ -5,7 +5,7 @@ import { type Action } from 'redux-actions'
 import axios from '../http'
 import socketSubscribe from '../socket-subscribe'
 
-import selectors from '../store/selectors-auth'
+import selectors from '../selectors/auth'
 import {
   types as actionTypesSaga,
   type Signup,

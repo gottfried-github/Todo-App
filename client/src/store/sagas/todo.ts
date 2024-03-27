@@ -2,7 +2,7 @@ import { call, put, takeEvery, takeLatest, select } from 'redux-saga/effects'
 import { type Action } from 'redux-actions'
 import axios from '../http'
 
-import selectorsTodo from '../store/selectors-todo'
+import selectorsTodo from '../selectors/todo'
 
 import {
   types as actionTypesSaga,

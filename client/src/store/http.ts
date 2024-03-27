@@ -2,7 +2,7 @@ import axios from 'axios'
 
 import { creators as actionCreatorsSagaAuth } from './actions/sagas/auth'
 import { creators as actionCreatorsStoreAuth } from './actions/store/auth'
-import { store } from './store/store'
+import { store } from './store'
 
 const instance = axios.create({
   baseURL: 'http://localhost:3000',

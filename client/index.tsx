@@ -4,7 +4,7 @@ import { ThemeProvider } from '@mui/material/styles'
 
 import Router from './src/router'
 
-import { store, sagaMiddleware } from './src/store/store/store'
+import { store, sagaMiddleware } from './src/store/store'
 import saga from './src/store/sagas/index'
 
 import theme from './src/theme/index'

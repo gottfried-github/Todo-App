@@ -13,8 +13,8 @@ import { useAppDispatch, useAppSelector } from '../../hooks/react-redux'
 import { ITEM_STATUS } from '../../constants'
 import { creators as actionCreatorsSaga } from '../../store/actions/sagas/todo'
 import { creators as actionCreatorsStore } from '../../store/actions/store/todo'
-import selectorsTodo from '../../store/store/selectors-todo'
-import selectorsAuth from '../../store/store/selectors-auth'
+import selectorsTodo from '../../store/selectors/todo'
+import selectorsAuth from '../../store/selectors/auth'
 import RowMenu from './RowMenu'
 
 type PaginationModel = {

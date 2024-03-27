@@ -11,7 +11,7 @@ import AddUsers from './AddUsers'
 import type { UserData } from '../../store/actions/types'
 import { useAppDispatch, useAppSelector } from '../../hooks/react-redux'
 import { creators as actionCreatorsSaga } from '../../store/actions/sagas/team'
-import selectors from '../../store/store/selectors-team'
+import selectors from '../../store/selectors/team'
 
 export default function Team() {
   const dispatch = useAppDispatch()

@@ -8,7 +8,7 @@ import { type Team } from '../actions/sagas/team'
 import { types as actionTypesSaga } from '../actions/sagas/team'
 import { types as actionTypesStore } from '../actions/store/team'
 import { types as actionTypesStoreAuth } from '../actions/store/auth'
-import selectorsAuth from '../store/selectors-auth'
+import selectorsAuth from '../selectors/auth'
 
 function* create(action: Action<Team>): Generator<any, any, any> {
   const userData = yield select(state => selectorsAuth.selectUserData(state))

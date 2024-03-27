@@ -7,7 +7,7 @@ import { Button, AuthForm } from '../Signup/SignupForm'
 import { useAppDispatch, useAppSelector } from '../../../hooks/react-redux'
 import { creators as actionCreatorsSaga } from '../../../store/actions/sagas/auth'
 import { creators as actionCreatorsStore } from '../../../store/actions/store/auth'
-import selectorsAuth from '../../../store/store/selectors-auth'
+import selectorsAuth from '../../../store/selectors/auth'
 import { validate } from '../../../utils'
 
 const schema = object({

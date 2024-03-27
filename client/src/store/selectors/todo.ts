@@ -1,4 +1,4 @@
-import { type RootState } from './store'
+import { type RootState } from '../store'
 
 export default {
   selectItems: (state: RootState) => state.todos.items,

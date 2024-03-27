@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography'
 
 import { useAppDispatch, useAppSelector } from '../../hooks/react-redux'
 import { creators as actionCreators } from '../../store/actions/sagas/todo'
-import selectors from '../../store/store/selectors-todo'
+import selectors from '../../store/selectors/todo'
 
 import Form from './Form'
 import Controls from './Controls'

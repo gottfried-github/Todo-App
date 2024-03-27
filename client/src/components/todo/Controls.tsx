@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from '../../hooks/react-redux'
 
 import { creators as actionCreatorsStore } from '../../store/actions/store/todo'
 import { creators as actionCreatorsSaga } from '../../store/actions/sagas/todo'
-import selectors from '../../store/store/selectors-todo'
+import selectors from '../../store/selectors/todo'
 
 import { ITEM_STATUS } from '../../constants'
 

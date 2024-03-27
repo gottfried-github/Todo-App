@@ -1,5 +1,5 @@
 import { useAppSelector } from '../hooks/react-redux'
-import selectorsAuth from '../store/store/selectors-auth'
+import selectorsAuth from '../store/selectors/auth'
 
 import CreateTeam from '../components/team/CreateTeam'
 import Team from '../components/team/Team'

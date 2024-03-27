@@ -2,7 +2,7 @@ import { type Socket } from 'socket.io-client'
 
 import { type Item } from './actions/store/todo'
 import { ITEM_CREATE, ITEM_UPDATE, ITEM_DELETE } from './events/index'
-import { store } from './store/store'
+import { store } from './store'
 import { creators as actionCreatorsStoreAuth } from './actions/store/auth'
 import { creators as actionCreatorsSagaTodo } from './actions/sagas/todo'
 import { creators as actionCreatorsStoreTodo } from './actions/store/todo'
