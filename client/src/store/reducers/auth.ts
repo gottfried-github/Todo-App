@@ -2,23 +2,18 @@ import { combineReducers } from 'redux'
 import { handleAction, handleActions } from 'redux-actions'
 
 import { types } from '../actions/auth'
-import { type UserData as UserDataPayload, type ErrorPayload } from '../types/common'
-import { type StorePayloadToken, type StorePayloadErrorSocket } from '../types/auth'
-
-type ErrorAuthPayload = ErrorPayload & {
-  errors?: { [key: string]: { message?: string } }
-}
-
-type ErrorState = null | ErrorAuthPayload
-type ErrorSocket = null | StorePayloadErrorSocket
-type UserData = null | UserDataPayload
+import type { ErrorPayload, UserData } from '../types/common'
+import type {
+  StateToken,
+  StateError,
+  StateErrorSocket,
+  StateUserData,
+  StorePayloadErrorSocket,
+} from '../types/auth'
 
 const token = handleActions(
   {
-    [types.storeSetToken]: (
-      state: StorePayloadToken,
-      { payload }: { payload: StorePayloadToken }
-    ) => {
+    [types.storeSetToken]: (state: StateToken, { payload }: { payload: StateToken }) => {
       return payload
     },
     [types.storeUnsetToken]: () => {
@@ -30,7 +25,7 @@ const token = handleActions(
 
 const errorAuth = handleActions(
   {
-    [types.storeSetError]: (state: ErrorState, { payload }: { payload: ErrorPayload }) => {
+    [types.storeSetError]: (state: StateError, { payload }: { payload: ErrorPayload }) => {
       return payload
     },
     [types.storeUnsetError]: () => {
@@ -42,7 +37,7 @@ const errorAuth = handleActions(
 
 const errorSignup = handleActions(
   {
-    [types.storeSetErrorSignup]: (state: ErrorState, { payload }: { payload: ErrorPayload }) => {
+    [types.storeSetErrorSignup]: (state: StateError, { payload }: { payload: ErrorPayload }) => {
       return payload
     },
     [types.storeUnsetErrorSignup]: () => {
@@ -54,7 +49,7 @@ const errorSignup = handleActions(
 
 const errorSignin = handleActions(
   {
-    [types.storeSetErrorSignin]: (state: ErrorState, { payload }: { payload: ErrorPayload }) => {
+    [types.storeSetErrorSignin]: (state: StateError, { payload }: { payload: ErrorPayload }) => {
       return payload
     },
     [types.storeUnsetErrorSignin]: () => {
@@ -67,7 +62,7 @@ const errorSignin = handleActions(
 const errorSocket = handleActions(
   {
     [types.storeSetErrorSocket]: (
-      state: ErrorSocket,
+      state: StateErrorSocket,
       { payload }: { payload: StorePayloadErrorSocket }
     ) => {
       return payload
@@ -93,7 +88,7 @@ const isLoading = handleActions(
 
 const userData = handleAction(
   types.storeSetUserData,
-  (state: UserData, { payload }: { payload: UserDataPayload }) => {
+  (state: StateUserData, { payload }: { payload: UserData }) => {
     return payload
   },
   null

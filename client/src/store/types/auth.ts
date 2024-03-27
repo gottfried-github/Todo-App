@@ -1,5 +1,7 @@
+import { type ErrorPayload, type UserData } from './common'
+
 /*
-  saga
+  actions, saga
 */
 export type SagaPayloadSignup = {
   userName: string
@@ -19,8 +21,21 @@ export type SagaPayloadSignout = {
 }
 
 /*
-  store
+  actions, store
 */
 export type StorePayloadToken = string
 export type StorePayloadErrorSocket = string
 export type StorePayloadIsLoading = boolean
+
+/*
+  store state
+*/
+export type StateToken = StorePayloadToken
+export type StateError =
+  | null
+  | (ErrorPayload & {
+      errors?: { [key: string]: { message?: string } }
+    })
+
+export type StateErrorSocket = null | StorePayloadErrorSocket
+export type StateUserData = null | UserData
