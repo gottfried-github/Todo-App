@@ -21,6 +21,9 @@ class Item {
 }
 
 function* create(action: Action<SagaPayloadCreate>): Generator<any, any, any> {
+  const counters = select(state => selectorsTodo.selectCounters(state))
+  const filter = select(state => selectorsTodo.selectFilter(state))
+
   const item = new Item(action.payload)
 
   try {
@@ -28,7 +31,11 @@ function* create(action: Action<SagaPayloadCreate>): Generator<any, any, any> {
 
     yield put({
       type: actionTypes.storeAppend,
-      payload: res.data,
+      payload: {
+        item: res.data,
+        counters,
+        filter,
+      },
     })
   } catch (e: any) {
     yield put({
@@ -39,8 +46,11 @@ function* create(action: Action<SagaPayloadCreate>): Generator<any, any, any> {
 }
 
 function* updateStatus(action: Action<SagaPayloadUpdateStatus>): Generator<any, any, any> {
+  const items = select(state => selectorsTodo.selectItems(state))
+  const filter = select(state => selectorsTodo.selectFilter(state))
+
   try {
-    yield call(axios.patch, `/todos/${action.payload.id}`, {
+    const res = yield call(axios.patch, `/todos/${action.payload.id}`, {
       userId: action.payload.userId,
       body: {
         status: action.payload.status,
@@ -49,7 +59,11 @@ function* updateStatus(action: Action<SagaPayloadUpdateStatus>): Generator<any, 
 
     yield put({
       type: actionTypes.storeUpdateItem,
-      payload: { id: action.payload.id, fields: { status: action.payload.status } },
+      payload: {
+        item: res.data,
+        itemsPrev: items,
+        filter,
+      },
     })
   } catch (e: any) {
     yield put({
@@ -60,8 +74,11 @@ function* updateStatus(action: Action<SagaPayloadUpdateStatus>): Generator<any, 
 }
 
 function* updateName(action: Action<SagaPayloadUpdateName>): Generator<any, any, any> {
+  const items = select(state => selectorsTodo.selectItems(state))
+  const filter = select(state => selectorsTodo.selectFilter(state))
+
   try {
-    yield call(axios.patch, `/todos/${action.payload.id}`, {
+    const res = yield call(axios.patch, `/todos/${action.payload.id}`, {
       userId: action.payload.userId,
       body: {
         name: action.payload.name,
@@ -70,7 +87,11 @@ function* updateName(action: Action<SagaPayloadUpdateName>): Generator<any, any,
 
     yield put({
       type: actionTypes.storeUpdateItem,
-      payload: { id: action.payload.id, fields: { name: action.payload.name } },
+      payload: {
+        item: res.data,
+        itemsPrev: items,
+        filter,
+      },
     })
   } catch (e: any) {
     yield put({
@@ -82,9 +103,12 @@ function* updateName(action: Action<SagaPayloadUpdateName>): Generator<any, any,
 
 function* deleteOne(action: Action<SagaPayloadDeleteOne>): Generator<any, any, any> {
   try {
-    yield call(axios.delete, `/todos/${action.payload}`)
+    const res = yield call(axios.delete, `/todos/${action.payload}`)
 
-    yield call(getItems)
+    yield put({
+      type: actionTypes.storeDeleteItem,
+      payload: { item: res.data },
+    })
   } catch (e: any) {
     yield put({
       type: actionTypes.storeSetError,
@@ -135,7 +159,12 @@ function* getItems(): Generator<any, any, any> {
 
     yield put({
       type: actionTypes.storeSetItems,
-      payload: res.data,
+      payload: res.data.items,
+    })
+
+    yield put({
+      type: actionTypes.storeSetCounters,
+      payload: res.data.counters,
     })
   } catch (e: any) {
     yield put({
