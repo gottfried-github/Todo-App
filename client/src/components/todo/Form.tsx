@@ -12,8 +12,8 @@ export default function Form() {
 
   const [name, setName] = useState('')
 
-  const handleInputChange = (ev: ChangeEvent) => {
-    setName((ev.target as HTMLInputElement).value)
+  const handleInputChange = (ev: ChangeEvent<HTMLInputElement>) => {
+    setName(ev.target.value)
   }
 
   const handleSubmit = (ev: FormEvent) => {

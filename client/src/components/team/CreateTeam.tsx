@@ -13,8 +13,8 @@ export default function CreateTeam() {
   const [teamName, setTeamName] = useState('')
   const [modalOpen, setModalOpen] = useState(false)
 
-  const handleTeamNameChange = (ev: React.ChangeEvent) => {
-    setTeamName((ev.target as HTMLInputElement).value)
+  const handleTeamNameChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
+    setTeamName(ev.target.value)
   }
 
   const handleSubmit = (ev: React.FormEvent) => {
