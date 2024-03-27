@@ -1,24 +1,27 @@
 import { combineReducers } from 'redux'
 import { handleAction, handleActions } from 'redux-actions'
 
-import { types } from '../actions/store/auth'
-import { type UserData as UserDataPayload, type ErrorPayload } from '../actions/types'
-import { type Token, type ErrorSocket as ErrorSocketPayload } from '../actions/store/auth'
+import { types } from '../actions/auth'
+import { type UserData as UserDataPayload, type ErrorPayload } from '../types/common'
+import { type StorePayloadToken, type StorePayloadErrorSocket } from '../types/auth'
 
 type ErrorAuthPayload = ErrorPayload & {
   errors?: { [key: string]: { message?: string } }
 }
 
 type ErrorState = null | ErrorAuthPayload
-type ErrorSocket = null | ErrorSocketPayload
+type ErrorSocket = null | StorePayloadErrorSocket
 type UserData = null | UserDataPayload
 
 const token = handleActions(
   {
-    [types.setToken]: (state: Token, { payload }: { payload: Token }) => {
+    [types.storeSetToken]: (
+      state: StorePayloadToken,
+      { payload }: { payload: StorePayloadToken }
+    ) => {
       return payload
     },
-    [types.unsetToken]: () => {
+    [types.storeUnsetToken]: () => {
       return ''
     },
   },
@@ -27,10 +30,10 @@ const token = handleActions(
 
 const errorAuth = handleActions(
   {
-    [types.setError]: (state: ErrorState, { payload }: { payload: ErrorPayload }) => {
+    [types.storeSetError]: (state: ErrorState, { payload }: { payload: ErrorPayload }) => {
       return payload
     },
-    [types.unsetError]: () => {
+    [types.storeUnsetError]: () => {
       return null
     },
   },
@@ -39,10 +42,10 @@ const errorAuth = handleActions(
 
 const errorSignup = handleActions(
   {
-    [types.setErrorSignup]: (state: ErrorState, { payload }: { payload: ErrorPayload }) => {
+    [types.storeSetErrorSignup]: (state: ErrorState, { payload }: { payload: ErrorPayload }) => {
       return payload
     },
-    [types.unsetErrorSignup]: () => {
+    [types.storeUnsetErrorSignup]: () => {
       return null
     },
   },
@@ -51,10 +54,10 @@ const errorSignup = handleActions(
 
 const errorSignin = handleActions(
   {
-    [types.setErrorSignin]: (state: ErrorState, { payload }: { payload: ErrorPayload }) => {
+    [types.storeSetErrorSignin]: (state: ErrorState, { payload }: { payload: ErrorPayload }) => {
       return payload
     },
-    [types.unsetErrorSignin]: () => {
+    [types.storeUnsetErrorSignin]: () => {
       return null
     },
   },
@@ -63,10 +66,13 @@ const errorSignin = handleActions(
 
 const errorSocket = handleActions(
   {
-    [types.setErrorSocket]: (state: ErrorSocket, { payload }: { payload: ErrorSocketPayload }) => {
+    [types.storeSetErrorSocket]: (
+      state: ErrorSocket,
+      { payload }: { payload: StorePayloadErrorSocket }
+    ) => {
       return payload
     },
-    [types.unsetErrorSocket]: () => {
+    [types.storeUnsetErrorSocket]: () => {
       return null
     },
   },
@@ -75,10 +81,10 @@ const errorSocket = handleActions(
 
 const isLoading = handleActions(
   {
-    [types.setIsLoading]: () => {
+    [types.storeSetIsLoading]: () => {
       return true
     },
-    [types.unsetIsLoading]: () => {
+    [types.storeUnsetIsLoading]: () => {
       return false
     },
   },
@@ -86,7 +92,7 @@ const isLoading = handleActions(
 )
 
 const userData = handleAction(
-  types.setUserData,
+  types.storeSetUserData,
   (state: UserData, { payload }: { payload: UserDataPayload }) => {
     return payload
   },
