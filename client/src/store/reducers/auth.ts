@@ -2,19 +2,13 @@ import { combineReducers } from 'redux'
 import { type Action, handleAction, handleActions } from 'redux-actions'
 
 import type { ErrorPayload, UserData } from '../types/common'
-import type {
-  StateToken,
-  StateError,
-  StateErrorSocket,
-  StateUserData,
-  StorePayloadErrorSocket,
-} from '../types/auth'
+import type { StateToken, StateUserData, StorePayloadErrorSocket } from '../types/auth'
 
 import { types } from '../actions/auth'
 
 const token = handleActions(
   {
-    [types.storeSetToken]: (state: StateToken, { payload }: Action<StateToken>) => {
+    [types.storeSetToken]: (state, { payload }: Action<StateToken>) => {
       return payload
     },
     [types.storeUnsetToken]: () => {
@@ -26,7 +20,7 @@ const token = handleActions(
 
 const errorAuth = handleActions(
   {
-    [types.storeSetError]: (state: StateError, { payload }: Action<ErrorPayload>) => {
+    [types.storeSetError]: (state, { payload }: Action<ErrorPayload>) => {
       return payload
     },
     [types.storeUnsetError]: () => {
@@ -38,7 +32,7 @@ const errorAuth = handleActions(
 
 const errorSignup = handleActions(
   {
-    [types.storeSetErrorSignup]: (state: StateError, { payload }: Action<ErrorPayload>) => {
+    [types.storeSetErrorSignup]: (state, { payload }: Action<ErrorPayload>) => {
       return payload
     },
     [types.storeUnsetErrorSignup]: () => {
@@ -50,7 +44,7 @@ const errorSignup = handleActions(
 
 const errorSignin = handleActions(
   {
-    [types.storeSetErrorSignin]: (state: StateError, { payload }: Action<ErrorPayload>) => {
+    [types.storeSetErrorSignin]: (state, { payload }: Action<ErrorPayload>) => {
       return payload
     },
     [types.storeUnsetErrorSignin]: () => {
@@ -62,10 +56,7 @@ const errorSignin = handleActions(
 
 const errorSocket = handleActions(
   {
-    [types.storeSetErrorSocket]: (
-      state: StateErrorSocket,
-      { payload }: Action<StorePayloadErrorSocket>
-    ) => {
+    [types.storeSetErrorSocket]: (state, { payload }: Action<StorePayloadErrorSocket>) => {
       return payload
     },
     [types.storeUnsetErrorSocket]: () => {

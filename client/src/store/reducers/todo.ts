@@ -9,7 +9,6 @@ import type {
   StorePayloadFilter,
   StorePayloadCounters,
   StateItems,
-  StateFilter,
   StateCounters,
   StateError,
 } from '../types/todo'
@@ -148,7 +147,7 @@ const counters = handleActionsTyped<StateCounters, StorePayloadCounters | StoreP
 
 const filter = handleActions(
   {
-    [types.storeSetFilter]: (state: StateFilter, { payload }: Action<StorePayloadFilter>) => {
+    [types.storeSetFilter]: (state, { payload }: Action<StorePayloadFilter>) => {
       return {
         ...state,
         ...payload,

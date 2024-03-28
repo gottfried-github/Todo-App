@@ -2,7 +2,7 @@ import { combineReducers } from 'redux'
 import { type Action, handleAction, handleActions } from 'redux-actions'
 
 import { handleActionsTyped, type UserData, type ErrorPayload } from '../types/common'
-import type { StateTeam, StateError, StorePayloadUsers, StorePayloadTeam } from '../types/team'
+import type { StateTeam, StorePayloadUsers, StorePayloadTeam } from '../types/team'
 
 import { types } from '../actions/team'
 
@@ -39,7 +39,7 @@ const data = handleAction(
 
 const error = handleActions(
   {
-    [types.storeSetError]: (state: StateError, { payload }: Action<ErrorPayload>) => {
+    [types.storeSetError]: (state, { payload }: Action<ErrorPayload>) => {
       return payload
     },
     [types.storeUnsetError]: () => {
