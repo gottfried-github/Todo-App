@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux'
-import { handleAction, handleActions } from 'redux-actions'
+import { type Action, handleAction, handleActions } from 'redux-actions'
 
 import type { ErrorPayload, UserData } from '../types/common'
 import type {
@@ -14,7 +14,7 @@ import { types } from '../actions/auth'
 
 const token = handleActions(
   {
-    [types.storeSetToken]: (state: StateToken, { payload }: { payload: StateToken }) => {
+    [types.storeSetToken]: (state: StateToken, { payload }: Action<StateToken>) => {
       return payload
     },
     [types.storeUnsetToken]: () => {
@@ -26,7 +26,7 @@ const token = handleActions(
 
 const errorAuth = handleActions(
   {
-    [types.storeSetError]: (state: StateError, { payload }: { payload: ErrorPayload }) => {
+    [types.storeSetError]: (state: StateError, { payload }: Action<ErrorPayload>) => {
       return payload
     },
     [types.storeUnsetError]: () => {
@@ -38,7 +38,7 @@ const errorAuth = handleActions(
 
 const errorSignup = handleActions(
   {
-    [types.storeSetErrorSignup]: (state: StateError, { payload }: { payload: ErrorPayload }) => {
+    [types.storeSetErrorSignup]: (state: StateError, { payload }: Action<ErrorPayload>) => {
       return payload
     },
     [types.storeUnsetErrorSignup]: () => {
@@ -50,7 +50,7 @@ const errorSignup = handleActions(
 
 const errorSignin = handleActions(
   {
-    [types.storeSetErrorSignin]: (state: StateError, { payload }: { payload: ErrorPayload }) => {
+    [types.storeSetErrorSignin]: (state: StateError, { payload }: Action<ErrorPayload>) => {
       return payload
     },
     [types.storeUnsetErrorSignin]: () => {
@@ -64,7 +64,7 @@ const errorSocket = handleActions(
   {
     [types.storeSetErrorSocket]: (
       state: StateErrorSocket,
-      { payload }: { payload: StorePayloadErrorSocket }
+      { payload }: Action<StorePayloadErrorSocket>
     ) => {
       return payload
     },
@@ -89,7 +89,7 @@ const isLoading = handleActions(
 
 const userData = handleAction(
   types.storeSetUserData,
-  (state: StateUserData, { payload }: { payload: UserData }) => {
+  (state: StateUserData, { payload }: Action<UserData>) => {
     return payload
   },
   null

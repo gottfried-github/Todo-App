@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux'
-import { handleAction, handleActions } from 'redux-actions'
+import { type Action, handleAction, handleActions } from 'redux-actions'
 
 import { handleActionsTyped, type ErrorPayload } from '../types/common'
 
@@ -19,10 +19,10 @@ import { ITEM_STATUS } from '../../constants'
 
 const items = handleActionsTyped<StateItems, StorePayloadItems | StorePayloadItem>(
   {
-    [types.storeSetItems]: (state: StateItems, { payload }: { payload: StorePayloadItems }) => {
+    [types.storeSetItems]: (state: StateItems, { payload }: Action<StorePayloadItems>) => {
       return payload
     },
-    [types.storeAppend]: (state: StateItems, { payload }: { payload: StorePayloadItem }) => {
+    [types.storeAppend]: (state: StateItems, { payload }: Action<StorePayloadItem>) => {
       if (!payload.counters || !payload.filter) {
         return state
       }
@@ -61,7 +61,7 @@ const items = handleActionsTyped<StateItems, StorePayloadItems | StorePayloadIte
 
       return state
     },
-    [types.storeUpdateItem]: (state: StateItems, { payload }: { payload: StorePayloadItem }) => {
+    [types.storeUpdateItem]: (state: StateItems, { payload }: Action<StorePayloadItem>) => {
       if (!payload.filter) {
         return state
       }
@@ -84,7 +84,7 @@ const items = handleActionsTyped<StateItems, StorePayloadItems | StorePayloadIte
 
       return stateNew
     },
-    [types.storeDeleteItem]: (state: StateItems, { payload }: { payload: StorePayloadItem }) => {
+    [types.storeDeleteItem]: (state: StateItems, { payload }: Action<StorePayloadItem>) => {
       return state.filter(item => item.id !== payload.item.id)
     },
   },
@@ -93,13 +93,10 @@ const items = handleActionsTyped<StateItems, StorePayloadItems | StorePayloadIte
 
 const counters = handleActionsTyped<StateCounters, StorePayloadCounters | StorePayloadItem>(
   {
-    [types.storeSetCounters]: (
-      state: StateCounters,
-      { payload }: { payload: StorePayloadCounters }
-    ) => {
+    [types.storeSetCounters]: (state: StateCounters, { payload }: Action<StorePayloadCounters>) => {
       return payload
     },
-    [types.storeAppend]: (state: StateCounters, { payload }: { payload: StorePayloadItem }) => {
+    [types.storeAppend]: (state: StateCounters, { payload }: Action<StorePayloadItem>) => {
       const stateNew: StateCounters = { ...state }
 
       stateNew.all++
@@ -112,7 +109,7 @@ const counters = handleActionsTyped<StateCounters, StorePayloadCounters | StoreP
 
       return stateNew
     },
-    [types.storeUpdateItem]: (state: StateCounters, { payload }: { payload: StorePayloadItem }) => {
+    [types.storeUpdateItem]: (state: StateCounters, { payload }: Action<StorePayloadItem>) => {
       const stateNew = { ...state }
 
       const itemPrev = payload.itemsPrev?.find(item => item.id === payload.item.id)
@@ -129,7 +126,7 @@ const counters = handleActionsTyped<StateCounters, StorePayloadCounters | StoreP
 
       return stateNew
     },
-    [types.storeDeleteItem]: (state: StateCounters, { payload }: { payload: StorePayloadItem }) => {
+    [types.storeDeleteItem]: (state: StateCounters, { payload }: Action<StorePayloadItem>) => {
       const stateNew = { ...state }
       stateNew.all--
 
@@ -151,7 +148,7 @@ const counters = handleActionsTyped<StateCounters, StorePayloadCounters | StoreP
 
 const filter = handleActions(
   {
-    [types.storeSetFilter]: (state: StateFilter, { payload }: { payload: StorePayloadFilter }) => {
+    [types.storeSetFilter]: (state: StateFilter, { payload }: Action<StorePayloadFilter>) => {
       return {
         ...state,
         ...payload,
@@ -173,7 +170,7 @@ const filter = handleActions(
 
 const error = handleAction(
   types.storeSetError,
-  (state: StateError, { payload }: { payload: null | ErrorPayload }) => {
+  (state: StateError, { payload }: Action<null | ErrorPayload>) => {
     return payload
   },
   null

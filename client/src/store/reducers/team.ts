@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux'
-import { handleAction, handleActions } from 'redux-actions'
+import { type Action, handleAction, handleActions } from 'redux-actions'
 
 import { handleActionsTyped, type UserData, type ErrorPayload } from '../types/common'
 import type { StateTeam, StateError, StorePayloadUsers, StorePayloadTeam } from '../types/team'
@@ -8,16 +8,13 @@ import { types } from '../actions/team'
 
 const members = handleActionsTyped<StorePayloadUsers, StorePayloadUsers | UserData>(
   {
-    [types.storeSetMembers]: (
-      state: StorePayloadUsers,
-      { payload }: { payload: StorePayloadUsers }
-    ) => {
+    [types.storeSetMembers]: (state: StorePayloadUsers, { payload }: Action<StorePayloadUsers>) => {
       return payload
     },
-    [types.storeAppendMember]: (state: StorePayloadUsers, { payload }: { payload: UserData }) => {
+    [types.storeAppendMember]: (state: StorePayloadUsers, { payload }: Action<UserData>) => {
       return [...state, payload]
     },
-    [types.storeDeleteMember]: (state: StorePayloadUsers, { payload }: { payload: UserData }) => {
+    [types.storeDeleteMember]: (state: StorePayloadUsers, { payload }: Action<UserData>) => {
       return state.filter(member => member.id !== payload.id)
     },
   },
@@ -26,7 +23,7 @@ const members = handleActionsTyped<StorePayloadUsers, StorePayloadUsers | UserDa
 
 const freeUsers = handleAction(
   types.storeSetFreeUsers,
-  (state: StorePayloadUsers, { payload }: { payload: StorePayloadUsers }) => {
+  (state: StorePayloadUsers, { payload }: Action<StorePayloadUsers>) => {
     return payload
   },
   []
@@ -34,7 +31,7 @@ const freeUsers = handleAction(
 
 const data = handleAction(
   types.storeSetData,
-  (state: StateTeam, { payload }: { payload: StorePayloadTeam }) => {
+  (state: StateTeam, { payload }: Action<StorePayloadTeam>) => {
     return payload
   },
   null
@@ -42,7 +39,7 @@ const data = handleAction(
 
 const error = handleActions(
   {
-    [types.storeSetError]: (state: StateError, { payload }: { payload: ErrorPayload }) => {
+    [types.storeSetError]: (state: StateError, { payload }: Action<ErrorPayload>) => {
       return payload
     },
     [types.storeUnsetError]: () => {
