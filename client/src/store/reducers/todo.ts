@@ -1,21 +1,21 @@
 import { combineReducers } from 'redux'
 import { handleAction, handleActions } from 'redux-actions'
-import { handleActionsTyped } from '../types/common'
 
-import { types } from '../actions/todo'
-import {
-  type StorePayloadItem,
-  type StorePayloadItems,
-  type StorePayloadFilter,
-  type StorePayloadCounters,
-  type StateItems,
-  type StateFilter,
-  type StateCounters,
-  type StateError,
+import { handleActionsTyped, type ErrorPayload } from '../types/common'
+
+import type {
+  StorePayloadItem,
+  StorePayloadItems,
+  StorePayloadFilter,
+  StorePayloadCounters,
+  StateItems,
+  StateFilter,
+  StateCounters,
+  StateError,
 } from '../types/todo'
 
+import { types } from '../actions/todo'
 import { ITEM_STATUS } from '../../constants'
-import { ErrorPayload } from '../types/common'
 
 const items = handleActionsTyped<StateItems, StorePayloadItems | StorePayloadItem>(
   {

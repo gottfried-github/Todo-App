@@ -1,15 +1,10 @@
 import { combineReducers } from 'redux'
 import { handleAction, handleActions } from 'redux-actions'
-import { handleActionsTyped } from '../types/common'
 
-import { type UserData, type ErrorPayload } from '../types/common'
+import { handleActionsTyped, type UserData, type ErrorPayload } from '../types/common'
+import type { StateTeam, StateError, StorePayloadUsers, StorePayloadTeam } from '../types/team'
+
 import { types } from '../actions/team'
-import {
-  type StateTeam,
-  type StateError,
-  type StorePayloadUsers,
-  type StorePayloadTeam,
-} from '../types/team'
 
 const members = handleActionsTyped<StorePayloadUsers, StorePayloadUsers | UserData>(
   {

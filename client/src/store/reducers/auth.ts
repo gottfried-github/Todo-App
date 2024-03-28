@@ -1,7 +1,6 @@
 import { combineReducers } from 'redux'
 import { handleAction, handleActions } from 'redux-actions'
 
-import { types } from '../actions/auth'
 import type { ErrorPayload, UserData } from '../types/common'
 import type {
   StateToken,
@@ -10,6 +9,8 @@ import type {
   StateUserData,
   StorePayloadErrorSocket,
 } from '../types/auth'
+
+import { types } from '../actions/auth'
 
 const token = handleActions(
   {
