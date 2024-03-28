@@ -1,5 +1,5 @@
 import { call, put, takeLatest, select } from 'redux-saga/effects'
-import { io, type Socket } from 'socket.io-client'
+import { io, Socket } from 'socket.io-client'
 import { type Action } from 'redux-actions'
 
 import axios from '../http'
@@ -7,17 +7,19 @@ import socketSubscribe from '../socket-subscribe'
 
 import selectors from '../selectors/auth'
 import { types as actionTypes } from '../actions/auth'
-import {
-  type SagaPayloadSignup,
-  type SagaPayloadSignin,
-  type SagaPayloadSignout,
+import type {
+  Token,
+  SagaPayloadSignup,
+  SagaPayloadSignin,
+  SagaPayloadSignout,
+  ResponseAuth,
 } from '../types/auth'
 
 let socket: null | Socket = null
 
-function* signup(action: Action<SagaPayloadSignup>): Generator<any, any, any> {
+function* signup(action: Action<SagaPayloadSignup>) {
   try {
-    const res = yield call(axios.post, '/auth/signup', action.payload)
+    const res: ResponseAuth = yield call(axios.post, '/auth/signup', action.payload)
 
     yield put({
       type: actionTypes.storeSetToken,
@@ -42,9 +44,9 @@ function* signup(action: Action<SagaPayloadSignup>): Generator<any, any, any> {
   }
 }
 
-function* signin(action: Action<SagaPayloadSignin>): Generator<any, any, any> {
+function* signin(action: Action<SagaPayloadSignin>) {
   try {
-    const res = yield call(axios.post, '/auth/signin', action.payload)
+    const res: ResponseAuth = yield call(axios.post, '/auth/signin', action.payload)
 
     yield put({
       type: actionTypes.storeSetToken,
@@ -91,8 +93,8 @@ function* signout(action: Action<SagaPayloadSignout>): Generator<any, any, any> 
   }
 }
 
-function* authorizeSocket(): Generator<any, any, any> {
-  const token = yield select(state => selectors.selectToken(state))
+function* authorizeSocket() {
+  const token: Token = yield select(state => selectors.selectToken(state))
 
   if (socket?.connected) {
     return put({
@@ -112,8 +114,8 @@ function* authorizeSocket(): Generator<any, any, any> {
   yield call<any>(socketSubscribe, socket)
 }
 
-function* refresh(): Generator<any, any, any> {
-  const token = yield select(state => selectors.selectToken(state))
+function* refresh() {
+  const token: Token = yield select(state => selectors.selectToken(state))
 
   if (token) return
 
@@ -122,7 +124,7 @@ function* refresh(): Generator<any, any, any> {
       type: actionTypes.storeSetIsLoading,
     })
 
-    const res = yield call(axios.get, '/auth/refresh')
+    const res: ResponseAuth = yield call(axios.get, '/auth/refresh')
 
     yield put({
       type: actionTypes.storeSetToken,
