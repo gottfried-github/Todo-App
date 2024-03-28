@@ -5,11 +5,16 @@ import axios from '../http'
 import selectorsTodo from '../selectors/todo'
 
 import { types as actionTypes } from '../actions/todo'
-import {
-  type SagaPayloadCreate,
-  type SagaPayloadUpdateStatus,
-  type SagaPayloadUpdateName,
-  type SagaPayloadDeleteOne,
+import type {
+  SagaPayloadCreate,
+  SagaPayloadUpdateStatus,
+  SagaPayloadUpdateName,
+  SagaPayloadDeleteOne,
+  Filter,
+  Counters,
+  Items,
+  ResponseItem,
+  ResponseItems,
 } from '../types/todo'
 
 class Item {
@@ -20,14 +25,14 @@ class Item {
   }
 }
 
-function* create(action: Action<SagaPayloadCreate>): Generator<any, any, any> {
-  const counters = yield select(state => selectorsTodo.selectCounters(state))
-  const filter = yield select(state => selectorsTodo.selectFilter(state))
+function* create(action: Action<SagaPayloadCreate>) {
+  const counters: Counters = yield select(state => selectorsTodo.selectCounters(state))
+  const filter: Filter = yield select(state => selectorsTodo.selectFilter(state))
 
   const item = new Item(action.payload)
 
   try {
-    const res = yield call(axios.post, '/todos', item)
+    const res: ResponseItem = yield call(axios.post, '/todos', item)
 
     yield put({
       type: actionTypes.storeAppend,
@@ -45,12 +50,12 @@ function* create(action: Action<SagaPayloadCreate>): Generator<any, any, any> {
   }
 }
 
-function* updateStatus(action: Action<SagaPayloadUpdateStatus>): Generator<any, any, any> {
-  const items = yield select(state => selectorsTodo.selectItems(state))
-  const filter = yield select(state => selectorsTodo.selectFilter(state))
+function* updateStatus(action: Action<SagaPayloadUpdateStatus>) {
+  const items: Items = yield select(state => selectorsTodo.selectItems(state))
+  const filter: Filter = yield select(state => selectorsTodo.selectFilter(state))
 
   try {
-    const res = yield call(axios.patch, `/todos/${action.payload.id}`, {
+    const res: ResponseItem = yield call(axios.patch, `/todos/${action.payload.id}`, {
       userId: action.payload.userId,
       body: {
         status: action.payload.status,
@@ -73,12 +78,12 @@ function* updateStatus(action: Action<SagaPayloadUpdateStatus>): Generator<any, 
   }
 }
 
-function* updateName(action: Action<SagaPayloadUpdateName>): Generator<any, any, any> {
-  const items = yield select(state => selectorsTodo.selectItems(state))
-  const filter = yield select(state => selectorsTodo.selectFilter(state))
+function* updateName(action: Action<SagaPayloadUpdateName>) {
+  const items: Items = yield select(state => selectorsTodo.selectItems(state))
+  const filter: Filter = yield select(state => selectorsTodo.selectFilter(state))
 
   try {
-    const res = yield call(axios.patch, `/todos/${action.payload.id}`, {
+    const res: ResponseItem = yield call(axios.patch, `/todos/${action.payload.id}`, {
       userId: action.payload.userId,
       body: {
         name: action.payload.name,
@@ -101,9 +106,9 @@ function* updateName(action: Action<SagaPayloadUpdateName>): Generator<any, any,
   }
 }
 
-function* deleteOne(action: Action<SagaPayloadDeleteOne>): Generator<any, any, any> {
+function* deleteOne(action: Action<SagaPayloadDeleteOne>) {
   try {
-    const res = yield call(axios.delete, `/todos/${action.payload}`)
+    const res: ResponseItem = yield call(axios.delete, `/todos/${action.payload}`)
 
     yield put({
       type: actionTypes.storeDeleteItem,
@@ -117,7 +122,7 @@ function* deleteOne(action: Action<SagaPayloadDeleteOne>): Generator<any, any, a
   }
 }
 
-function* deleteDone(): Generator<any, any, any> {
+function* deleteDone() {
   try {
     yield call(axios.delete, '/todos')
 
@@ -130,7 +135,7 @@ function* deleteDone(): Generator<any, any, any> {
   }
 }
 
-function* getItems(): Generator<any, any, any> {
+function* getItems() {
   const config: {
     params?: {
       sortField: string
@@ -141,7 +146,7 @@ function* getItems(): Generator<any, any, any> {
     }
   } = {}
 
-  const filter = yield select(state => selectorsTodo.selectFilter(state))
+  const filter: Filter = yield select(state => selectorsTodo.selectFilter(state))
 
   config.params = {
     sortField: filter.sort.field,
@@ -155,7 +160,7 @@ function* getItems(): Generator<any, any, any> {
   }
 
   try {
-    const res = yield call(axios.get, '/todos', config)
+    const res: ResponseItems = yield call(axios.get, '/todos', config)
 
     yield put({
       type: actionTypes.storeSetItems,
