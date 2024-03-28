@@ -1,6 +1,7 @@
 import { call, put, takeLatest, select } from 'redux-saga/effects'
 import { io, Socket } from 'socket.io-client'
 import { type Action } from 'redux-actions'
+import { AxiosError } from 'axios'
 
 import axios from '../http'
 import socketSubscribe from '../socket-subscribe'
@@ -34,8 +35,15 @@ function* signup(action: Action<SagaPayloadSignup>) {
     yield put({
       type: actionTypes.sagaSignedIn,
     })
-  } catch (e: any) {
+  } catch (e: unknown) {
     console.log('saga, auth, signup, axios errored, e:', e)
+
+    if (!(e instanceof AxiosError)) {
+      return put({
+        type: actionTypes.storeSetErrorSignup,
+        payload: { message: 'something went wrong' },
+      })
+    }
 
     yield put({
       type: actionTypes.storeSetErrorSignup,
@@ -61,8 +69,15 @@ function* signin(action: Action<SagaPayloadSignin>) {
     yield put({
       type: actionTypes.sagaSignedIn,
     })
-  } catch (e: any) {
+  } catch (e: unknown) {
     console.log('saga, auth, signin, axios errored, e:', e)
+
+    if (!(e instanceof AxiosError)) {
+      return put({
+        type: actionTypes.storeSetErrorSignin,
+        payload: { message: 'something went wrong' },
+      })
+    }
 
     yield put({
       type: actionTypes.storeSetErrorSignin,
@@ -71,7 +86,7 @@ function* signin(action: Action<SagaPayloadSignin>) {
   }
 }
 
-function* signout(action: Action<SagaPayloadSignout>): Generator<any, any, any> {
+function* signout(action: Action<SagaPayloadSignout>) {
   try {
     if (action.payload?.server) {
       yield call(axios.delete, '/auth')
@@ -84,8 +99,16 @@ function* signout(action: Action<SagaPayloadSignout>): Generator<any, any, any> 
     if (socket?.connected) {
       yield call(socket.disconnect.bind(socket))
     }
-  } catch (e: any) {
+  } catch (e: unknown) {
     console.log('saga, signout, e:', e)
+
+    if (!(e instanceof AxiosError)) {
+      return put({
+        type: actionTypes.storeSetError,
+        payload: { message: 'something went wrong' },
+      })
+    }
+
     yield put({
       type: actionTypes.storeSetError,
       payload: e.response?.data || { message: 'something went wrong' },
@@ -139,7 +162,14 @@ function* refresh() {
     yield put({
       type: actionTypes.sagaSignedIn,
     })
-  } catch (e: any) {
+  } catch (e: unknown) {
+    if (!(e instanceof AxiosError)) {
+      return put({
+        type: actionTypes.storeSetError,
+        payload: { message: 'something went wrong' },
+      })
+    }
+
     yield put({
       type: actionTypes.storeSetError,
       payload: e.response?.data || { message: 'something went wrong' },

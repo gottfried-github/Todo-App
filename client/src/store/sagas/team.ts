@@ -1,5 +1,6 @@
 import { call, put, takeEvery, takeLatest, select } from 'redux-saga/effects'
 import type { Action } from 'redux-actions'
+import { AxiosError } from 'axios'
 import axios from '../http'
 
 import type { UserData } from '../types/common'
@@ -20,7 +21,14 @@ function* create(action: Action<SagaPayloadTeam>) {
       type: actionTypesAuth.storeSetUserData,
       payload: { ...userData, teamId: res.data.id },
     })
-  } catch (e: any) {
+  } catch (e: unknown) {
+    if (!(e instanceof AxiosError)) {
+      return put({
+        type: actionTypesTeam.storeSetError,
+        payload: { message: 'something went wrong' },
+      })
+    }
+
     yield put({
       type: actionTypesTeam.storeSetError,
       payload: e.response?.data || { message: 'something went wrong' },
@@ -46,7 +54,14 @@ function* getTeam() {
       type: actionTypesTeam.storeSetMembers,
       payload: res.data.members,
     })
-  } catch (e: any) {
+  } catch (e: unknown) {
+    if (!(e instanceof AxiosError)) {
+      return put({
+        type: actionTypesTeam.storeSetError,
+        payload: { message: 'something went wrong' },
+      })
+    }
+
     yield put({
       type: actionTypesTeam.storeSetError,
       payload: e.response?.data || { message: 'something went wrong' },
@@ -62,7 +77,14 @@ function* getFreeUsers() {
       type: actionTypesTeam.storeSetFreeUsers,
       payload: res.data,
     })
-  } catch (e: any) {
+  } catch (e: unknown) {
+    if (!(e instanceof AxiosError)) {
+      return put({
+        type: actionTypesTeam.storeSetError,
+        payload: { message: 'something went wrong' },
+      })
+    }
+
     yield put({
       type: actionTypesTeam.storeSetError,
       payload: e.response?.data || { message: 'something went wrong' },
@@ -80,7 +102,14 @@ function* addUser(action: Action<UserData>) {
       type: actionTypesTeam.storeAppendMember,
       payload: action.payload,
     })
-  } catch (e: any) {
+  } catch (e: unknown) {
+    if (!(e instanceof AxiosError)) {
+      return put({
+        type: actionTypesTeam.storeSetError,
+        payload: { message: 'something went wrong' },
+      })
+    }
+
     yield put({
       type: actionTypesTeam.storeSetError,
       payload: e.response?.data || { message: 'something went wrong' },
@@ -98,7 +127,14 @@ function* deleteUser(action: Action<UserData>) {
       type: actionTypesTeam.storeDeleteMember,
       payload: action.payload,
     })
-  } catch (e: any) {
+  } catch (e: unknown) {
+    if (!(e instanceof AxiosError)) {
+      return put({
+        type: actionTypesTeam.storeSetError,
+        payload: { message: 'something went wrong' },
+      })
+    }
+
     yield put({
       type: actionTypesTeam.storeSetError,
       payload: e.response?.data || { message: 'something went wrong' },
@@ -117,7 +153,14 @@ function* deleteTeam() {
       type: actionTypesAuth.storeSetUserData,
       payload: { ...userData, teamId: null },
     })
-  } catch (e: any) {
+  } catch (e: unknown) {
+    if (!(e instanceof AxiosError)) {
+      return put({
+        type: actionTypesTeam.storeSetError,
+        payload: { message: 'something went wrong' },
+      })
+    }
+
     yield put({
       type: actionTypesTeam.storeSetError,
       payload: e.response?.data || { message: 'something went wrong' },
