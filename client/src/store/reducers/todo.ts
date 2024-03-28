@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux'
 import { handleAction, handleActions } from 'redux-actions'
+import { handleActionsTyped } from '../types/common'
 
 import { types } from '../actions/todo'
 import {
@@ -16,7 +17,7 @@ import {
 import { ITEM_STATUS } from '../../constants'
 import { ErrorPayload } from '../types/common'
 
-const items = handleActions<StateItems, any>(
+const items = handleActionsTyped<StateItems, StorePayloadItems | StorePayloadItem>(
   {
     [types.storeSetItems]: (state: StateItems, { payload }: { payload: StorePayloadItems }) => {
       return payload
@@ -90,7 +91,7 @@ const items = handleActions<StateItems, any>(
   []
 )
 
-const counters = handleActions<StateCounters, any>(
+const counters = handleActionsTyped<StateCounters, StorePayloadCounters | StorePayloadItem>(
   {
     [types.storeSetCounters]: (
       state: StateCounters,

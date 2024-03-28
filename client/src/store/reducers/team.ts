@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux'
 import { handleAction, handleActions } from 'redux-actions'
+import { handleActionsTyped } from '../types/common'
 
 import { type UserData, type ErrorPayload } from '../types/common'
 import { types } from '../actions/team'
@@ -10,7 +11,7 @@ import {
   type StorePayloadTeam,
 } from '../types/team'
 
-const members = handleActions<StorePayloadUsers, any>(
+const members = handleActionsTyped<StorePayloadUsers, StorePayloadUsers | UserData>(
   {
     [types.storeSetMembers]: (
       state: StorePayloadUsers,
