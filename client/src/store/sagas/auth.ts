@@ -134,7 +134,9 @@ function* authorizeSocket() {
     },
   })
 
-  yield call(socketSubscribe, socket as Socket)
+  if (!socket) return
+
+  yield call(socketSubscribe, socket)
 }
 
 function* refresh() {
