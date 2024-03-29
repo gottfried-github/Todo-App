@@ -1,26 +1,34 @@
 import { call, put, takeEvery, takeLatest, select } from 'redux-saga/effects'
-import { type Action } from 'redux-actions'
+import type { Action } from 'redux-actions'
+import { AxiosError } from 'axios'
 import axios from '../http'
 
-import { type UserData } from '../types/common'
-import { type SagaPayloadTeam } from '../types/team'
+import type { UserData } from '../types/common'
+import type { SagaPayloadTeam, ResponseCreate, ResponseGet, ResponseFreeUsers } from '../types/team'
 
 import { types as actionTypesTeam } from '../actions/team'
 import { types as actionTypesAuth } from '../actions/auth'
 import selectorsAuth from '../selectors/auth'
 
-function* create(action: Action<SagaPayloadTeam>): Generator<any, any, any> {
-  const userData = yield select(state => selectorsAuth.selectUserData(state))
+function* create(action: Action<SagaPayloadTeam>) {
+  const userData: UserData = yield select(state => selectorsAuth.selectUserData(state))
 
   try {
-    const res = yield call(axios.post, '/teams', action.payload)
+    const res: ResponseCreate = yield call(axios.post, '/teams', action.payload)
 
     // auth slice: set teamId
     yield put({
       type: actionTypesAuth.storeSetUserData,
       payload: { ...userData, teamId: res.data.id },
     })
-  } catch (e: any) {
+  } catch (e: unknown) {
+    if (!(e instanceof AxiosError)) {
+      return put({
+        type: actionTypesTeam.storeSetError,
+        payload: { message: 'something went wrong' },
+      })
+    }
+
     yield put({
       type: actionTypesTeam.storeSetError,
       payload: e.response?.data || { message: 'something went wrong' },
@@ -28,11 +36,11 @@ function* create(action: Action<SagaPayloadTeam>): Generator<any, any, any> {
   }
 }
 
-function* getTeam(): Generator<any, any, any> {
-  const userData = yield select(state => selectorsAuth.selectUserData(state))
+function* getTeam() {
+  const userData: UserData = yield select(state => selectorsAuth.selectUserData(state))
 
   try {
-    const res = yield call(axios.get, `/teams/${userData.teamId}`)
+    const res: ResponseGet = yield call(axios.get, `/teams/${userData.teamId}`)
 
     /*
       set team data
@@ -46,7 +54,14 @@ function* getTeam(): Generator<any, any, any> {
       type: actionTypesTeam.storeSetMembers,
       payload: res.data.members,
     })
-  } catch (e: any) {
+  } catch (e: unknown) {
+    if (!(e instanceof AxiosError)) {
+      return put({
+        type: actionTypesTeam.storeSetError,
+        payload: { message: 'something went wrong' },
+      })
+    }
+
     yield put({
       type: actionTypesTeam.storeSetError,
       payload: e.response?.data || { message: 'something went wrong' },
@@ -54,15 +69,22 @@ function* getTeam(): Generator<any, any, any> {
   }
 }
 
-function* getFreeUsers(): Generator<any, any, any> {
+function* getFreeUsers() {
   try {
-    const res = yield call(axios.get, '/teams/users')
+    const res: ResponseFreeUsers = yield call(axios.get, '/teams/users')
 
     yield put({
       type: actionTypesTeam.storeSetFreeUsers,
       payload: res.data,
     })
-  } catch (e: any) {
+  } catch (e: unknown) {
+    if (!(e instanceof AxiosError)) {
+      return put({
+        type: actionTypesTeam.storeSetError,
+        payload: { message: 'something went wrong' },
+      })
+    }
+
     yield put({
       type: actionTypesTeam.storeSetError,
       payload: e.response?.data || { message: 'something went wrong' },
@@ -70,8 +92,8 @@ function* getFreeUsers(): Generator<any, any, any> {
   }
 }
 
-function* addUser(action: Action<UserData>): Generator<any, any, any> {
-  const userData = yield select(state => selectorsAuth.selectUserData(state))
+function* addUser(action: Action<UserData>) {
+  const userData: UserData = yield select(state => selectorsAuth.selectUserData(state))
 
   try {
     yield call(axios.post, `/teams/${userData.teamId}/users/${action.payload.id}`)
@@ -80,7 +102,14 @@ function* addUser(action: Action<UserData>): Generator<any, any, any> {
       type: actionTypesTeam.storeAppendMember,
       payload: action.payload,
     })
-  } catch (e: any) {
+  } catch (e: unknown) {
+    if (!(e instanceof AxiosError)) {
+      return put({
+        type: actionTypesTeam.storeSetError,
+        payload: { message: 'something went wrong' },
+      })
+    }
+
     yield put({
       type: actionTypesTeam.storeSetError,
       payload: e.response?.data || { message: 'something went wrong' },
@@ -88,8 +117,8 @@ function* addUser(action: Action<UserData>): Generator<any, any, any> {
   }
 }
 
-function* deleteUser(action: Action<UserData>): Generator<any, any, any> {
-  const userData = yield select(state => selectorsAuth.selectUserData(state))
+function* deleteUser(action: Action<UserData>) {
+  const userData: UserData = yield select(state => selectorsAuth.selectUserData(state))
 
   try {
     yield call(axios.delete, `/teams/${userData.teamId}/users/${action.payload.id}`)
@@ -98,7 +127,14 @@ function* deleteUser(action: Action<UserData>): Generator<any, any, any> {
       type: actionTypesTeam.storeDeleteMember,
       payload: action.payload,
     })
-  } catch (e: any) {
+  } catch (e: unknown) {
+    if (!(e instanceof AxiosError)) {
+      return put({
+        type: actionTypesTeam.storeSetError,
+        payload: { message: 'something went wrong' },
+      })
+    }
+
     yield put({
       type: actionTypesTeam.storeSetError,
       payload: e.response?.data || { message: 'something went wrong' },
@@ -106,8 +142,8 @@ function* deleteUser(action: Action<UserData>): Generator<any, any, any> {
   }
 }
 
-function* deleteTeam(): Generator<any, any, any> {
-  const userData = yield select(state => selectorsAuth.selectUserData(state))
+function* deleteTeam() {
+  const userData: UserData = yield select(state => selectorsAuth.selectUserData(state))
 
   try {
     yield call(axios.delete, `/teams/${userData.teamId}`)
@@ -117,7 +153,14 @@ function* deleteTeam(): Generator<any, any, any> {
       type: actionTypesAuth.storeSetUserData,
       payload: { ...userData, teamId: null },
     })
-  } catch (e: any) {
+  } catch (e: unknown) {
+    if (!(e instanceof AxiosError)) {
+      return put({
+        type: actionTypesTeam.storeSetError,
+        payload: { message: 'something went wrong' },
+      })
+    }
+
     yield put({
       type: actionTypesTeam.storeSetError,
       payload: e.response?.data || { message: 'something went wrong' },

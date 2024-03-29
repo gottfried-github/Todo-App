@@ -1,6 +1,7 @@
+import { AxiosResponse } from 'axios'
 import { ErrorPayload } from './common'
 
-type Filter = {
+export type Filter = {
   status: null | number
   sort: {
     field: string
@@ -12,7 +13,7 @@ type Filter = {
   }
 }
 
-type Item = {
+export type Item = {
   id: string
   name: string
   status: number
@@ -22,6 +23,14 @@ type Item = {
   }
   createdAt: Date
   updatedAt: Date
+}
+
+export type Items = Item[]
+
+export type Counters = {
+  all: number
+  done: number
+  notDone: number
 }
 
 /*
@@ -52,7 +61,7 @@ export type StorePayloadItemUpdate = {
   }
 }
 
-export type StorePayloadItems = Item[]
+export type StorePayloadItems = Items
 
 export type StorePayloadFilter = {
   status?: null | number
@@ -66,11 +75,7 @@ export type StorePayloadFilter = {
   }
 }
 
-export type StorePayloadCounters = {
-  all: number
-  done: number
-  notDone: number
-}
+export type StorePayloadCounters = Counters
 
 export type StorePayloadItem = {
   item: Item
@@ -80,9 +85,18 @@ export type StorePayloadItem = {
 }
 
 /*
+  axios responses
+*/
+export type ResponseItem = AxiosResponse<Item>
+export type ResponseItems = AxiosResponse<{
+  counters: Counters
+  items: Items
+}>
+
+/*
   store state
 */
-export type StateItems = Item[]
+export type StateItems = Items
 export type StateFilter = Filter
-export type StateCounters = StorePayloadCounters
+export type StateCounters = Counters
 export type StateError = null | ErrorPayload

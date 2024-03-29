@@ -1,23 +1,26 @@
 import { call, put, takeLatest, select } from 'redux-saga/effects'
-import { io, type Socket } from 'socket.io-client'
+import { io, Socket } from 'socket.io-client'
 import { type Action } from 'redux-actions'
+import { AxiosError } from 'axios'
 
 import axios from '../http'
 import socketSubscribe from '../socket-subscribe'
 
 import selectors from '../selectors/auth'
 import { types as actionTypes } from '../actions/auth'
-import {
-  type SagaPayloadSignup,
-  type SagaPayloadSignin,
-  type SagaPayloadSignout,
+import type {
+  Token,
+  SagaPayloadSignup,
+  SagaPayloadSignin,
+  SagaPayloadSignout,
+  ResponseAuth,
 } from '../types/auth'
 
 let socket: null | Socket = null
 
-function* signup(action: Action<SagaPayloadSignup>): Generator<any, any, any> {
+function* signup(action: Action<SagaPayloadSignup>) {
   try {
-    const res = yield call(axios.post, '/auth/signup', action.payload)
+    const res: ResponseAuth = yield call(axios.post, '/auth/signup', action.payload)
 
     yield put({
       type: actionTypes.storeSetToken,
@@ -32,8 +35,15 @@ function* signup(action: Action<SagaPayloadSignup>): Generator<any, any, any> {
     yield put({
       type: actionTypes.sagaSignedIn,
     })
-  } catch (e: any) {
+  } catch (e: unknown) {
     console.log('saga, auth, signup, axios errored, e:', e)
+
+    if (!(e instanceof AxiosError)) {
+      return put({
+        type: actionTypes.storeSetErrorSignup,
+        payload: { message: 'something went wrong' },
+      })
+    }
 
     yield put({
       type: actionTypes.storeSetErrorSignup,
@@ -42,9 +52,9 @@ function* signup(action: Action<SagaPayloadSignup>): Generator<any, any, any> {
   }
 }
 
-function* signin(action: Action<SagaPayloadSignin>): Generator<any, any, any> {
+function* signin(action: Action<SagaPayloadSignin>) {
   try {
-    const res = yield call(axios.post, '/auth/signin', action.payload)
+    const res: ResponseAuth = yield call(axios.post, '/auth/signin', action.payload)
 
     yield put({
       type: actionTypes.storeSetToken,
@@ -59,8 +69,15 @@ function* signin(action: Action<SagaPayloadSignin>): Generator<any, any, any> {
     yield put({
       type: actionTypes.sagaSignedIn,
     })
-  } catch (e: any) {
+  } catch (e: unknown) {
     console.log('saga, auth, signin, axios errored, e:', e)
+
+    if (!(e instanceof AxiosError)) {
+      return put({
+        type: actionTypes.storeSetErrorSignin,
+        payload: { message: 'something went wrong' },
+      })
+    }
 
     yield put({
       type: actionTypes.storeSetErrorSignin,
@@ -69,7 +86,7 @@ function* signin(action: Action<SagaPayloadSignin>): Generator<any, any, any> {
   }
 }
 
-function* signout(action: Action<SagaPayloadSignout>): Generator<any, any, any> {
+function* signout(action: Action<SagaPayloadSignout>) {
   try {
     if (action.payload?.server) {
       yield call(axios.delete, '/auth')
@@ -82,8 +99,16 @@ function* signout(action: Action<SagaPayloadSignout>): Generator<any, any, any> 
     if (socket?.connected) {
       yield call(socket.disconnect.bind(socket))
     }
-  } catch (e: any) {
+  } catch (e: unknown) {
     console.log('saga, signout, e:', e)
+
+    if (!(e instanceof AxiosError)) {
+      return put({
+        type: actionTypes.storeSetError,
+        payload: { message: 'something went wrong' },
+      })
+    }
+
     yield put({
       type: actionTypes.storeSetError,
       payload: e.response?.data || { message: 'something went wrong' },
@@ -91,8 +116,8 @@ function* signout(action: Action<SagaPayloadSignout>): Generator<any, any, any> 
   }
 }
 
-function* authorizeSocket(): Generator<any, any, any> {
-  const token = yield select(state => selectors.selectToken(state))
+function* authorizeSocket() {
+  const token: Token = yield select(state => selectors.selectToken(state))
 
   if (socket?.connected) {
     return put({
@@ -109,11 +134,13 @@ function* authorizeSocket(): Generator<any, any, any> {
     },
   })
 
-  yield call<any>(socketSubscribe, socket)
+  if (!socket) return
+
+  yield call(socketSubscribe, socket)
 }
 
-function* refresh(): Generator<any, any, any> {
-  const token = yield select(state => selectors.selectToken(state))
+function* refresh() {
+  const token: Token = yield select(state => selectors.selectToken(state))
 
   if (token) return
 
@@ -122,7 +149,7 @@ function* refresh(): Generator<any, any, any> {
       type: actionTypes.storeSetIsLoading,
     })
 
-    const res = yield call(axios.get, '/auth/refresh')
+    const res: ResponseAuth = yield call(axios.get, '/auth/refresh')
 
     yield put({
       type: actionTypes.storeSetToken,
@@ -137,7 +164,14 @@ function* refresh(): Generator<any, any, any> {
     yield put({
       type: actionTypes.sagaSignedIn,
     })
-  } catch (e: any) {
+  } catch (e: unknown) {
+    if (!(e instanceof AxiosError)) {
+      return put({
+        type: actionTypes.storeSetError,
+        payload: { message: 'something went wrong' },
+      })
+    }
+
     yield put({
       type: actionTypes.storeSetError,
       payload: e.response?.data || { message: 'something went wrong' },

@@ -1,27 +1,27 @@
 import { combineReducers } from 'redux'
-import { handleAction, handleActions } from 'redux-actions'
+import { type Action, handleAction, handleActions } from 'redux-actions'
 
-import { types } from '../actions/todo'
-import {
-  type StorePayloadItem,
-  type StorePayloadItems,
-  type StorePayloadFilter,
-  type StorePayloadCounters,
-  type StateItems,
-  type StateFilter,
-  type StateCounters,
-  type StateError,
+import { handleActionsTyped, type ErrorPayload } from '../types/common'
+
+import type {
+  StorePayloadItem,
+  StorePayloadItems,
+  StorePayloadFilter,
+  StorePayloadCounters,
+  StateItems,
+  StateCounters,
+  StateError,
 } from '../types/todo'
 
+import { types } from '../actions/todo'
 import { ITEM_STATUS } from '../../constants'
-import { ErrorPayload } from '../types/common'
 
-const items = handleActions<StateItems, any>(
+const items = handleActionsTyped<StateItems, StorePayloadItems | StorePayloadItem>(
   {
-    [types.storeSetItems]: (state: StateItems, { payload }: { payload: StorePayloadItems }) => {
+    [types.storeSetItems]: (state: StateItems, { payload }: Action<StorePayloadItems>) => {
       return payload
     },
-    [types.storeAppend]: (state: StateItems, { payload }: { payload: StorePayloadItem }) => {
+    [types.storeAppend]: (state: StateItems, { payload }: Action<StorePayloadItem>) => {
       if (!payload.counters || !payload.filter) {
         return state
       }
@@ -60,7 +60,7 @@ const items = handleActions<StateItems, any>(
 
       return state
     },
-    [types.storeUpdateItem]: (state: StateItems, { payload }: { payload: StorePayloadItem }) => {
+    [types.storeUpdateItem]: (state: StateItems, { payload }: Action<StorePayloadItem>) => {
       if (!payload.filter) {
         return state
       }
@@ -83,22 +83,19 @@ const items = handleActions<StateItems, any>(
 
       return stateNew
     },
-    [types.storeDeleteItem]: (state: StateItems, { payload }: { payload: StorePayloadItem }) => {
+    [types.storeDeleteItem]: (state: StateItems, { payload }: Action<StorePayloadItem>) => {
       return state.filter(item => item.id !== payload.item.id)
     },
   },
   []
 )
 
-const counters = handleActions<StateCounters, any>(
+const counters = handleActionsTyped<StateCounters, StorePayloadCounters | StorePayloadItem>(
   {
-    [types.storeSetCounters]: (
-      state: StateCounters,
-      { payload }: { payload: StorePayloadCounters }
-    ) => {
+    [types.storeSetCounters]: (state: StateCounters, { payload }: Action<StorePayloadCounters>) => {
       return payload
     },
-    [types.storeAppend]: (state: StateCounters, { payload }: { payload: StorePayloadItem }) => {
+    [types.storeAppend]: (state: StateCounters, { payload }: Action<StorePayloadItem>) => {
       const stateNew: StateCounters = { ...state }
 
       stateNew.all++
@@ -111,7 +108,7 @@ const counters = handleActions<StateCounters, any>(
 
       return stateNew
     },
-    [types.storeUpdateItem]: (state: StateCounters, { payload }: { payload: StorePayloadItem }) => {
+    [types.storeUpdateItem]: (state: StateCounters, { payload }: Action<StorePayloadItem>) => {
       const stateNew = { ...state }
 
       const itemPrev = payload.itemsPrev?.find(item => item.id === payload.item.id)
@@ -128,7 +125,7 @@ const counters = handleActions<StateCounters, any>(
 
       return stateNew
     },
-    [types.storeDeleteItem]: (state: StateCounters, { payload }: { payload: StorePayloadItem }) => {
+    [types.storeDeleteItem]: (state: StateCounters, { payload }: Action<StorePayloadItem>) => {
       const stateNew = { ...state }
       stateNew.all--
 
@@ -150,7 +147,7 @@ const counters = handleActions<StateCounters, any>(
 
 const filter = handleActions(
   {
-    [types.storeSetFilter]: (state: StateFilter, { payload }: { payload: StorePayloadFilter }) => {
+    [types.storeSetFilter]: (state, { payload }: Action<StorePayloadFilter>) => {
       return {
         ...state,
         ...payload,
@@ -172,7 +169,7 @@ const filter = handleActions(
 
 const error = handleAction(
   types.storeSetError,
-  (state: StateError, { payload }: { payload: null | ErrorPayload }) => {
+  (state: StateError, { payload }: Action<null | ErrorPayload>) => {
     return payload
   },
   null

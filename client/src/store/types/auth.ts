@@ -1,4 +1,7 @@
+import { AxiosResponse } from 'axios'
 import { type ErrorPayload, type UserData } from './common'
+
+export type Token = string
 
 /*
   actions, saga
@@ -23,14 +26,22 @@ export type SagaPayloadSignout = {
 /*
   actions, store
 */
-export type StorePayloadToken = string
+export type StorePayloadToken = Token
 export type StorePayloadErrorSocket = string
 export type StorePayloadIsLoading = boolean
 
 /*
+  axios responses
+*/
+export type ResponseAuth = AxiosResponse<{
+  accessToken: string
+  user: UserData
+}>
+
+/*
   store state
 */
-export type StateToken = StorePayloadToken
+export type StateToken = Token
 export type StateError =
   | null
   | (ErrorPayload & {
