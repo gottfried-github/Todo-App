@@ -1,9 +1,6 @@
 # Run
 First, clone the repo via `git clone`.
 
-Then, in the root folder of the cloned repo:
+Then, in the root folder of the cloned repo, open two terminals, one in `client/` and the other in `server/`.
 
-```bash
-cd client && npm run dev
-cd ../server && npm run dev
-```
+From each, run: `npm run dev`
